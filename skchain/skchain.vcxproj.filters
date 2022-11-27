@@ -13,5 +13,54 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\common">
+      <UniqueIdentifier>{169f1461-e464-4491-9bac-2debd0ad48a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\common\klib">
+      <UniqueIdentifier>{b8468b42-d2c8-409c-bfe5-d1776ba928b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common">
+      <UniqueIdentifier>{fb18e52f-3c18-4fd8-9540-a422a4f84953}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\klib">
+      <UniqueIdentifier>{e66bdea0-8e0c-4027-a536-44ca21a14a15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\levels">
+      <UniqueIdentifier>{614eb7e1-0b72-4c59-90a8-a3f3bae2044f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\levels">
+      <UniqueIdentifier>{99c95e00-ba1c-4630-900a-6f72848783cf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\common\klib\klib_file.h">
+      <Filter>Header Files\common\klib</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SKC_Level.h">
+      <Filter>Header Files\levels</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\klib\NES_Palette.h">
+      <Filter>Header Files\common\klib</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\klib\NES_Gfx_tile.h">
+      <Filter>Header Files\common\klib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\common\klib\klib_file.cpp">
+      <Filter>Source Files\common\klib</Filter>
+    </ClCompile>
+    <ClCompile Include="source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SKC_Level.cpp">
+      <Filter>Source Files\levels</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\klib\NES_Palette.cpp">
+      <Filter>Source Files\common\klib</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\klib\NES_Gfx_tile.cpp">
+      <Filter>Source Files\common\klib</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
