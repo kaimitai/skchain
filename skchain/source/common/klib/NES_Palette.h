@@ -24,6 +24,7 @@ namespace klib {
 		byte get_nes_palette_index(std::size_t p_color_no) const;
 
 		static NES_Color get_nes_color(std::size_t p_color_no);
+		static std::size_t get_nes_color_count(void);
 	};
 
 }

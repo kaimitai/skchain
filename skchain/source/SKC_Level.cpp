@@ -56,3 +56,16 @@ std::string skc::Level::get_blocks(void) const {
 
 	return result;
 }
+
+skc::Wall skc::Level::get_wall_type(int p_x, int p_y) const {
+	return m_tiles.at(p_y).at(p_x);
+}
+
+std::pair<byte, byte> skc::Level::get_player_start_pos(void) const {
+	return m_fixed_start_pos;
+}
+
+// setters
+void skc::Level::set_player_start_pos(byte p_x, byte p_y) {
+	m_fixed_start_pos = std::make_pair(p_x, p_y);
+}

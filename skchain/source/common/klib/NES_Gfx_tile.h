@@ -14,6 +14,7 @@ namespace klib {
 
 	public:
 		NES_Gfx_tile(const std::vector<byte>& p_bytes);
+		byte get_palette_index(int p_w, int p_y) const;
 	};
 
 }

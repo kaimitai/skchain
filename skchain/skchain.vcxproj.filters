@@ -31,6 +31,18 @@
     <Filter Include="Source Files\levels">
       <UniqueIdentifier>{99c95e00-ba1c-4630-900a-6f72848783cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\gfx">
+      <UniqueIdentifier>{1a1707b3-f149-4a68-aab6-f53b44b11f15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gfx">
+      <UniqueIdentifier>{ffe4a4cc-629a-407a-a209-4bc457a5a1a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\skc_windows">
+      <UniqueIdentifier>{a66e1f5c-537f-48a3-8c7a-539f43b29c64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\skc_windows">
+      <UniqueIdentifier>{9a81b9f9-e354-4bd9-bf18-477b7b0a1a87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\common\klib\klib_file.h">
@@ -43,6 +55,24 @@
       <Filter>Header Files\common\klib</Filter>
     </ClInclude>
     <ClInclude Include="source\common\klib\NES_Gfx_tile.h">
+      <Filter>Header Files\common\klib</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SKC_Gfx.h">
+      <Filter>Header Files\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="source\skc_windows\SKC_Main_window.h">
+      <Filter>Header Files\skc_windows</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\klib\klib_gfx.h">
+      <Filter>Header Files\common\klib</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\klib\klib_util.h">
+      <Filter>Header Files\common\klib</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\klib\Timer.h">
+      <Filter>Header Files\common\klib</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\klib\User_input.h">
       <Filter>Header Files\common\klib</Filter>
     </ClInclude>
   </ItemGroup>
@@ -60,6 +90,21 @@
       <Filter>Source Files\common\klib</Filter>
     </ClCompile>
     <ClCompile Include="source\common\klib\NES_Gfx_tile.cpp">
+      <Filter>Source Files\common\klib</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SKC_Gfx.cpp">
+      <Filter>Source Files\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="source\skc_windows\SKC_Main_window.cpp">
+      <Filter>Source Files\skc_windows</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\klib\klib_gfx.cpp">
+      <Filter>Source Files\common\klib</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\klib\Timer.cpp">
+      <Filter>Source Files\common\klib</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\klib\User_input.cpp">
       <Filter>Source Files\common\klib</Filter>
     </ClCompile>
   </ItemGroup>

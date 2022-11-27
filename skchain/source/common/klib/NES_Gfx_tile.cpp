@@ -9,11 +9,15 @@ klib::NES_Gfx_tile::NES_Gfx_tile(const std::vector<byte>& p_bytes) {
 		byte l_b = p_bytes.at(i + 8);
 
 		for (int e{ 7 }; e >= 0; --e) {
-			byte l_pal_index = klib::file::get_bit(l_a, e) * 2 +
-				klib::file::get_bit(l_b, e);
+			byte l_pal_index = klib::file::get_bit(l_a, e) +
+				2 * klib::file::get_bit(l_b, e);
 			l_row.push_back(l_pal_index);
 		}
 
 		m_pixels.push_back(l_row);
 	}
+}
+
+byte klib::NES_Gfx_tile::get_palette_index(int p_x, int p_y) const {
+	return m_pixels.at(p_y).at(p_x);
 }
