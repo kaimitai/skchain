@@ -3,3 +3,4 @@ v17
 *.nes
 Debug
 *.log
+Release
