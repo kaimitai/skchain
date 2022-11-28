@@ -5,6 +5,7 @@
 #include <vector>
 #include "./common/klib/NES_Gfx_tile.h"
 #include "./common/klib/NES_Palette.h"
+#include "SKC_Tile_metadata.h"
 
 using byte = unsigned char;
 
@@ -18,10 +19,12 @@ namespace skc {
 			int p_x, int p_y) const;
 
 		std::vector<klib::NES_Gfx_tile> m_tiles;
+		std::vector<skc::SKC_Tile_definition> m_tile_definitions;
 		std::vector<SDL_Texture*> m_tile_gfx;
 		std::vector<klib::NES_Palette> m_palettes;
 
 		void load_metadata(void);
+		void generate_tile_textures(SDL_Renderer* p_rnd);
 
 	public:
 		static SDL_Color nes_color_to_sdl(const klib::NES_Color& p_col);

@@ -30,67 +30,7 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 	}
 
 	this->load_metadata();
-	/*
-	klib::NES_Palette l_pal_dana({ 0x26,0x29,0x30 });
-	klib::NES_Palette l_pal_wall_white({ 0x07,0x10,0x30 });
-	klib::NES_Palette l_pal_wall_brown({ 0x07,0x27,0x30 });
-	*/
-	for (int i = 0; i < m_tiles.size() / 4 - 1; ++i) {
-		int l_offset = i * 4;
-
-		auto l_srf = create_nes_sdl_surface(16, 16);
-		draw_tile_on_surface(l_srf, l_offset + 0, 2, 0, 0);
-		draw_tile_on_surface(l_srf, l_offset + 2, 2, 8, 0);
-		draw_tile_on_surface(l_srf, l_offset + 1, 2, 0, 8);
-		draw_tile_on_surface(l_srf, l_offset + 3, 2, 8, 8);
-
-		m_tile_gfx.push_back(klib::gfx::surface_to_texture(p_rnd, l_srf));
-	}
-
-	{
-		auto l_srf = create_nes_sdl_surface(16, 16);
-		int l_offset = 0;
-		draw_tile_on_surface(l_srf, l_offset, 0, 0, 0);
-		draw_tile_on_surface(l_srf, l_offset + 2, 0, 8, 0);
-		draw_tile_on_surface(l_srf, l_offset + 1, 0, 0, 8);
-		draw_tile_on_surface(l_srf, l_offset + 3, 0, 8, 8);
-
-		m_tile_gfx.insert(begin(m_tile_gfx), klib::gfx::surface_to_texture(p_rnd, l_srf));
-	}
-
-	{
-		auto l_srf = create_nes_sdl_surface(16, 16);
-		int l_offset = 4 * (30 * 3 + 7);
-		draw_tile_on_surface(l_srf, l_offset, 1, 0, 0);
-		draw_tile_on_surface(l_srf, l_offset + 1, 1, 8, 0);
-		draw_tile_on_surface(l_srf, l_offset + 2, 1, 0, 8);
-		draw_tile_on_surface(l_srf, l_offset + 3, 1, 8, 8);
-
-		m_tile_gfx.insert(begin(m_tile_gfx), klib::gfx::surface_to_texture(p_rnd, l_srf));
-	}
-
-	{
-		auto l_srf = create_nes_sdl_surface(16, 16);
-		int l_offset = 4 * (30 * 3 + 10);
-		draw_tile_on_surface(l_srf, l_offset, 2, 0, 0);
-		draw_tile_on_surface(l_srf, l_offset + 1, 2, 8, 0);
-		draw_tile_on_surface(l_srf, l_offset + 2, 2, 0, 8);
-		draw_tile_on_surface(l_srf, l_offset + 3, 2, 8, 8);
-
-		m_tile_gfx.insert(begin(m_tile_gfx), klib::gfx::surface_to_texture(p_rnd, l_srf));
-	}
-
-	{
-		auto l_srf = create_nes_sdl_surface(16, 16);
-		int l_offset = 4 * (30 * 2 + 15);
-		draw_tile_on_surface(l_srf, l_offset, 2, 0, 0);
-		draw_tile_on_surface(l_srf, l_offset + 1, 2, 8, 0);
-		draw_tile_on_surface(l_srf, l_offset + 2, 2, 0, 8);
-		draw_tile_on_surface(l_srf, l_offset + 3, 2, 8, 8);
-
-		m_tile_gfx.insert(begin(m_tile_gfx), klib::gfx::surface_to_texture(p_rnd, l_srf));
-	}
-
+	this->generate_tile_textures(p_rnd);
 }
 
 SDL_Texture* skc::SKC_Gfx::get_tile_gfx(std::size_t p_gfx_no) const {
@@ -141,4 +81,56 @@ void skc::SKC_Gfx::load_metadata(void) {
 		m_palettes.push_back(klib::NES_Palette(klib::util::string_split<byte>(
 			n_palette.attribute(skc::c::XML_ATTR_COLORS).as_string(), ',')));
 	}
+
+	auto n_tile_defs = n_gfx_meta.child(skc::c::XML_TAG_TILE_DEFINITIONS);
+
+	for (auto n_tile = n_tile_defs.child(skc::c::XML_TAG_TILE);
+		n_tile;
+		n_tile = n_tile.next_sibling(skc::c::XML_TAG_TILE)) {
+
+		auto l_values = klib::util::string_split<int>(
+			n_tile.attribute(skc::c::XML_ATTR_NES_TILES).as_string(), ',');
+		int l_w = n_tile.attribute(skc::c::XML_ATTR_W).as_int();
+
+		// if w is not given, determine the value automatically
+		// if the tile consists of 4 nes tiles, we assume 2x2 tile,
+		// otherwise we assume a horizontal strip of the given tiles
+		if (l_w == 0) {
+			if (l_values.size() == 4)
+				l_w = 2;
+			else
+				l_w = static_cast<int>(l_values.size());
+		}
+		int l_h = static_cast<int>(l_values.size()) / l_w;
+		std::size_t l_palette_no = n_tile.attribute(skc::c::XML_ATTR_PALETTE_NO).as_int();
+
+		SKC_Tile_definition l_definition(l_w, l_h);
+		for (std::size_t i{ 0 }; i < l_values.size(); ++i) {
+			std::size_t l_x = i % l_w;
+			std::size_t l_y = i / l_w;
+			l_definition.add_tile_metadata(
+				SKC_Tile_metadata(l_values.at(i),
+					l_palette_no),
+				l_x, l_y);
+		}
+		m_tile_definitions.push_back(l_definition);
+	}
+}
+
+void skc::SKC_Gfx::generate_tile_textures(SDL_Renderer* p_rnd) {
+
+	for (const auto& l_meta : m_tile_definitions) {
+		auto l_srf = create_nes_sdl_surface(8 * l_meta.get_w(), 8 * l_meta.get_h());
+
+		for (int j{ 0 }; j < l_meta.get_h(); ++j)
+			for (int i{ 0 }; i < l_meta.get_h(); ++i) {
+				draw_tile_on_surface(l_srf,
+					l_meta.get_nes_tile_no(i, j),
+					l_meta.get_palette_no(i, j),
+					8 * i, 8 * j);
+			}
+
+		m_tile_gfx.push_back(klib::gfx::surface_to_texture(p_rnd, l_srf));
+	}
+
 }

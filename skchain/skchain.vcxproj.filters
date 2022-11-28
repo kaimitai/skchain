@@ -96,6 +96,9 @@
     <ClInclude Include="source\common\pugixml\pugixml.hpp">
       <Filter>Header Files\common\pugixml</Filter>
     </ClInclude>
+    <ClInclude Include="source\SKC_Tile_metadata.h">
+      <Filter>Header Files\gfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\klib\klib_file.cpp">
@@ -130,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="source\common\pugixml\pugixml.cpp">
       <Filter>Source Files\common\pugixml</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SKC_Tile_metadata.cpp">
+      <Filter>Source Files\gfx</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
