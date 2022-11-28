@@ -1,5 +1,11 @@
 #include "SKC_Gfx.h"
 #include "./common/klib/klib_gfx.h"
+#include "./common/klib/klib_util.h"
+#include "./skc_constants/Constants_application.h"
+#include "./skc_constants/Constants_xml.h"
+#include "./common/pugixml/pugixml.hpp"
+#include "./common/pugixml/pugiconfig.hpp"
+#include <stdexcept>
 
 constexpr unsigned int OFFSET_GFX{ 0x8010 };
 
@@ -23,18 +29,20 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 		);
 	}
 
+	this->load_metadata();
+	/*
 	klib::NES_Palette l_pal_dana({ 0x26,0x29,0x30 });
 	klib::NES_Palette l_pal_wall_white({ 0x07,0x10,0x30 });
 	klib::NES_Palette l_pal_wall_brown({ 0x07,0x27,0x30 });
-
+	*/
 	for (int i = 0; i < m_tiles.size() / 4 - 1; ++i) {
 		int l_offset = i * 4;
 
 		auto l_srf = create_nes_sdl_surface(16, 16);
-		draw_tile_on_surface(l_srf, l_offset + 0, l_pal_wall_brown, 0, 0);
-		draw_tile_on_surface(l_srf, l_offset + 2, l_pal_wall_brown, 8, 0);
-		draw_tile_on_surface(l_srf, l_offset + 1, l_pal_wall_brown, 0, 8);
-		draw_tile_on_surface(l_srf, l_offset + 3, l_pal_wall_brown, 8, 8);
+		draw_tile_on_surface(l_srf, l_offset + 0, 2, 0, 0);
+		draw_tile_on_surface(l_srf, l_offset + 2, 2, 8, 0);
+		draw_tile_on_surface(l_srf, l_offset + 1, 2, 0, 8);
+		draw_tile_on_surface(l_srf, l_offset + 3, 2, 8, 8);
 
 		m_tile_gfx.push_back(klib::gfx::surface_to_texture(p_rnd, l_srf));
 	}
@@ -42,10 +50,10 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 	{
 		auto l_srf = create_nes_sdl_surface(16, 16);
 		int l_offset = 0;
-		draw_tile_on_surface(l_srf, l_offset, l_pal_dana, 0, 0);
-		draw_tile_on_surface(l_srf, l_offset + 2, l_pal_dana, 8, 0);
-		draw_tile_on_surface(l_srf, l_offset + 1, l_pal_dana, 0, 8);
-		draw_tile_on_surface(l_srf, l_offset + 3, l_pal_dana, 8, 8);
+		draw_tile_on_surface(l_srf, l_offset, 0, 0, 0);
+		draw_tile_on_surface(l_srf, l_offset + 2, 0, 8, 0);
+		draw_tile_on_surface(l_srf, l_offset + 1, 0, 0, 8);
+		draw_tile_on_surface(l_srf, l_offset + 3, 0, 8, 8);
 
 		m_tile_gfx.insert(begin(m_tile_gfx), klib::gfx::surface_to_texture(p_rnd, l_srf));
 	}
@@ -53,10 +61,10 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 	{
 		auto l_srf = create_nes_sdl_surface(16, 16);
 		int l_offset = 4 * (30 * 3 + 7);
-		draw_tile_on_surface(l_srf, l_offset, l_pal_wall_white, 0, 0);
-		draw_tile_on_surface(l_srf, l_offset + 1, l_pal_wall_white, 8, 0);
-		draw_tile_on_surface(l_srf, l_offset + 2, l_pal_wall_white, 0, 8);
-		draw_tile_on_surface(l_srf, l_offset + 3, l_pal_wall_white, 8, 8);
+		draw_tile_on_surface(l_srf, l_offset, 1, 0, 0);
+		draw_tile_on_surface(l_srf, l_offset + 1, 1, 8, 0);
+		draw_tile_on_surface(l_srf, l_offset + 2, 1, 0, 8);
+		draw_tile_on_surface(l_srf, l_offset + 3, 1, 8, 8);
 
 		m_tile_gfx.insert(begin(m_tile_gfx), klib::gfx::surface_to_texture(p_rnd, l_srf));
 	}
@@ -64,10 +72,10 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 	{
 		auto l_srf = create_nes_sdl_surface(16, 16);
 		int l_offset = 4 * (30 * 3 + 10);
-		draw_tile_on_surface(l_srf, l_offset, l_pal_wall_brown, 0, 0);
-		draw_tile_on_surface(l_srf, l_offset + 1, l_pal_wall_brown, 8, 0);
-		draw_tile_on_surface(l_srf, l_offset + 2, l_pal_wall_brown, 0, 8);
-		draw_tile_on_surface(l_srf, l_offset + 3, l_pal_wall_brown, 8, 8);
+		draw_tile_on_surface(l_srf, l_offset, 2, 0, 0);
+		draw_tile_on_surface(l_srf, l_offset + 1, 2, 8, 0);
+		draw_tile_on_surface(l_srf, l_offset + 2, 2, 0, 8);
+		draw_tile_on_surface(l_srf, l_offset + 3, 2, 8, 8);
 
 		m_tile_gfx.insert(begin(m_tile_gfx), klib::gfx::surface_to_texture(p_rnd, l_srf));
 	}
@@ -75,10 +83,10 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 	{
 		auto l_srf = create_nes_sdl_surface(16, 16);
 		int l_offset = 4 * (30 * 2 + 15);
-		draw_tile_on_surface(l_srf, l_offset, l_pal_wall_brown, 0, 0);
-		draw_tile_on_surface(l_srf, l_offset + 1, l_pal_wall_brown, 8, 0);
-		draw_tile_on_surface(l_srf, l_offset + 2, l_pal_wall_brown, 0, 8);
-		draw_tile_on_surface(l_srf, l_offset + 3, l_pal_wall_brown, 8, 8);
+		draw_tile_on_surface(l_srf, l_offset, 2, 0, 0);
+		draw_tile_on_surface(l_srf, l_offset + 1, 2, 8, 0);
+		draw_tile_on_surface(l_srf, l_offset + 2, 2, 0, 8);
+		draw_tile_on_surface(l_srf, l_offset + 3, 2, 8, 8);
 
 		m_tile_gfx.insert(begin(m_tile_gfx), klib::gfx::surface_to_texture(p_rnd, l_srf));
 	}
@@ -103,18 +111,34 @@ SDL_Surface* skc::SKC_Gfx::create_nes_sdl_surface(int p_w, int p_h) const {
 }
 
 void skc::SKC_Gfx::draw_tile_on_surface(SDL_Surface* p_surface,
-	std::size_t p_tile_no, const klib::NES_Palette& p_palette,
+	std::size_t p_tile_no, std::size_t p_palette_no,
 	int p_x, int p_y) const {
 
 	for (int j{ 0 }; j < 8; ++j)
 		for (int i{ 0 }; i < 8; ++i)
 			klib::gfx::put_pixel(p_surface, p_x + i, p_y + j,
-				p_palette.get_nes_palette_index(
+				m_palettes.at(p_palette_no).get_nes_palette_index(
 					m_tiles.at(p_tile_no).get_palette_index(i, j))
 			);
-
 }
 
 SDL_Color skc::SKC_Gfx::nes_color_to_sdl(const klib::NES_Color& p_col) {
 	return SDL_Color{ p_col.m_r, p_col.m_g, p_col.m_b };
+}
+
+void skc::SKC_Gfx::load_metadata(void) {
+	pugi::xml_document doc;
+	if (!doc.load_file(skc::c::FILENAME_CONFIG_XML))
+		throw std::runtime_error("Could not load configuration xml");
+
+	auto n_meta = doc.child(skc::c::XML_TAG_META);
+	auto n_gfx_meta = n_meta.child(skc::c::XML_TAG_GFX_METADATA);
+	auto n_palettes = n_gfx_meta.child(skc::c::XML_TAG_PALETTES);
+
+	for (auto n_palette = n_palettes.child(skc::c::XML_TAG_PALETTE);
+		n_palette;
+		n_palette = n_palette.next_sibling(skc::c::XML_TAG_PALETTE)) {
+		m_palettes.push_back(klib::NES_Palette(klib::util::string_split<byte>(
+			n_palette.attribute(skc::c::XML_ATTR_COLORS).as_string(), ',')));
+	}
 }

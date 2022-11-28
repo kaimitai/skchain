@@ -3,10 +3,31 @@
 
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 namespace klib {
 
 	namespace util {
+
+		template <class T>
+		T hex_string_to_numeric(const std::string& p_value) {
+			T result{ 0 };
+
+			for (std::size_t i{ 2 }; i < p_value.size(); ++i) {
+				result *= 16;
+				char cchar{ p_value[i] };
+				if (cchar >= '0' && cchar <= '9')
+					result += (cchar - '0');
+				else if (cchar >= 'a' && cchar <= 'f')
+					result += (cchar - 'a') + 10;
+				else if (cchar >= 'A' && cchar <= 'F')
+					result += (cchar - 'A') + 10;
+				else
+					throw std::runtime_error("Invalid hex-string");
+			}
+
+			return result;
+		}
 
 		template <class T>
 		std::vector<T> string_split(const std::string& p_values, char p_delimeter) {
@@ -17,14 +38,23 @@ namespace klib {
 
 			while (l_next != std::string::npos) {
 				auto l_next_num = p_values.substr(l_last, l_next - l_last);
-				result.push_back(static_cast<T>(atoi(l_next_num.c_str())));
+				if (l_next_num.size() >= 2 && l_next_num.substr(0, 2) == "0x") {
+					result.push_back(hex_string_to_numeric<T>(l_next_num));
+				}
+				else
+					result.push_back(static_cast<T>(atoi(l_next_num.c_str())));
 
 				l_last = l_next + 1;
 				l_next = p_values.find(p_delimeter, l_last);
 			}
 			auto l_next_num = p_values.substr(l_last, l_next - l_last);
-			if (!l_next_num.empty())
-				result.push_back(static_cast<T>(atoi(l_next_num.c_str())));
+			if (!l_next_num.empty()) {
+				if (l_next_num.size() >= 2 && l_next_num.substr(0, 2) == "0x") {
+					result.push_back(hex_string_to_numeric<T>(l_next_num));
+				}
+				else
+					result.push_back(static_cast<T>(atoi(l_next_num.c_str())));
+			}
 
 			return result;
 		}

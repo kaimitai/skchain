@@ -43,6 +43,15 @@
     <Filter Include="Source Files\skc_windows">
       <UniqueIdentifier>{9a81b9f9-e354-4bd9-bf18-477b7b0a1a87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\skc_constants">
+      <UniqueIdentifier>{944aae0d-cd97-4886-b6f2-d3c414f65ce2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\common\pugixml">
+      <UniqueIdentifier>{06de47fa-bf39-462a-a7cd-bc131152c2d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\pugixml">
+      <UniqueIdentifier>{3e0a1694-de96-41a8-832a-c28a190c553f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\common\klib\klib_file.h">
@@ -75,6 +84,18 @@
     <ClInclude Include="source\common\klib\User_input.h">
       <Filter>Header Files\common\klib</Filter>
     </ClInclude>
+    <ClInclude Include="source\skc_constants\Constants_xml.h">
+      <Filter>Header Files\skc_constants</Filter>
+    </ClInclude>
+    <ClInclude Include="source\skc_constants\Constants_application.h">
+      <Filter>Header Files\skc_constants</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\pugixml\pugiconfig.hpp">
+      <Filter>Header Files\common\pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\pugixml\pugixml.hpp">
+      <Filter>Header Files\common\pugixml</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\klib\klib_file.cpp">
@@ -106,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="source\common\klib\User_input.cpp">
       <Filter>Source Files\common\klib</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\pugixml\pugixml.cpp">
+      <Filter>Source Files\common\pugixml</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

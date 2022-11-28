@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include "./skc_constants/Constants_application.h"
 #include "./common/klib/klib_file.h"
 #include "./skc_windows/SKC_Main_window.h"
 #include <iostream>
@@ -9,7 +10,6 @@
 #endif
 
 using byte = unsigned char;
-constexpr char ERROR_LOG_FILE[]{ "skc_errors.log" };
 
 int main(int argc, char* args[]) try {
 	SDL_Window* l_window{ nullptr };
@@ -22,7 +22,7 @@ int main(int argc, char* args[]) try {
 		// Event handler
 		SDL_Event e;
 
-		l_window = SDL_CreateWindow("Solomon's Keychain", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+		l_window = SDL_CreateWindow(skc::c::APP_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, skc::c::APP_W, skc::c::APP_H, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 		if (l_window == nullptr)
 			throw std::runtime_error(SDL_GetError());
 		else {
@@ -66,8 +66,7 @@ int main(int argc, char* args[]) try {
 			uint32_t delta = 1;
 			uint32_t deltaDraw = 17;
 
-			//int l_w{ c::APP_WIN_W_INITIAL }, l_h{ c::APP_WIN_H_INITIAL };
-			int l_w{ 0 }, l_h{ 0 };
+			int l_w{ skc::c::APP_W }, l_h{ skc::c::APP_H };
 
 			while (!l_exit) {
 
@@ -128,11 +127,11 @@ int main(int argc, char* args[]) try {
 	return 0;
 }
 catch (const std::exception& ex) {
-	klib::file::append_string_to_file("Runtime error. Exception was:\n" + std::string(ex.what()) + "\n", ERROR_LOG_FILE);
+	klib::file::append_string_to_file("Runtime error. Exception was:\n" + std::string(ex.what()) + "\n", skc::c::FILENAME_ERROR_LOG);
 	return 1;
 }
 catch (...) {
-	klib::file::append_string_to_file("Unknown runtime error occurred.\n", ERROR_LOG_FILE);
+	klib::file::append_string_to_file("Unknown runtime error occurred.\n", skc::c::FILENAME_ERROR_LOG);
 	return 1;
 }
 

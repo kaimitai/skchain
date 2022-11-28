@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- Configuration file for Solomon's Keychain (https://github.com/kaimitai/skchain) -->
+<skchain app_version="0.1">
+
+<!-- gfx metadata - do not edit unless you know what you are doing -->
+  <gfx_metadata>
+    <palettes>
+	  <palette no="0" colors="0x26,0x29,0x30" />
+	  <palette no="1" colors="0x07,0x10,0x30" />
+	  <palette no="2" colors="0x07,0x27,0x30" />
+	</palettes>
+  </gfx_metadata>
+
+</skchain>

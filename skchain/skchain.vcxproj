@@ -140,6 +140,10 @@
     <ClInclude Include="source\common\klib\NES_Palette.h" />
     <ClInclude Include="source\common\klib\Timer.h" />
     <ClInclude Include="source\common\klib\User_input.h" />
+    <ClInclude Include="source\common\pugixml\pugiconfig.hpp" />
+    <ClInclude Include="source\common\pugixml\pugixml.hpp" />
+    <ClInclude Include="source\skc_constants\Constants_application.h" />
+    <ClInclude Include="source\skc_constants\Constants_xml.h" />
     <ClInclude Include="source\SKC_Gfx.h" />
     <ClInclude Include="source\SKC_Level.h" />
     <ClInclude Include="source\skc_windows\SKC_Main_window.h" />
@@ -151,6 +155,7 @@
     <ClCompile Include="source\common\klib\NES_Palette.cpp" />
     <ClCompile Include="source\common\klib\Timer.cpp" />
     <ClCompile Include="source\common\klib\User_input.cpp" />
+    <ClCompile Include="source\common\pugixml\pugixml.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\SKC_Gfx.cpp" />
     <ClCompile Include="source\SKC_Level.cpp" />
