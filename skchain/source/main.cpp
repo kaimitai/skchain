@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include "./skc_constants/Constants_application.h"
 #include "./common/klib/klib_file.h"
+#include "./common/klib/User_input.h"
 #include "./skc_windows/SKC_Main_window.h"
 #include <iostream>
 #include <vector>
@@ -56,7 +57,7 @@ int main(int argc, char* args[]) try {
 			//main_window.set_application_icon(l_window);
 
 			// input handler
-			//klib::User_input input;
+			klib::User_input input;
 			int mouse_wheel_y{ 0 };
 			bool mw_used{ false };
 
@@ -94,9 +95,9 @@ int main(int argc, char* args[]) try {
 					uint32_t realDelta = std::min(delta, 5u);
 					SDL_GetWindowSize(l_window, &l_w, &l_h);
 
-					//input.move(realDelta, mw_used ? mouse_wheel_y : 0);
+					input.move(realDelta, mw_used ? mouse_wheel_y : 0);
 					//main_window.move(realDelta, input, config, l_w, l_h);
-					main_window.move(realDelta);
+					main_window.move(realDelta, input);
 
 					last_logic_time = tick_time;
 				}
@@ -134,64 +135,3 @@ catch (...) {
 	klib::file::append_string_to_file("Unknown runtime error occurred.\n", skc::c::FILENAME_ERROR_LOG);
 	return 1;
 }
-
-
-/*
-constexpr unsigned int LEVEL_W{ 16 }, LEVEL_H{ 12 }, LEVEL_COUNT{ 53 };
-
-	constexpr unsigned int OFFSET_ENEMIES{ 0x5d67 };
-	constexpr unsigned int OFFSET_WALLS{ 0x603c };
-	constexpr unsigned int OFFSET_GFX{ 0x8010 };
-
-	constexpr unsigned int SIZE_LEVEL_WALL_LAYER{ (LEVEL_W * LEVEL_H) / 8 };
-	constexpr unsigned int SIZE_LEVEL_WALLS{ 2 * SIZE_LEVEL_WALL_LAYER };
-	constexpr unsigned int SIZE_TOTAL_WALLS{ LEVEL_COUNT * SIZE_LEVEL_WALLS };
-
-	auto l_bytes = klib::file::read_file_as_bytes("Solomon's Key (U) [!].nes");
-
-	std::vector<skc::Level> levels;
-
-	for (std::size_t i{ OFFSET_WALLS }; i < OFFSET_WALLS + SIZE_TOTAL_WALLS; i += SIZE_LEVEL_WALLS) {
-		std::vector<byte> l_brown_layer{
-			std::vector<byte>(begin(l_bytes) + i,
-			begin(l_bytes) + i + SIZE_LEVEL_WALL_LAYER) };
-
-		std::vector<byte> l_white_layer{
-	std::vector<byte>(begin(l_bytes) + i + SIZE_LEVEL_WALL_LAYER,
-	begin(l_bytes) + i + 2 * SIZE_LEVEL_WALL_LAYER) };
-
-		levels.push_back(skc::Level(l_brown_layer, l_white_layer));
-
-	}
-
-	for (std::size_t i{ 0 }; i < levels.size(); ++i)
-		std::cout << i << "\n" << levels[i].get_blocks();
-
-	klib::NES_Palette x({ 1, 1, 1 });
-
-	std::vector<byte> img01v = std::vector<byte>(begin(l_bytes) + 0x8010, begin(l_bytes) + 0x8010 + 16);
-	klib::NES_Gfx_tile img01(img01v);
-
-	/*
-	int lvl_no{ 1 };
-	unsigned int l_idx{ OFFSET_ENEMIES };
-
-	while (lvl_no <= 53) {
-		std::cout << "Level " << lvl_no << "\n";
-
-		while (true) {
-			int a = l_bytes.at(l_idx);
-			int b = l_bytes.at(l_idx + 1);
-			l_idx += 2;
-
-			if (a == 0) {
-				++lvl_no;
-				std::cout << "Leftover: " << b << "\n";
-				break;
-			}
-			else {
-				std::cout << "Enemy " << a << " @ " << (b % 16) << "," << (b / 16) << "\n";
-			}
-		}
-	}
-	*/

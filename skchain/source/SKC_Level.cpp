@@ -1,4 +1,5 @@
 #include "SKC_Level.h"
+#include "skc_constants/Constants_level.h"
 #include "./common/klib/klib_file.h"
 
 using byte = unsigned char;
@@ -68,4 +69,10 @@ std::pair<byte, byte> skc::Level::get_player_start_pos(void) const {
 // setters
 void skc::Level::set_player_start_pos(byte p_x, byte p_y) {
 	m_fixed_start_pos = std::make_pair(p_x, p_y);
+}
+
+// static functions
+bool skc::Level::is_item_constellation(byte p_item_no) {
+	return p_item_no >= c::ITEM_CONSTELLATION_ARIES &&
+		p_item_no <= c::ITEM_CONSTELLATION_SAGITTARIUS;
 }

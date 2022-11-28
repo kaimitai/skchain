@@ -25,6 +25,8 @@ namespace skc {
 
 		void set_player_start_pos(byte p_x, byte p_y);
 
+		static bool is_item_constellation(byte p_item_no);
+
 		// TODO: Remove debug functions
 		std::string get_blocks(void) const;
 	};
