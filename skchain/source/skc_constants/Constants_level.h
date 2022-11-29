@@ -7,6 +7,10 @@ namespace skc {
 
 	namespace c {
 
+		constexpr byte DEFAULT_KEY_STATUS{ 0x01 };
+		constexpr byte DEFAULT_SPAWN_RATE{ 0x02 };
+		constexpr byte DEFAULT_SPAWN_VALUE{ 0x27 };
+
 		constexpr byte ITEM_OFFSET_KEY_STATUS{ 4 };
 		constexpr byte ITEM_OFFSET_DOOR_POS{ ITEM_OFFSET_KEY_STATUS + 1 };
 		constexpr byte ITEM_OFFSET_KEY_POS{ ITEM_OFFSET_DOOR_POS + 1 };

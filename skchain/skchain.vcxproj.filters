@@ -52,6 +52,12 @@
     <Filter Include="Source Files\common\pugixml">
       <UniqueIdentifier>{3e0a1694-de96-41a8-832a-c28a190c553f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\skc_util">
+      <UniqueIdentifier>{34f63ab6-c6c5-4bf8-ad71-71ed3fb6ad46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\skc_util">
+      <UniqueIdentifier>{50432085-0001-419e-9fd3-fb0a15b907bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\common\klib\klib_file.h">
@@ -102,6 +108,9 @@
     <ClInclude Include="source\skc_constants\Constants_level.h">
       <Filter>Header Files\skc_constants</Filter>
     </ClInclude>
+    <ClInclude Include="source\skc_util\Xml_helper.h">
+      <Filter>Header Files\skc_util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\klib\klib_file.cpp">
@@ -139,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="source\SKC_Tile_metadata.cpp">
       <Filter>Source Files\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="source\skc_util\Xml_helper.cpp">
+      <Filter>Source Files\skc_util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

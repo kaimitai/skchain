@@ -1,12 +1,25 @@
 #include "SKC_Level.h"
 #include "skc_constants/Constants_level.h"
 #include "./common/klib/klib_file.h"
+#include <set>
 
 using byte = unsigned char;
 
 skc::Level_element::Level_element(skc::Element_type p_type, position p_position, byte p_element_no) :
 	m_type{ p_type }, m_position{ p_position }, m_element_no{ p_element_no }
 { }
+
+position skc::Level_element::get_position(void) const {
+	return m_position;
+}
+
+skc::Element_type skc::Level_element::get_element_type(void) const {
+	return m_type;
+}
+
+byte skc::Level_element::get_element_no(void) const {
+	return m_element_no;
+}
 
 void skc::Level::add_blocks(byte p_b1, byte p_b2, byte p_w1, byte p_w2) {
 	std::vector<Wall> l_row;
@@ -33,29 +46,12 @@ void skc::Level::add_blocks(byte p_b1, byte p_b2, byte p_w1, byte p_w2) {
 	m_tiles.push_back(l_row);
 }
 
-skc::Level::Level(void) : m_key_status{ 0x01 }, m_spawn_rate{ 0x02 }
+skc::Level::Level(void) :
+	m_key_status{ c::DEFAULT_KEY_STATUS },
+	m_spawn_rate{ c::DEFAULT_SPAWN_RATE },
+	m_spawn01{ c::DEFAULT_SPAWN_VALUE },
+	m_spawn02{ c::DEFAULT_SPAWN_VALUE }
 { }
-
-std::string skc::Level::get_blocks(void) const {
-	std::string result;
-
-	for (const auto& row : m_tiles) {
-		for (const auto wall : row) {
-			if (wall == skc::Wall::White)
-				result.push_back('#');
-			else if (wall == skc::Wall::Brown)
-				result.push_back('+');
-			else if (wall == skc::Wall::Brown_white)
-				result.push_back('X');
-			else
-				result.push_back('.');
-		}
-
-		result.push_back('\n');
-	}
-
-	return result;
-}
 
 void skc::Level::load_block_data(const std::vector<byte>& p_bytes, std::size_t p_offset) {
 	for (std::size_t i{ 0 }; i < 24; i += 2) {
@@ -86,6 +82,8 @@ void skc::Level::load_item_data(const std::vector<byte>& p_bytes, std::size_t p_
 	m_fixed_door_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_DOOR_POS));
 	m_fixed_key_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_KEY_POS));
 	m_fixed_start_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_START_POS));
+	m_spawn01 = p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN01);
+	m_spawn02 = p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN02);
 
 	for (std::size_t i{ p_offset + c::ITEM_OFFSET_ITEM_DATA }; ; i += 2) {
 		byte l_next_elm{ p_bytes.at(i) };
@@ -127,6 +125,50 @@ std::pair<int, int> skc::Level::get_player_start_pos(void) const {
 	return m_fixed_start_pos;
 }
 
+position skc::Level::get_door_pos(void) const {
+	return m_fixed_door_pos;
+}
+
+position skc::Level::get_key_pos(void) const {
+	return m_fixed_key_pos;
+}
+
+byte skc::Level::get_key_status(void) const {
+	return m_key_status;
+}
+
+bool skc::Level::has_constellation(void) const {
+	return m_constellation != std::nullopt;
+}
+
+byte skc::Level::get_constellation_no(void) const {
+	return m_constellation.value().get_element_no();
+}
+
+position skc::Level::get_constellation_pos(void) const {
+	return m_constellation.value().get_position();
+}
+
+byte skc::Level::get_spawn_rate(void) const {
+	return m_spawn_rate;
+}
+
+byte skc::Level::get_spawn01(void) const {
+	return m_spawn01;
+}
+
+byte skc::Level::get_spawn02(void) const {
+	return m_spawn02;
+}
+
+const std::vector<skc::Level_element>& skc::Level::get_elements(void) const {
+	return m_elements;
+}
+
+const std::vector<byte>& skc::Level::get_item_header(void) const {
+	return m_item_header;
+}
+
 // setters
 void skc::Level::set_player_start_pos(int p_x, int p_y) {
 	m_fixed_start_pos = std::make_pair(p_x, p_y);
@@ -138,8 +180,92 @@ bool skc::Level::is_item_constellation(byte p_item_no) {
 		p_item_no <= c::ITEM_CONSTELLATION_SAGITTARIUS;
 }
 
+std::vector<std::size_t> skc::Level::get_item_indexes(byte p_item_no, std::set<std::size_t>& p_ignored_indexes) const {
+	std::vector<std::size_t> result;
+
+	for (std::size_t i{ 0 }; result.size() <= 16 && i < m_elements.size(); ++i)
+		if (p_ignored_indexes.find(i) == end(p_ignored_indexes) &&
+			m_elements[i].get_element_type() == Element_type::Item &&
+			m_elements[i].get_element_no() == p_item_no) {
+			result.push_back(i);
+			p_ignored_indexes.insert(i);
+		}
+
+	return result;
+}
+
 std::pair<int, int> skc::Level::get_position_from_byte(byte b) {
 	int l_x{ b % 0x10 };
 	int l_y{ b / 0x10 };
 	return std::make_pair(l_x, l_y - 1);
+}
+
+byte skc::Level::get_byte_from_position(const std::pair<int, int>& p_position) {
+	return static_cast<byte>(p_position.second + 1) * 16 + static_cast<byte>(p_position.first);
+}
+
+std::vector<byte> skc::Level::get_item_bytes(void) const {
+	std::vector<byte> result(m_item_header);
+
+	// level metadata
+	result.push_back(m_key_status);
+	result.push_back(get_byte_from_position(m_fixed_door_pos));
+	result.push_back(get_byte_from_position(m_fixed_key_pos));
+	result.push_back(get_byte_from_position(m_fixed_start_pos));
+
+	// enemy spawn point values (spawn rate set in the enemy data)
+	result.push_back(m_spawn01);
+	result.push_back(m_spawn02);
+
+	// add all item data, and apply "0xC"-compression whenever more than one item of the same type exists
+	std::set<std::size_t> l_handled_offsets;
+	for (std::size_t i{ 0 }; i < m_elements.size(); ++i)
+		if (l_handled_offsets.find(i) == end(l_handled_offsets)) {
+			byte l_item_no = m_elements[i].get_element_no();
+			auto l_indexes = get_item_indexes(l_item_no, l_handled_offsets);
+
+			// when two items are the same, it does not matter if we compress or not
+			// the original game seems to prefer compression when item count > 1, so we will go with the same cutoff
+			if (l_indexes.size() > 1) {
+				byte l_repeat_count = 0xc0 + static_cast<byte>(l_indexes.size() - 1);
+				result.push_back(l_repeat_count);
+				result.push_back(l_item_no);
+				for (std::size_t li{ 0 }; li < l_indexes.size(); ++li)
+					result.push_back(get_byte_from_position(m_elements[l_indexes[li]].get_position()));
+			}
+			else {
+				for (std::size_t li{ 0 }; li < l_indexes.size(); ++li) {
+					result.push_back(l_item_no);
+					result.push_back(get_byte_from_position(m_elements[l_indexes[li]].get_position()));
+				}
+			}
+		}
+
+	// add constellation if it exists, this will act as an end-of-stream indicator
+	// if no constellation exists, 0x00 will terminate the stream
+	if (has_constellation()) {
+		result.push_back(m_constellation.value().get_element_no());
+		result.push_back(get_byte_from_position(m_constellation.value().get_position()));
+	}
+	else
+		result.push_back(0x00);
+
+	return result;
+}
+
+std::vector<byte> skc::Level::get_enemy_bytes(void) const {
+	std::vector<byte> result;
+	// spwan rate is the first byte of the enemy stream
+	result.push_back(m_spawn_rate);
+
+	// add data (element number and position) for each enemy
+	for (const auto& element : m_elements)
+		if (element.get_element_type() == Element_type::Enemy) {
+			result.push_back(element.get_element_no());
+			result.push_back(get_byte_from_position(element.get_position()));
+		}
+
+	// append end-of-stream symbol
+	result.push_back(0x00);
+	return result;
 }

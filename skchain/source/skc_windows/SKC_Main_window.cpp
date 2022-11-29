@@ -1,6 +1,9 @@
 #include "SKC_Main_window.h"
 #include "./../common/klib/klib_gfx.h"
+#include "./../skc_util/Xml_helper.h"
 #include <vector>
+
+//#include "./../common/klib/klib_file.h"
 
 constexpr unsigned int LEVEL_W{ 16 }, LEVEL_H{ 12 }, LEVEL_COUNT{ 53 };
 
@@ -36,7 +39,13 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const std::vector<byt
 		m_levels.at(i).load_block_data(p_bytes, OFFSET_WALLS + i * SIZE_LEVEL_WALLS);
 		m_levels.at(i).load_item_data(p_bytes, l_item_offsets.at(i));
 		m_levels.at(i).load_enemy_data(p_bytes, l_enemy_offsets.at(i));
+
+		std::string l_filename = "level-" + std::to_string(i) + ".xml";
+		//skc::save_level_xml(m_levels.at(i), "./xml", l_filename);
 	}
+
+	//klib::file::write_bytes_to_file(m_levels[1].get_item_bytes(), "test.dat");
+
 }
 
 void skc::SKC_Main_window::move(int p_delta_ms, const klib::User_input& p_input) {

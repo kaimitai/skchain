@@ -153,6 +153,7 @@
     <ClInclude Include="source\SKC_Gfx.h" />
     <ClInclude Include="source\SKC_Level.h" />
     <ClInclude Include="source\SKC_Tile_metadata.h" />
+    <ClInclude Include="source\skc_util\Xml_helper.h" />
     <ClInclude Include="source\skc_windows\SKC_Main_window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +168,7 @@
     <ClCompile Include="source\SKC_Gfx.cpp" />
     <ClCompile Include="source\SKC_Level.cpp" />
     <ClCompile Include="source\SKC_Tile_metadata.cpp" />
+    <ClCompile Include="source\skc_util\Xml_helper.cpp" />
     <ClCompile Include="source\skc_windows\SKC_Main_window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
