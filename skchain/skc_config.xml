@@ -18,6 +18,10 @@
 	  <tile no="1" palette_no="2" nes_tiles="400,401,402,403" />
 	  <tile no="2" palette_no="1" nes_tiles="388,389,390,391" />
 	  <tile no="3" palette_no="0" nes_tiles="0,2,1,3" transparent="true" />
+	  <tile no="4" palette_no="2" nes_tiles="320,321,322,323" />
+	  <tile no="5" palette_no="2" nes_tiles="300,397,398,399" />
+	  <tile no="6" palette_no="2" nes_tiles="316,317,318,319" />
+	  <tile no="7" palette_no="2" nes_tiles="352,353,354,355" />
 	</tile_definitions>
 	
   </gfx_metadata>

@@ -71,10 +71,39 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd) {
 			klib::gfx::blit_scale(p_rnd, m_gfx.get_tile_gfx(l_tile_no), 20 + i * TILE_SIZE_VISUAL, 20 + j * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 		}
 
+	// draw door
+	auto l_door_pos = m_levels.at(m_current_level).get_door_pos();
+	if (l_door_pos.second >= 0)
+		klib::gfx::blit_scale(p_rnd,
+			m_gfx.get_tile_gfx(4),
+			20 + l_door_pos.first * TILE_SIZE_VISUAL,
+			20 + l_door_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
+
 	// draw player start
 	auto l_pstart = m_levels.at(m_current_level).get_player_start_pos();
 	klib::gfx::blit_scale(p_rnd,
 		m_gfx.get_tile_gfx(3),
 		20 + l_pstart.first * TILE_SIZE_VISUAL,
 		20 + l_pstart.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
+
+	// draw key
+	auto l_key_pos = m_levels.at(m_current_level).get_key_pos();
+	if (l_key_pos.second >= 0)
+		klib::gfx::blit_scale(p_rnd,
+			m_gfx.get_tile_gfx(5),
+			20 + l_key_pos.first * TILE_SIZE_VISUAL,
+			20 + l_key_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
+
+	// draw items
+	const auto& l_items = m_levels.at(m_current_level).get_elements();
+	for (const auto& item : l_items) {
+		byte l_no = item.get_element_no();
+		if ((l_no == 0x04 || l_no == 0xb3) && item.get_element_type() == skc::Element_type::Item) {
+			auto l_pos = item.get_position();
+			klib::gfx::blit_scale(p_rnd,
+				m_gfx.get_tile_gfx(l_no == 0x04 ? 6 : 7),
+				20 + l_pos.first * TILE_SIZE_VISUAL,
+				20 + l_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
+		}
+	}
 }

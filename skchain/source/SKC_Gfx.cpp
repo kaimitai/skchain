@@ -31,6 +31,28 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 
 	this->load_metadata();
 	this->generate_tile_textures(p_rnd);
+
+	// code for generating tilemap bmp-file
+	/*
+	auto l_srf = create_nes_sdl_surface(32 * 16, 16 * 16);
+	std::size_t l_pal_nox{ 0 };
+	for (int i{ 0 }; i < 2048; i += 4) {
+		int l_x = (i/4) % 32;
+		int l_y = (i/4) / 32;
+
+		draw_tile_on_surface(l_srf, i, l_pal_nox, l_x * 16, l_y * 16);
+		draw_tile_on_surface(l_srf, i + 1, l_pal_nox, l_x * 16 + 8, l_y * 16);
+		draw_tile_on_surface(l_srf, i + 2, l_pal_nox, l_x * 16, l_y * 16 + 8);
+		draw_tile_on_surface(l_srf, i + 3, l_pal_nox, l_x * 16 + 8, l_y * 16 + 8);
+	}
+	/*
+	for (int j{ 0 }; j < 32; ++j)
+		for (int i{ 0 }; i < 64; ++i) {
+			draw_tile_on_surface(l_srf, j * 64 + i, 1, i * 8, j * 8);
+		}
+
+	SDL_SaveBMP(l_srf, "tilemap.bmp");
+	*/
 }
 
 SDL_Texture* skc::SKC_Gfx::get_tile_gfx(std::size_t p_gfx_no) const {
