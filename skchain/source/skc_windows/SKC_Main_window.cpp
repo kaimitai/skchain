@@ -33,19 +33,15 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const std::vector<byt
 		l_enemy_offsets.push_back(l_enemy_offset - 0x8000 + 0x10);
 	}
 
-	// DEBUG
-	// #include "./../common/klib/klib_file.h"
-	/*
 	for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
 		m_levels.at(i).load_block_data(p_bytes, OFFSET_WALLS + i * SIZE_LEVEL_WALLS);
-
-		std::string l_filename = "./dat/test-items-" + std::to_string(i) + ".dat";
-		auto l_file = klib::file::read_file_as_bytes(l_filename);
-		m_levels.at(i).load_item_data(l_file, 0);
-		//m_levels.at(i).load_item_data(p_bytes, l_item_offsets.at(i));
+		m_levels.at(i).load_item_data(p_bytes, l_item_offsets.at(i));
 		m_levels.at(i).load_enemy_data(p_bytes, l_enemy_offsets.at(i));
 	}
 
+	// DEBUG
+	// #include "./../common/klib/klib_file.h"
+	/*
 	std::vector<byte> l_generated_item_bytes;
 	std::vector<byte> l_original_item_bytes(begin(p_bytes) + l_item_offsets.at(0),
 		begin(p_bytes) + l_item_offsets.at(0) + 1300);
