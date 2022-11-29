@@ -105,7 +105,9 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd) {
 			20 + l_key_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 
 	std::map<byte, std::size_t> m_item_tiles{
-		{0x04, 6}, {0x33,7}, {0x18, 8}, {0x2b, 9}
+		{0x04, 6}, {0x33,7}, {0x18, 8}, {0x2b, 9},
+		{0x08, 10}, {0x0c, 11}, {0x15, 12}, {0x16, 13},
+		{0x13, 14}, {0x14, 15}, {0x22, 16}
 	};
 
 	// draw items

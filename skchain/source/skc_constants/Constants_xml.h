@@ -16,7 +16,7 @@ namespace skc {
 		constexpr char XML_ATTR_NO[]{ "no" };
 		constexpr char XML_ATTR_W[]{ "w" };
 		constexpr char XML_ATTR_TRANSPARENT[]{ "transparent" };
-		constexpr char XML_ATTR_COLORS[]{ "colors" };
+		constexpr char XML_ATTR_OFFSET[]{ "offset" };
 		constexpr char XML_ATTR_PALETTE_NO[]{ "palette_no" };
 		constexpr char XML_ATTR_NES_TILES[]{ "nes_tiles" };
 

@@ -23,7 +23,7 @@ namespace skc {
 		std::vector<SDL_Texture*> m_tile_gfx;
 		std::vector<klib::NES_Palette> m_palettes;
 
-		void load_metadata(void);
+		void load_metadata(const std::vector<byte> p_rom_data);
 		void generate_tile_textures(SDL_Renderer* p_rnd);
 
 	public:

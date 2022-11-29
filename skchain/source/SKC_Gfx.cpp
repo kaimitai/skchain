@@ -7,6 +7,8 @@
 #include "./common/pugixml/pugiconfig.hpp"
 #include <stdexcept>
 
+using byte = unsigned char;
+
 constexpr unsigned int OFFSET_GFX{ 0x8010 };
 
 skc::SKC_Gfx::~SKC_Gfx(void) {
@@ -16,7 +18,7 @@ skc::SKC_Gfx::~SKC_Gfx(void) {
 }
 
 skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
-	const std::vector<unsigned char> p_rom_data) {
+	const std::vector<byte> p_rom_data) {
 
 	constexpr unsigned int NES_GFX_TILE_BYTE_SIZE{ 16 };
 
@@ -29,7 +31,7 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 		);
 	}
 
-	this->load_metadata();
+	this->load_metadata(p_rom_data);
 	this->generate_tile_textures(p_rnd);
 
 	// code for generating tilemap bmp-file
@@ -95,7 +97,7 @@ SDL_Color skc::SKC_Gfx::nes_color_to_sdl(const klib::NES_Color& p_col) {
 	return SDL_Color{ p_col.m_r, p_col.m_g, p_col.m_b };
 }
 
-void skc::SKC_Gfx::load_metadata(void) {
+void skc::SKC_Gfx::load_metadata(const std::vector<byte> p_rom_data) {
 	pugi::xml_document doc;
 	if (!doc.load_file(skc::c::FILENAME_CONFIG_XML))
 		throw std::runtime_error("Could not load configuration xml");
@@ -107,8 +109,12 @@ void skc::SKC_Gfx::load_metadata(void) {
 	for (auto n_palette = n_palettes.child(skc::c::XML_TAG_PALETTE);
 		n_palette;
 		n_palette = n_palette.next_sibling(skc::c::XML_TAG_PALETTE)) {
-		m_palettes.push_back(klib::NES_Palette(klib::util::string_split<byte>(
-			n_palette.attribute(skc::c::XML_ATTR_COLORS).as_string(), ',')));
+
+		std::size_t l_offset = klib::util::string_to_numeric<std::size_t>(
+			n_palette.attribute(skc::c::XML_ATTR_OFFSET).as_string()
+			);
+		m_palettes.push_back(klib::NES_Palette(std::vector<byte>(begin(p_rom_data) + l_offset,
+			begin(p_rom_data) + l_offset + 4)));
 	}
 
 	auto n_tile_defs = n_gfx_meta.child(skc::c::XML_TAG_TILE_DEFINITIONS);
