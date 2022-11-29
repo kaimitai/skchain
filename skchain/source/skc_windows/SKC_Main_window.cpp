@@ -3,8 +3,6 @@
 #include "./../skc_util/Xml_helper.h"
 #include <vector>
 
-//#include "./../common/klib/klib_file.h"
-
 constexpr unsigned int LEVEL_W{ 16 }, LEVEL_H{ 12 }, LEVEL_COUNT{ 53 };
 
 constexpr unsigned int OFFSET_ENEMIES{ 0x5d67 };
@@ -35,17 +33,32 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const std::vector<byt
 		l_enemy_offsets.push_back(l_enemy_offset - 0x8000 + 0x10);
 	}
 
+	// DEBUG
+	// #include "./../common/klib/klib_file.h"
+	/*
 	for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
 		m_levels.at(i).load_block_data(p_bytes, OFFSET_WALLS + i * SIZE_LEVEL_WALLS);
-		m_levels.at(i).load_item_data(p_bytes, l_item_offsets.at(i));
-		m_levels.at(i).load_enemy_data(p_bytes, l_enemy_offsets.at(i));
 
-		std::string l_filename = "level-" + std::to_string(i) + ".xml";
-		//skc::save_level_xml(m_levels.at(i), "./xml", l_filename);
+		std::string l_filename = "./dat/test-items-" + std::to_string(i) + ".dat";
+		auto l_file = klib::file::read_file_as_bytes(l_filename);
+		m_levels.at(i).load_item_data(l_file, 0);
+		//m_levels.at(i).load_item_data(p_bytes, l_item_offsets.at(i));
+		m_levels.at(i).load_enemy_data(p_bytes, l_enemy_offsets.at(i));
 	}
 
-	//klib::file::write_bytes_to_file(m_levels[1].get_item_bytes(), "test.dat");
-
+	std::vector<byte> l_generated_item_bytes;
+	std::vector<byte> l_original_item_bytes(begin(p_bytes) + l_item_offsets.at(0),
+		begin(p_bytes) + l_item_offsets.at(0) + 1300);
+	for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
+		std::string l_filename = "level-" + std::to_string(i) + ".xml";
+		skc::save_level_xml(m_levels.at(i), "./xml", l_filename);
+		auto l_lvl_item_bytes{ m_levels[i].get_item_bytes() };
+		//klib::file::write_bytes_to_file(l_lvl_item_bytes, "./dat/test-items-" + std::to_string(i) + ".dat");
+		l_generated_item_bytes.insert(end(l_generated_item_bytes), begin(l_lvl_item_bytes), end(l_lvl_item_bytes));
+	}
+	//klib::file::write_bytes_to_file(l_original_item_bytes, "./dat/test-items-original.dat");
+	//klib::file::write_bytes_to_file(l_generated_item_bytes, "./dat/test-items.dat");
+	*/
 }
 
 void skc::SKC_Main_window::move(int p_delta_ms, const klib::User_input& p_input) {

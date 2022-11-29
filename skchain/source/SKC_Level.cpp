@@ -88,8 +88,10 @@ void skc::Level::load_item_data(const std::vector<byte>& p_bytes, std::size_t p_
 	for (std::size_t i{ p_offset + c::ITEM_OFFSET_ITEM_DATA }; ; i += 2) {
 		byte l_next_elm{ p_bytes.at(i) };
 		// found a 0-terminator, end stream read
-		if (l_next_elm == 0x00)
+		if (is_item_delimiter(l_next_elm)) {
+			m_item_eof = l_next_elm;
 			break;
+		}
 		// if we hit a constellation, store it as an optional in the level metadata (as 0 or 1 of these can be present)
 		// this will also act as end-of-stream
 		if (is_item_constellation(l_next_elm)) {
@@ -141,8 +143,16 @@ bool skc::Level::has_constellation(void) const {
 	return m_constellation != std::nullopt;
 }
 
+bool skc::Level::has_item_eof(void) const {
+	return m_item_eof != std::nullopt;
+}
+
 byte skc::Level::get_constellation_no(void) const {
 	return m_constellation.value().get_element_no();
+}
+
+byte skc::Level::get_item_eof(void) const {
+	return m_item_eof.value();
 }
 
 position skc::Level::get_constellation_pos(void) const {
@@ -248,7 +258,7 @@ std::vector<byte> skc::Level::get_item_bytes(void) const {
 		result.push_back(get_byte_from_position(m_constellation.value().get_position()));
 	}
 	else
-		result.push_back(0x00);
+		result.push_back(has_item_eof() ? get_item_eof() : 0x00);
 
 	return result;
 }
@@ -268,4 +278,8 @@ std::vector<byte> skc::Level::get_enemy_bytes(void) const {
 	// append end-of-stream symbol
 	result.push_back(0x00);
 	return result;
+}
+
+bool skc::Level::is_item_delimiter(byte p_value) {
+	return (p_value == 0) || (p_value >= 0xd0 && p_value < 0xf0);
 }

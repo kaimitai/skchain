@@ -32,6 +32,7 @@ namespace skc {
 		std::vector<Level_element> m_elements;
 		std::vector<byte> m_item_header;
 		std::optional<Level_element> m_constellation;
+		std::optional<byte> m_item_eof;
 
 		void add_blocks(byte p_b1, byte p_b2, byte p_w1, byte p_w2);
 		byte m_key_status, m_spawn_rate, m_spawn01, m_spawn02;
@@ -41,6 +42,7 @@ namespace skc {
 
 		static std::pair<int, int> get_position_from_byte(byte b);
 		static byte get_byte_from_position(const std::pair<int, int>& p_position);
+		static bool is_item_delimiter(byte p_value);
 
 	public:
 		Level(void);
@@ -60,6 +62,8 @@ namespace skc {
 		byte get_spawn01(void) const;
 		byte get_spawn02(void) const;
 		const std::vector<byte>& get_item_header(void) const;
+		bool has_item_eof(void) const;
+		byte get_item_eof(void) const;
 
 		const std::vector<skc::Level_element>& get_elements(void) const;
 

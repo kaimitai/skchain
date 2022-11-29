@@ -38,6 +38,11 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 		n_level.attribute(c::XML_ATTR_CONSTELLATION_POSITION).set_value(get_position_string(p_level.get_constellation_pos()).c_str());
 	}
 
+	if (p_level.has_item_eof()) {
+		n_level.append_attribute(c::XML_ATTR_ITEM_EOF);
+		n_level.attribute(c::XML_ATTR_ITEM_EOF).set_value(p_level.get_item_eof());
+	}
+
 	n_level.append_attribute(c::XML_ATTR_ITEM_HEADER);
 	n_level.attribute(c::XML_ATTR_ITEM_HEADER).set_value(klib::util::string_join<byte>(p_level.get_item_header(), ',').c_str());
 

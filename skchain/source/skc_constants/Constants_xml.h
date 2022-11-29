@@ -42,6 +42,7 @@ namespace skc {
 		constexpr char XML_ATTR_CONSTELLATION_NO[]{ "constellation_no" };
 		constexpr char XML_ATTR_CONSTELLATION_POSITION[]{ "constellation_position" };
 		constexpr char XML_ATTR_ITEM_HEADER[]{ "item_header" };
+		constexpr char XML_ATTR_ITEM_EOF[]{ "item_eof" };
 
 		constexpr char XML_ATTR_ELEMENT_NO[]{ "element_no" };
 		constexpr char XML_ATTR_POSITION[]{ "position" };
