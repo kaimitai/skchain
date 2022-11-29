@@ -21,6 +21,13 @@ byte skc::Level_element::get_element_no(void) const {
 	return m_element_no;
 }
 
+byte skc::Level_element::get_item_no(void) const {
+	if (m_element_no >= 0xc0)
+		return m_element_no;
+	else
+		return m_element_no % 0x40;
+}
+
 void skc::Level::add_blocks(byte p_b1, byte p_b2, byte p_w1, byte p_w2) {
 	std::vector<Wall> l_row;
 

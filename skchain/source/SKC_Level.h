@@ -25,6 +25,7 @@ namespace skc {
 		position get_position(void) const;
 		Element_type get_element_type(void) const;
 		byte get_element_no(void) const;
+		byte get_item_no(void) const;
 	};
 
 	class Level {

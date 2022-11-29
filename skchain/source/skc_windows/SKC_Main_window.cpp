@@ -1,6 +1,7 @@
 #include "SKC_Main_window.h"
 #include "./../common/klib/klib_gfx.h"
 #include "./../skc_util/Xml_helper.h"
+#include <map>
 #include <vector>
 
 constexpr unsigned int LEVEL_W{ 16 }, LEVEL_H{ 12 }, LEVEL_COUNT{ 53 };
@@ -103,14 +104,19 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd) {
 			20 + l_key_pos.first * TILE_SIZE_VISUAL,
 			20 + l_key_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 
+	std::map<byte, std::size_t> m_item_tiles{
+		{0x04, 6}, {0x33,7}, {0x18, 8}, {0x2b, 9}
+	};
+
 	// draw items
 	const auto& l_items = m_levels.at(m_current_level).get_elements();
 	for (const auto& item : l_items) {
-		byte l_no = item.get_element_no();
-		if ((l_no == 0x04 || l_no == 0xb3) && item.get_element_type() == skc::Element_type::Item) {
+		byte l_no = item.get_item_no();
+		if (item.get_element_type() == skc::Element_type::Item &&
+			m_item_tiles.find(l_no) != end(m_item_tiles)) {
 			auto l_pos = item.get_position();
 			klib::gfx::blit_scale(p_rnd,
-				m_gfx.get_tile_gfx(l_no == 0x04 ? 6 : 7),
+				m_gfx.get_tile_gfx(m_item_tiles.at(l_no)),
 				20 + l_pos.first * TILE_SIZE_VISUAL,
 				20 + l_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 		}
