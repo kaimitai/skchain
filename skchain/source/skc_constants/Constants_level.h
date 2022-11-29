@@ -7,6 +7,14 @@ namespace skc {
 
 	namespace c {
 
+		constexpr byte ITEM_OFFSET_KEY_STATUS{ 4 };
+		constexpr byte ITEM_OFFSET_DOOR_POS{ ITEM_OFFSET_KEY_STATUS + 1 };
+		constexpr byte ITEM_OFFSET_KEY_POS{ ITEM_OFFSET_DOOR_POS + 1 };
+		constexpr byte ITEM_OFFSET_START_POS{ ITEM_OFFSET_KEY_POS + 1 };
+		constexpr byte ITEM_OFFSET_SPAWN01{ ITEM_OFFSET_START_POS + 1 };
+		constexpr byte ITEM_OFFSET_SPAWN02{ ITEM_OFFSET_SPAWN01 + 1 };
+		constexpr byte ITEM_OFFSET_ITEM_DATA{ ITEM_OFFSET_SPAWN02 + 1 };
+
 		constexpr byte ITEM_CONSTELLATION_ARIES{ 0xf0 };
 		constexpr byte ITEM_CONSTELLATION_GEMINI{ 0xf1 };
 		constexpr byte ITEM_CONSTELLATION_VIRGO{ 0xf2 };

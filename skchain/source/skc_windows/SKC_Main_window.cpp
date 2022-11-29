@@ -21,18 +21,7 @@ constexpr size_t OFFSET_ITEM_TABLE_HI{ OFFSET_ITEM_TABLE_LO + LEVEL_COUNT };
 skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const std::vector<byte>& p_bytes) :
 	m_gfx{ p_rnd, p_bytes }, m_current_level{ 0 }
 {
-	for (std::size_t i{ OFFSET_WALLS }; i < OFFSET_WALLS + SIZE_TOTAL_WALLS; i += SIZE_LEVEL_WALLS) {
-		std::vector<byte> l_brown_layer{
-			std::vector<byte>(begin(p_bytes) + i,
-			begin(p_bytes) + i + SIZE_LEVEL_WALL_LAYER) };
-
-		std::vector<byte> l_white_layer{
-	std::vector<byte>(begin(p_bytes) + i + SIZE_LEVEL_WALL_LAYER,
-	begin(p_bytes) + i + 2 * SIZE_LEVEL_WALL_LAYER) };
-
-		m_levels.push_back(skc::Level(l_brown_layer, l_white_layer));
-	}
-
+	m_levels = std::vector<skc::Level>(LEVEL_COUNT, skc::Level());
 	std::vector<size_t> l_item_offsets, l_enemy_offsets;
 	for (std::size_t i{ 0 }; i < LEVEL_COUNT; ++i) {
 		std::size_t l_item_offset = p_bytes.at(OFFSET_ITEM_TABLE_HI + i) * 256 +
@@ -44,8 +33,9 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const std::vector<byt
 	}
 
 	for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
-		byte l_pos = p_bytes.at(l_item_offsets.at(i) + 7);
-		m_levels.at(i).set_player_start_pos(l_pos % 16, l_pos / 16 - 1);
+		m_levels.at(i).load_block_data(p_bytes, OFFSET_WALLS + i * SIZE_LEVEL_WALLS);
+		m_levels.at(i).load_item_data(p_bytes, l_item_offsets.at(i));
+		m_levels.at(i).load_enemy_data(p_bytes, l_enemy_offsets.at(i));
 	}
 }
 
