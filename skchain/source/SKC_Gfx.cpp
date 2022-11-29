@@ -52,14 +52,21 @@ SDL_Surface* skc::SKC_Gfx::create_nes_sdl_surface(int p_w, int p_h) const {
 
 void skc::SKC_Gfx::draw_tile_on_surface(SDL_Surface* p_surface,
 	std::size_t p_tile_no, std::size_t p_palette_no,
-	int p_x, int p_y) const {
+	int p_x, int p_y, bool p_skip_transp, bool p_global_transp) const {
 
 	for (int j{ 0 }; j < 8; ++j)
-		for (int i{ 0 }; i < 8; ++i)
-			klib::gfx::put_pixel(p_surface, p_x + i, p_y + j,
-				m_palettes.at(p_palette_no).get_nes_palette_index(
-					m_tiles.at(p_tile_no).get_palette_index(i, j))
-			);
+		for (int i{ 0 }; i < 8; ++i) {
+			byte l_pal_index = m_tiles.at(p_tile_no).get_palette_index(i, j);
+			bool l_transp = (l_pal_index == 0);
+
+			if (!l_transp || !p_skip_transp) {
+				klib::gfx::put_pixel(p_surface, p_x + i, p_y + j,
+					l_transp && p_global_transp ?
+					klib::NES_Palette::get_transparent_index() :
+					m_palettes.at(p_palette_no).get_nes_palette_index(l_pal_index)
+				);
+			}
+		}
 }
 
 SDL_Color skc::SKC_Gfx::nes_color_to_sdl(const klib::NES_Color& p_col) {
@@ -91,6 +98,7 @@ void skc::SKC_Gfx::load_metadata(void) {
 		auto l_values = klib::util::string_split<int>(
 			n_tile.attribute(skc::c::XML_ATTR_NES_TILES).as_string(), ',');
 		int l_w = n_tile.attribute(skc::c::XML_ATTR_W).as_int();
+		bool l_transparent = n_tile.attribute(c::XML_ATTR_TRANSPARENT).as_bool();
 
 		// if w is not given, determine the value automatically
 		// if the tile consists of 4 nes tiles, we assume 2x2 tile,
@@ -104,7 +112,7 @@ void skc::SKC_Gfx::load_metadata(void) {
 		int l_h = static_cast<int>(l_values.size()) / l_w;
 		std::size_t l_palette_no = n_tile.attribute(skc::c::XML_ATTR_PALETTE_NO).as_int();
 
-		SKC_Tile_definition l_definition(l_w, l_h);
+		SKC_Tile_definition l_definition(l_w, l_h, l_transparent);
 		for (std::size_t i{ 0 }; i < l_values.size(); ++i) {
 			std::size_t l_x = i % l_w;
 			std::size_t l_y = i / l_w;
@@ -127,8 +135,13 @@ void skc::SKC_Gfx::generate_tile_textures(SDL_Renderer* p_rnd) {
 				draw_tile_on_surface(l_srf,
 					l_meta.get_nes_tile_no(i, j),
 					l_meta.get_palette_no(i, j),
-					8 * i, 8 * j);
+					8 * i, 8 * j, false, l_meta.is_transparent());
 			}
+
+		if (l_meta.is_transparent()) {
+			SDL_Color l_trans_rgb = nes_color_to_sdl(klib::NES_Palette::get_transparent_color());
+			SDL_SetColorKey(l_srf, true, SDL_MapRGB(l_srf->format, l_trans_rgb.r, l_trans_rgb.g, l_trans_rgb.b));
+		}
 
 		m_tile_gfx.push_back(klib::gfx::surface_to_texture(p_rnd, l_srf));
 	}

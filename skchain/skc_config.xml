@@ -17,7 +17,7 @@
 	  <tile no="0" palette_no="2" nes_tiles="300,301,302,303" />
 	  <tile no="1" palette_no="2" nes_tiles="400,401,402,403" />
 	  <tile no="2" palette_no="1" nes_tiles="388,389,390,391" />
-	  <tile no="3" palette_no="0" nes_tiles="0,2,1,3" />
+	  <tile no="3" palette_no="0" nes_tiles="0,2,1,3" transparent="true" />
 	</tile_definitions>
 	
   </gfx_metadata>

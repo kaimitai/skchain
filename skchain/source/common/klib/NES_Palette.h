@@ -25,6 +25,8 @@ namespace klib {
 
 		static NES_Color get_nes_color(std::size_t p_color_no);
 		static std::size_t get_nes_color_count(void);
+		static NES_Color get_transparent_color(void);
+		static byte get_transparent_index(void);
 	};
 
 }

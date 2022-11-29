@@ -16,7 +16,7 @@ namespace skc {
 		SDL_Surface* create_nes_sdl_surface(int p_w, int p_h) const;
 		void draw_tile_on_surface(SDL_Surface* p_surface,
 			std::size_t p_tile_no, std::size_t p_palette_no,
-			int p_x, int p_y) const;
+			int p_x, int p_y, bool p_skip_transp = false, bool p_global_transp = false) const;
 
 		std::vector<klib::NES_Gfx_tile> m_tiles;
 		std::vector<skc::SKC_Tile_definition> m_tile_definitions;
