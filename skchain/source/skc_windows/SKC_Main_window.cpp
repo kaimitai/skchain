@@ -107,18 +107,27 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd) {
 	std::map<byte, std::size_t> m_item_tiles{
 		{0x04, 6}, {0x33,7}, {0x18, 8}, {0x2b, 9},
 		{0x08, 10}, {0x0c, 11}, {0x15, 12}, {0x16, 13},
-		{0x13, 14}, {0x14, 15}, {0x22, 16}
+		{0x13, 14}, {0x14, 15}, {0x22, 16}, {0x1b, 17}, {0x0b, 18},
+		{0x27, 19}, {0x2a, 20}, {0x2c, 20}, {0x2d, 20}, {0x25, 21}, {0x28, 22},
+		{0x12, 23}, {0x19, 24},
+		{0x1c, 25}, {0x1d, 26}, {0x1e, 27}, {0x1f, 28},
+		{0x20, 29}, {0x21, 30}, {0x2f, 31},
+		{0x0e, 33}, {0x17, 33},
+		{0x26, 34}, {0x29, 35},
+		{0x2e, 36}, {0x11, 37}, {0x30, 38}, {0x31, 30}, {0x32, 39}
 	};
 
 	// draw items
 	const auto& l_items = m_levels.at(m_current_level).get_elements();
 	for (const auto& item : l_items) {
 		byte l_no = item.get_item_no();
-		if (item.get_element_type() == skc::Element_type::Item &&
-			m_item_tiles.find(l_no) != end(m_item_tiles)) {
+		if (item.get_element_type() == skc::Element_type::Item) {
 			auto l_pos = item.get_position();
+			auto l_iter = m_item_tiles.find(l_no);
+			bool l_found = (l_iter != end(m_item_tiles));
+
 			klib::gfx::blit_scale(p_rnd,
-				m_gfx.get_tile_gfx(m_item_tiles.at(l_no)),
+				m_gfx.get_tile_gfx(l_found ? l_iter->second : 32),
 				20 + l_pos.first * TILE_SIZE_VISUAL,
 				20 + l_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 		}

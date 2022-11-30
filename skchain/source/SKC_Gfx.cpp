@@ -47,11 +47,6 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 		draw_tile_on_surface(l_srf, i + 2, l_pal_nox, l_x * 16, l_y * 16 + 8);
 		draw_tile_on_surface(l_srf, i + 3, l_pal_nox, l_x * 16 + 8, l_y * 16 + 8);
 	}
-	/*
-	for (int j{ 0 }; j < 32; ++j)
-		for (int i{ 0 }; i < 64; ++i) {
-			draw_tile_on_surface(l_srf, j * 64 + i, 1, i * 8, j * 8);
-		}
 
 	SDL_SaveBMP(l_srf, "tilemap.bmp");
 	*/
