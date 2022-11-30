@@ -91,13 +91,29 @@
 	  <tile no="38" palette_no="3" nes_tiles="272,275,281,396" />
       <!-- magic lamp -->
 	  <tile no="39" palette_no="3" nes_tiles="276,285,286,287" />
+	  
+	  <!-- monsters -->
+	  <!-- golem/mage -->
+	  <tile no="40" palette_no="7" nes_tiles="84,86,85,87" transparent="true" />
+	  <!-- dragon -->
+	  <tile no="41" palette_no="7" nes_tiles="72,74,73,75" transparent="true" />
+	   <!-- fairy -->
+	  <tile no="42" palette_no="4" nes_tiles="200,202,201,203" transparent="true" />
+	  <!-- ghost/wyvern -->
+	  <tile no="43" palette_no="6" nes_tiles="148,150,149,151" transparent="true" />
+	  <!-- fireball -->
+	  <tile no="44" palette_no="6" nes_tiles="60,62,61,63" transparent="true" />
+	  <!-- panel monster -->
+	  <tile no="45" palette_no="6" nes_tiles="64,66,65,67" transparent="true" />
+	  <!-- gargoyle -->
+	  <tile no="46" palette_no="6" nes_tiles="104,106,105,107" transparent="true" />
+	  <!-- flames (white/red) -->
+	  <tile no="47" palette_no="6" nes_tiles="212,214,213,215" transparent="true" />
+	  <tile no="48" palette_no="7" nes_tiles="212,214,213,215" transparent="true" />
+	  <!-- fairy princess -->
+	  <tile no="48" palette_no="7" nes_tiles="216,202,217,203" transparent="true" />
   
 	</tile_definitions>
-	
-	<temp>
-	  <!-- golem -->
-	  <tile no="x" palette_no="7" nes_tiles="84,86,85,87" transparent="true" />
-	</temp>
 	
   </gfx_metadata>
 
