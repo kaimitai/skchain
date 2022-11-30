@@ -132,17 +132,27 @@
   <!-- gfx metadata - do not edit unless you know what you are doing -->
   <gfx_metadata>
     <palettes>
-      <!-- background palettes 1-4 -->
+      <!-- background palettes red -->
       <palette no="0" offset="0x0ed3" />
       <palette no="1" offset="0x0ed7" />
       <palette no="2" offset="0x0edb" />
       <palette no="3" offset="0x0edf" />
-
-      <!-- sprite palettes 1-4 (dana) -->
+      <!-- sprite palettes -->
       <palette no="4" offset="0x0ee3" />
       <palette no="5" offset="0x0ee7" />
       <palette no="6" offset="0x0eeb" />
       <palette no="7" offset="0x0eef" />
+	  <!-- background palettes cyan -->
+	  <palette no="8" offset="0x1c,0x10,0x30" />
+      <palette no="9" offset="0x1c,0x27,0x30" />
+      <palette no="10" offset="0x0edb" />
+      <palette no="11" offset="0x0edf" />
+      <!-- sprite palettes -->
+      <palette no="12" offset="0x0ee3" />
+      <palette no="13" offset="0x0ee7" />
+      <palette no="14" offset="0x0eeb" />
+      <palette no="15" offset="0x0eef" />
+	  
     </palettes>
 
     <tile_definitions>
@@ -249,6 +259,12 @@
       <tile no="52" palette_no="6" nes_tiles="69:h,71:h,68:h,70:h" transparent="true" />
 
     </tile_definitions>
+	
+	<tilesets>
+	  <tileset palette_offset="0" tile_offset="0" />
+	  <!--tileset palette_offset="0" tile_offset="512" /-->
+	  <!--tileset palette_offset="8" tile_offset="1024" /-->
+	</tilesets>
 
   </gfx_metadata>
 

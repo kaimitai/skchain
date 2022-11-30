@@ -20,6 +20,7 @@ namespace klib {
 
 	public:
 		NES_Palette(const std::vector<unsigned char>& p_palette);
+		NES_Palette(const std::vector<std::size_t>& p_palette);
 		NES_Color get_rgb_color(std::size_t p_color_no) const;
 		byte get_nes_palette_index(std::size_t p_color_no) const;
 

@@ -14,6 +14,8 @@ namespace skc {
 		constexpr char XML_TAG_ITEM_DEFINITIONS[]{ "item_definitions" };
 		constexpr char XML_TAG_ENEMY[]{ "enemy" };
 		constexpr char XML_TAG_TILE_DEFINITIONS[]{ "tile_definitions" };
+		constexpr char XML_TAG_TILESETS[]{ "tilesets" };
+		constexpr char XML_TAG_TILESET[]{ "tileset" };
 		constexpr char XML_TAG_TILE[]{ "tile" };
 
 		constexpr char XML_ATTR_APP_VERSION[]{ "app_version" };
@@ -33,6 +35,8 @@ namespace skc {
 		constexpr char XML_ATTR_OFFSET[]{ "offset" };
 		constexpr char XML_ATTR_PALETTE_NO[]{ "palette_no" };
 		constexpr char XML_ATTR_NES_TILES[]{ "nes_tiles" };
+		constexpr char XML_ATTR_PALETTE_OFFSET[]{ "palette_offset" };
+		constexpr char XML_ATTR_TILE_OFFSET[]{ "tile_offset" };
 
 		// level xml file
 		constexpr char XML_LEVEL_COMMENTS[]{ " Solomon's Key level file created with Solomon's Keychain (https://github.com/kaimitai/skchain) " };

@@ -142,63 +142,78 @@ void skc::SKC_Gfx::load_metadata(const std::vector<byte> p_rom_data) {
 		n_palette;
 		n_palette = n_palette.next_sibling(skc::c::XML_TAG_PALETTE)) {
 
-		std::size_t l_offset = klib::util::string_to_numeric<std::size_t>(
-			n_palette.attribute(skc::c::XML_ATTR_OFFSET).as_string()
+		auto l_pal_data = klib::util::string_split<std::size_t>(
+			n_palette.attribute(skc::c::XML_ATTR_OFFSET).as_string(), ','
 			);
-		m_palettes.push_back(klib::NES_Palette(std::vector<byte>(begin(p_rom_data) + l_offset,
-			begin(p_rom_data) + l_offset + 4)));
+		if (l_pal_data.size() == 1)
+			m_palettes.push_back(klib::NES_Palette(std::vector<byte>(begin(p_rom_data) + l_pal_data[0],
+				begin(p_rom_data) + l_pal_data[0] + 4)));
+		else
+			m_palettes.push_back(klib::NES_Palette(l_pal_data));
 	}
 
-	auto n_tile_defs = n_gfx_meta.child(skc::c::XML_TAG_TILE_DEFINITIONS);
+	// loop over all tilesets, and generate all tiles for each iteration
+	auto n_tilesets = n_gfx_meta.child(c::XML_TAG_TILESETS);
+	for (auto n_tileset = n_tilesets.child(c::XML_TAG_TILESET); n_tileset;
+		n_tileset = n_tileset.next_sibling(c::XML_TAG_TILESET)) {
+		unsigned int l_palette_offset =
+			klib::util::string_to_numeric<unsigned int>(n_tileset.attribute(c::XML_ATTR_PALETTE_OFFSET).as_string());
+		unsigned int l_tile_offset =
+			klib::util::string_to_numeric<unsigned int>(n_tileset.attribute(c::XML_ATTR_TILE_OFFSET).as_string());
 
-	for (auto n_tile = n_tile_defs.child(skc::c::XML_TAG_TILE);
-		n_tile;
-		n_tile = n_tile.next_sibling(skc::c::XML_TAG_TILE)) {
+		auto n_tile_defs = n_gfx_meta.child(skc::c::XML_TAG_TILE_DEFINITIONS);
 
-		auto l_values = klib::util::string_split_strings(
-			n_tile.attribute(skc::c::XML_ATTR_NES_TILES).as_string(), ',');
-		int l_w = n_tile.attribute(skc::c::XML_ATTR_W).as_int();
-		bool l_transparent = n_tile.attribute(c::XML_ATTR_TRANSPARENT).as_bool();
+		for (auto n_tile = n_tile_defs.child(skc::c::XML_TAG_TILE);
+			n_tile;
+			n_tile = n_tile.next_sibling(skc::c::XML_TAG_TILE)) {
 
-		// if w is not given, determine the value automatically
-		// if the tile consists of 4 nes tiles, we assume 2x2 tile,
-		// otherwise we assume a horizontal strip of the given tiles
-		if (l_w == 0) {
-			if (l_values.size() == 4)
-				l_w = 2;
-			else
-				l_w = static_cast<int>(l_values.size());
-		}
-		int l_h = static_cast<int>(l_values.size()) / l_w;
-		std::size_t l_palette_no = n_tile.attribute(skc::c::XML_ATTR_PALETTE_NO).as_int();
+			auto l_values = klib::util::string_split_strings(
+				n_tile.attribute(skc::c::XML_ATTR_NES_TILES).as_string(), ',');
+			int l_w = n_tile.attribute(skc::c::XML_ATTR_W).as_int();
+			bool l_transparent = n_tile.attribute(c::XML_ATTR_TRANSPARENT).as_bool();
 
-		SKC_Tile_definition l_definition(l_w, l_h, l_transparent);
-		for (std::size_t i{ 0 }; i < l_values.size(); ++i) {
-			std::size_t l_x = i % l_w;
-			std::size_t l_y = i / l_w;
-
-			auto l_unpack = klib::util::string_split_strings(l_values.at(i), ':');
-			int l_unpack_tile_no{ klib::util::string_to_numeric<int>(l_unpack.at(0)) };
-			bool l_flip_v{ false }, l_flip_h{ false };
-			if (l_unpack.size() > 1) {
-				char l_flip_instruction{ l_unpack[1].at(0) };
-				if (l_flip_instruction == 'r') {
-					l_flip_v = true;
-					l_flip_h = true;
-				}
-				else if (l_flip_instruction == 'v')
-					l_flip_v = true;
-				else if (l_flip_instruction == 'h')
-					l_flip_h = true;
+			// if w is not given, determine the value automatically
+			// if the tile consists of 4 nes tiles, we assume 2x2 tile,
+			// otherwise we assume a horizontal strip of the given tiles
+			if (l_w == 0) {
+				if (l_values.size() == 4)
+					l_w = 2;
+				else
+					l_w = static_cast<int>(l_values.size());
 			}
+			int l_h = static_cast<int>(l_values.size()) / l_w;
+			std::size_t l_palette_no = n_tile.attribute(skc::c::XML_ATTR_PALETTE_NO).as_int();
 
-			l_definition.add_tile_metadata(
-				SKC_Tile_metadata(l_unpack_tile_no,
-					l_palette_no, l_flip_v, l_flip_h),
-				l_x, l_y);
+			SKC_Tile_definition l_definition(l_w, l_h, l_transparent);
+			for (std::size_t i{ 0 }; i < l_values.size(); ++i) {
+				std::size_t l_x = i % l_w;
+				std::size_t l_y = i / l_w;
+
+				auto l_unpack = klib::util::string_split_strings(l_values.at(i), ':');
+				int l_unpack_tile_no{ klib::util::string_to_numeric<int>(l_unpack.at(0)) };
+				bool l_flip_v{ false }, l_flip_h{ false };
+				if (l_unpack.size() > 1) {
+					char l_flip_instruction{ l_unpack[1].at(0) };
+					if (l_flip_instruction == 'r') {
+						l_flip_v = true;
+						l_flip_h = true;
+					}
+					else if (l_flip_instruction == 'v')
+						l_flip_v = true;
+					else if (l_flip_instruction == 'h')
+						l_flip_h = true;
+				}
+
+				l_definition.add_tile_metadata(
+					SKC_Tile_metadata(l_unpack_tile_no + l_tile_offset,
+						l_palette_no + l_palette_offset, l_flip_v, l_flip_h),
+					l_x, l_y);
+			}
+			m_tile_definitions.push_back(l_definition);
 		}
-		m_tile_definitions.push_back(l_definition);
+
 	}
+
 }
 
 void skc::SKC_Gfx::generate_tile_textures(SDL_Renderer* p_rnd) {
