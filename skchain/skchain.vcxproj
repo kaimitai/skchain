@@ -148,6 +148,7 @@
     <ClInclude Include="source\common\klib\User_input.h" />
     <ClInclude Include="source\common\pugixml\pugiconfig.hpp" />
     <ClInclude Include="source\common\pugixml\pugixml.hpp" />
+    <ClInclude Include="source\SKC_Config.h" />
     <ClInclude Include="source\skc_constants\Constants_application.h" />
     <ClInclude Include="source\skc_constants\Constants_level.h" />
     <ClInclude Include="source\skc_constants\Constants_xml.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="source\common\klib\User_input.cpp" />
     <ClCompile Include="source\common\pugixml\pugixml.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\SKC_Config.cpp" />
     <ClCompile Include="source\SKC_Gfx.cpp" />
     <ClCompile Include="source\SKC_Level.cpp" />
     <ClCompile Include="source\SKC_Tile_metadata.cpp" />

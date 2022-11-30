@@ -3,6 +3,7 @@
 #include "./common/klib/klib_file.h"
 #include "./common/klib/User_input.h"
 #include "./skc_windows/SKC_Main_window.h"
+#include "./SKC_Config.h"
 #include <iostream>
 #include <vector>
 
@@ -52,8 +53,8 @@ int main(int argc, char* args[]) try {
 			// main window object to handle all logic and drawing
 			SP_Config config(argc > 1 ? args[1] : std::string());
 			*/
-			auto l_bytes = klib::file::read_file_as_bytes("Solomon's Key (U) [!].nes");
-			skc::SKC_Main_window main_window(l_rnd, l_bytes);
+			skc::SKC_Config l_config(klib::file::read_file_as_bytes("Solomon's Key (U) [!].nes"));
+			skc::SKC_Main_window main_window(l_rnd, l_config);
 			//main_window.set_application_icon(l_window);
 
 			// input handler

@@ -32,6 +32,9 @@ namespace skc {
 		constexpr byte ITEM_CONSTELLATION_LIBRA{ 0xfa };
 		constexpr byte ITEM_CONSTELLATION_SAGITTARIUS{ 0xfb };
 
+		constexpr unsigned int LEVEL_W{ 16 }, LEVEL_H{ 12 };
+		constexpr unsigned int SIZE_LEVEL_WALL_LAYER{ (LEVEL_W * LEVEL_H) / 8 };
+		constexpr unsigned int SIZE_LEVEL_WALLS{ 2 * SIZE_LEVEL_WALL_LAYER };
 	}
 
 }

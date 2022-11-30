@@ -6,6 +6,7 @@ namespace skc {
 
 		constexpr char XML_TAG_META[]{ "skchain" };
 
+		constexpr char XML_TAG_ROM_METADATA[]{ "rom_metadata" };
 		constexpr char XML_TAG_GFX_METADATA[]{ "gfx_metadata" };
 		constexpr char XML_TAG_PALETTES[]{ "palettes" };
 		constexpr char XML_TAG_PALETTE[]{ "palette" };
@@ -16,6 +17,14 @@ namespace skc {
 		constexpr char XML_TAG_TILE[]{ "tile" };
 
 		constexpr char XML_ATTR_APP_VERSION[]{ "app_version" };
+		constexpr char XML_TAG_OFFSET_GFX[]{ "offset_gfx" };
+		constexpr char XML_TAG_OFFSET_BLOCKS[]{ "offset_block_data" };
+		constexpr char XML_TAG_OFFSET_ENEMIES[]{ "offset_enemy_table" };
+		constexpr char XML_TAG_OFFSET_ITEMS[]{ "offset_item_table" };
+		constexpr char XML_TAG_ROM_RAM_DIFF[]{ "rom_ram_diff" };
+		constexpr char XML_TAG_LEVEL_COUNT[]{ "level_count" };
+		constexpr char XML_TAG_NES_TILE_COUNT[]{ "nes_tile_count" };
+
 		constexpr char XML_ATTR_NO[]{ "no" };
 		constexpr char XML_ATTR_DESCRIPTION[]{ "description" };
 		constexpr char XML_ATTR_ANIMATION[]{ "animation" };

@@ -111,6 +111,9 @@
     <ClInclude Include="source\skc_util\Xml_helper.h">
       <Filter>Header Files\skc_util</Filter>
     </ClInclude>
+    <ClInclude Include="source\SKC_Config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\klib\klib_file.cpp">
@@ -154,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="source\common\klib\klib_util.cpp">
       <Filter>Source Files\common\klib</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SKC_Config.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

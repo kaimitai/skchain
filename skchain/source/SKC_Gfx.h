@@ -7,6 +7,7 @@
 #include "./common/klib/NES_Gfx_tile.h"
 #include "./common/klib/NES_Palette.h"
 #include "SKC_Tile_metadata.h"
+#include "SKC_Config.h"
 
 using byte = unsigned char;
 
@@ -35,8 +36,7 @@ namespace skc {
 		static SDL_Color nes_color_to_sdl(const klib::NES_Color& p_col);
 
 		~SKC_Gfx(void);
-		SKC_Gfx(SDL_Renderer* p_rnd,
-			const std::vector<unsigned char> p_chr_data);
+		SKC_Gfx(SDL_Renderer* p_rnd, const SKC_Config& p_config);
 		SDL_Texture* get_tile_gfx(std::size_t p_gfx_no) const;
 		SDL_Texture* get_enemy_tile(byte p_enemy_no, int frame_no = 0) const;
 		SDL_Texture* get_item_tile(byte p_item_no, int frame_no = 0) const;

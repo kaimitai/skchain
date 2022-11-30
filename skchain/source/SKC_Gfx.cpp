@@ -9,8 +9,6 @@
 
 using byte = unsigned char;
 
-constexpr unsigned int OFFSET_GFX{ 0x8010 };
-
 skc::SKC_Gfx::~SKC_Gfx(void) {
 	for (auto l_texture : m_tile_gfx)
 		if (l_texture != nullptr)
@@ -18,20 +16,22 @@ skc::SKC_Gfx::~SKC_Gfx(void) {
 }
 
 skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
-	const std::vector<byte> p_rom_data) {
+	const SKC_Config& p_config) {
+	const auto& lr_rom_data{ p_config.get_rom_data() };
 
-	constexpr unsigned int NES_GFX_TILE_BYTE_SIZE{ 16 };
+	std::vector<byte> l_chr_data{ std::vector<byte>(begin(lr_rom_data) + p_config.get_offset_gfx(),
+		end(lr_rom_data)) };
 
-	std::vector<byte> l_chr_data{ std::vector<byte>(begin(p_rom_data) + OFFSET_GFX, end(p_rom_data)) };
-
-	for (std::size_t i{ 0 }; i < l_chr_data.size(); i += NES_GFX_TILE_BYTE_SIZE) {
+	for (std::size_t i{ 0 };
+		i < p_config.get_nes_tile_count() * klib::c::NES_GFX_TILE_BYTE_SIZE;
+		i += klib::c::NES_GFX_TILE_BYTE_SIZE) {
 		m_tiles.push_back(klib::NES_Gfx_tile(
 			std::vector<byte>(begin(l_chr_data) + i,
-				begin(l_chr_data) + i + NES_GFX_TILE_BYTE_SIZE))
+				begin(l_chr_data) + i + klib::c::NES_GFX_TILE_BYTE_SIZE))
 		);
 	}
 
-	this->load_metadata(p_rom_data);
+	this->load_metadata(lr_rom_data);
 	this->generate_tile_textures(p_rnd);
 
 	// code for generating tilemap bmp-file

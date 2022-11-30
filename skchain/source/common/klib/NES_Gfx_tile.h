@@ -10,6 +10,7 @@ namespace klib {
 
 	namespace c {
 		constexpr int NES_TILE_W{ 8 };
+		constexpr unsigned int NES_GFX_TILE_BYTE_SIZE{ NES_TILE_W * NES_TILE_W / 4 };
 	}
 
 	class NES_Gfx_tile {

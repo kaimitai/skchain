@@ -1,43 +1,30 @@
 #include "SKC_Main_window.h"
 #include "./../common/klib/klib_gfx.h"
 #include "./../skc_util/Xml_helper.h"
+#include "./../skc_constants/Constants_level.h"
 #include <map>
 #include <vector>
 
-constexpr unsigned int LEVEL_W{ 16 }, LEVEL_H{ 12 }, LEVEL_COUNT{ 53 };
-
-constexpr unsigned int OFFSET_ENEMIES{ 0x5d67 };
-constexpr unsigned int OFFSET_WALLS{ 0x603c };
-constexpr unsigned int OFFSET_GFX{ 0x8010 };
-
-constexpr unsigned int SIZE_LEVEL_WALL_LAYER{ (LEVEL_W * LEVEL_H) / 8 };
-constexpr unsigned int SIZE_LEVEL_WALLS{ 2 * SIZE_LEVEL_WALL_LAYER };
-constexpr unsigned int SIZE_TOTAL_WALLS{ LEVEL_COUNT * SIZE_LEVEL_WALLS };
-
-constexpr size_t OFFSET_ENEMY_TABLE_LO{ 0x5cfc };
-constexpr size_t OFFSET_ENEMY_TABLE_HI{ OFFSET_ENEMY_TABLE_LO + LEVEL_COUNT };
-
-constexpr size_t OFFSET_ITEM_TABLE_LO{ 0x6a2c };
-constexpr size_t OFFSET_ITEM_TABLE_HI{ OFFSET_ITEM_TABLE_LO + LEVEL_COUNT };
-
-skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const std::vector<byte>& p_bytes) :
-	m_gfx{ p_rnd, p_bytes }, m_current_level{ 0 }
+skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_config) :
+	m_gfx{ p_rnd, p_config }, m_current_level{ 0 }
 {
-	m_levels = std::vector<skc::Level>(LEVEL_COUNT, skc::Level());
+	const auto& lr_rom_data{ p_config.get_rom_data() };
+
+	m_levels = std::vector<skc::Level>(p_config.get_level_count(), skc::Level());
 	std::vector<size_t> l_item_offsets, l_enemy_offsets;
-	for (std::size_t i{ 0 }; i < LEVEL_COUNT; ++i) {
-		std::size_t l_item_offset = p_bytes.at(OFFSET_ITEM_TABLE_HI + i) * 256 +
-			p_bytes.at(OFFSET_ITEM_TABLE_LO + i);
-		std::size_t l_enemy_offset = p_bytes.at(OFFSET_ENEMY_TABLE_HI + i) * 256 +
-			p_bytes.at(OFFSET_ENEMY_TABLE_LO + i);
-		l_item_offsets.push_back(l_item_offset - 0x8000 + 0x10);
-		l_enemy_offsets.push_back(l_enemy_offset - 0x8000 + 0x10);
+	for (std::size_t i{ 0 }; i < p_config.get_level_count(); ++i) {
+		std::size_t l_item_offset = lr_rom_data.at(p_config.get_offset_item_table_hi() + i) * 256 +
+			lr_rom_data.at(p_config.get_offset_item_table_lo() + i);
+		std::size_t l_enemy_offset = lr_rom_data.at(p_config.get_offset_enemy_table_hi() + i) * 256 +
+			lr_rom_data.at(p_config.get_offset_enemy_table_lo() + i);
+		l_item_offsets.push_back(p_config.get_rom_address_from_ram(l_item_offset));
+		l_enemy_offsets.push_back(p_config.get_rom_address_from_ram(l_enemy_offset));
 	}
 
 	for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
-		m_levels.at(i).load_block_data(p_bytes, OFFSET_WALLS + i * SIZE_LEVEL_WALLS);
-		m_levels.at(i).load_item_data(p_bytes, l_item_offsets.at(i));
-		m_levels.at(i).load_enemy_data(p_bytes, l_enemy_offsets.at(i));
+		m_levels.at(i).load_block_data(lr_rom_data, p_config.get_offset_block_data() + i * c::SIZE_LEVEL_WALLS);
+		m_levels.at(i).load_item_data(lr_rom_data, l_item_offsets.at(i));
+		m_levels.at(i).load_enemy_data(lr_rom_data, l_enemy_offsets.at(i));
 	}
 
 	// DEBUG
@@ -69,8 +56,8 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd) {
 	constexpr int TILE_SIZE_VISUAL{ 32 };
 
 	// draw background
-	for (int j{ 0 }; j < LEVEL_H; ++j)
-		for (int i{ 0 }; i < LEVEL_W; ++i) {
+	for (int j{ 0 }; j < c::LEVEL_H; ++j)
+		for (int i{ 0 }; i < c::LEVEL_W; ++i) {
 			int l_tile_no{ 0 };
 			auto l_ttype = m_levels.at(m_current_level).get_wall_type(i, j);
 			if (l_ttype == skc::Wall::Brown)
