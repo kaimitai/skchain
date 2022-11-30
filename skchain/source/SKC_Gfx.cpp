@@ -52,6 +52,16 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 	*/
 }
 
+SDL_Texture* skc::SKC_Gfx::get_item_tile(byte p_item_no, int frame_no) const {
+	const auto iter{ m_item_gfx_map.find(p_item_no) };
+	return m_tile_gfx.at(iter == end(m_item_gfx_map) ? 32 : iter->second);
+}
+
+SDL_Texture* skc::SKC_Gfx::get_enemy_tile(byte p_enemy_no, int frame_no) const {
+	const auto iter{ m_sprite_gfx_map.find(p_enemy_no) };
+	return m_tile_gfx.at(iter == end(m_sprite_gfx_map) ? 32 : iter->second);
+}
+
 SDL_Texture* skc::SKC_Gfx::get_tile_gfx(std::size_t p_gfx_no) const {
 	return m_tile_gfx.at(p_gfx_no);
 }
@@ -71,11 +81,13 @@ SDL_Surface* skc::SKC_Gfx::create_nes_sdl_surface(int p_w, int p_h) const {
 
 void skc::SKC_Gfx::draw_tile_on_surface(SDL_Surface* p_surface,
 	std::size_t p_tile_no, std::size_t p_palette_no,
-	int p_x, int p_y, bool p_skip_transp, bool p_global_transp) const {
+	int p_x, int p_y,
+	bool p_flip_v, bool p_flip_h,
+	bool p_skip_transp, bool p_global_transp) const {
 
 	for (int j{ 0 }; j < 8; ++j)
 		for (int i{ 0 }; i < 8; ++i) {
-			byte l_pal_index = m_tiles.at(p_tile_no).get_palette_index(i, j);
+			byte l_pal_index = m_tiles.at(p_tile_no).get_palette_index(i, j, p_flip_v, p_flip_h);
 			bool l_transp = (l_pal_index == 0);
 
 			if (!l_transp || !p_skip_transp) {
@@ -98,6 +110,31 @@ void skc::SKC_Gfx::load_metadata(const std::vector<byte> p_rom_data) {
 		throw std::runtime_error("Could not load configuration xml");
 
 	auto n_meta = doc.child(skc::c::XML_TAG_META);
+
+	auto n_enemy_defs = n_meta.child(c::XML_TAG_ENEMY_DEFINITIONS);
+	for (auto n_enemy = n_enemy_defs.child(c::XML_TAG_ENEMY);
+		n_enemy;
+		n_enemy = n_enemy.next_sibling(c::XML_TAG_ENEMY)) {
+		byte l_index{ klib::util::string_to_numeric<byte>(n_enemy.attribute(c::XML_ATTR_NO).as_string()) };
+		auto l_animation{ klib::util::string_split<std::size_t>(
+			n_enemy.attribute(c::XML_ATTR_ANIMATION).as_string(),
+			',') };
+
+		m_sprite_gfx_map.insert(std::make_pair(l_index, l_animation.at(0)));
+	}
+
+	auto n_item_defs = n_meta.child(c::XML_TAG_ITEM_DEFINITIONS);
+	for (auto n_item = n_item_defs.child(c::XML_TAG_ITEM);
+		n_item;
+		n_item = n_item.next_sibling(c::XML_TAG_ITEM)) {
+		byte l_index{ klib::util::string_to_numeric<byte>(n_item.attribute(c::XML_ATTR_NO).as_string()) };
+		auto l_animation{ klib::util::string_split<std::size_t>(
+			n_item.attribute(c::XML_ATTR_ANIMATION).as_string(),
+			',') };
+
+		m_item_gfx_map.insert(std::make_pair(l_index, l_animation.at(0)));
+	}
+
 	auto n_gfx_meta = n_meta.child(skc::c::XML_TAG_GFX_METADATA);
 	auto n_palettes = n_gfx_meta.child(skc::c::XML_TAG_PALETTES);
 
@@ -118,7 +155,7 @@ void skc::SKC_Gfx::load_metadata(const std::vector<byte> p_rom_data) {
 		n_tile;
 		n_tile = n_tile.next_sibling(skc::c::XML_TAG_TILE)) {
 
-		auto l_values = klib::util::string_split<int>(
+		auto l_values = klib::util::string_split_strings(
 			n_tile.attribute(skc::c::XML_ATTR_NES_TILES).as_string(), ',');
 		int l_w = n_tile.attribute(skc::c::XML_ATTR_W).as_int();
 		bool l_transparent = n_tile.attribute(c::XML_ATTR_TRANSPARENT).as_bool();
@@ -139,9 +176,25 @@ void skc::SKC_Gfx::load_metadata(const std::vector<byte> p_rom_data) {
 		for (std::size_t i{ 0 }; i < l_values.size(); ++i) {
 			std::size_t l_x = i % l_w;
 			std::size_t l_y = i / l_w;
+
+			auto l_unpack = klib::util::string_split_strings(l_values.at(i), ':');
+			int l_unpack_tile_no{ klib::util::string_to_numeric<int>(l_unpack.at(0)) };
+			bool l_flip_v{ false }, l_flip_h{ false };
+			if (l_unpack.size() > 1) {
+				char l_flip_instruction{ l_unpack[1].at(0) };
+				if (l_flip_instruction == 'r') {
+					l_flip_v = true;
+					l_flip_h = true;
+				}
+				else if (l_flip_instruction == 'v')
+					l_flip_v = true;
+				else if (l_flip_instruction == 'h')
+					l_flip_h = true;
+			}
+
 			l_definition.add_tile_metadata(
-				SKC_Tile_metadata(l_values.at(i),
-					l_palette_no),
+				SKC_Tile_metadata(l_unpack_tile_no,
+					l_palette_no, l_flip_v, l_flip_h),
 				l_x, l_y);
 		}
 		m_tile_definitions.push_back(l_definition);
@@ -158,7 +211,10 @@ void skc::SKC_Gfx::generate_tile_textures(SDL_Renderer* p_rnd) {
 				draw_tile_on_surface(l_srf,
 					l_meta.get_nes_tile_no(i, j),
 					l_meta.get_palette_no(i, j),
-					8 * i, 8 * j, false, l_meta.is_transparent());
+					8 * i, 8 * j,
+					l_meta.is_flip_v(i, j),
+					l_meta.is_flip_h(i, j),
+					false, l_meta.is_transparent());
 			}
 
 		if (l_meta.is_transparent()) {

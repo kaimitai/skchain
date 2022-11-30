@@ -160,6 +160,7 @@
   <ItemGroup>
     <ClCompile Include="source\common\klib\klib_file.cpp" />
     <ClCompile Include="source\common\klib\klib_gfx.cpp" />
+    <ClCompile Include="source\common\klib\klib_util.cpp" />
     <ClCompile Include="source\common\klib\NES_Gfx_tile.cpp" />
     <ClCompile Include="source\common\klib\NES_Palette.cpp" />
     <ClCompile Include="source\common\klib\Timer.cpp" />

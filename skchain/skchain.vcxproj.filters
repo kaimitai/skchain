@@ -152,5 +152,8 @@
     <ClCompile Include="source\skc_util\Xml_helper.cpp">
       <Filter>Source Files\skc_util</Filter>
     </ClCompile>
+    <ClCompile Include="source\common\klib\klib_util.cpp">
+      <Filter>Source Files\common\klib</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

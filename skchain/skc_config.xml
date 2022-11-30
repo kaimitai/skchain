@@ -2,6 +2,130 @@
 <!-- Configuration file for Solomon's Keychain (https://github.com/kaimitai/skchain) -->
 <skchain app_version="0.1">
 
+	<!-- each enemy mapped from byte value (0-255) to description and tile graphics indexes -->
+	<enemy_definitions>
+	  <enemy no="0x1c" description="Fairy" animation="42" />
+	  <enemy no="0x1d" description="Fairy Princess" animation="49" />
+	
+	  <enemy no="0x24" description="Panel Monster (right)" animation="50" />
+	  <enemy no="0x25" description="Panel Monster (left)" animation="45" />
+	  <enemy no="0x26" description="Panel Monster (up)" animation="51" />
+	  <enemy no="0x27" description="Panel Monster (down)" animation="52" />
+	
+	  <enemy no="0x20" description="Fireball" animation="44" />
+	  <enemy no="0x21" description="Fireball" animation="44" />
+	  <enemy no="0x22" description="Fireball" animation="44" />
+	  <enemy no="0x23" description="Fireball" animation="44" />
+	  
+	  <enemy no="0x30" description="Ghost" animation="43" />
+	  <enemy no="0x31" description="Ghost" animation="43" />
+	  <enemy no="0x32" description="Ghost" animation="43" />
+	  <enemy no="0x33" description="Ghost" animation="43" />
+	  <enemy no="0x34" description="Ghost" animation="43" />
+	  <enemy no="0x35" description="Ghost" animation="43" />
+	  <enemy no="0x36" description="Ghost" animation="43" />
+	  <enemy no="0x37" description="Ghost" animation="43" />
+	  <enemy no="0x38" description="Ghost" animation="43" />
+	  <enemy no="0x39" description="Ghost" animation="43" />
+	  <enemy no="0x3a" description="Ghost" animation="43" />
+	  <enemy no="0x3b" description="Ghost" animation="43" />
+	  <enemy no="0x3c" description="Ghost" animation="43" />
+	  <enemy no="0x3d" description="Ghost" animation="43" />
+	  <enemy no="0x3e" description="Ghost" animation="43" />
+	  <enemy no="0x3f" description="Ghost" animation="43" />
+	  <enemy no="0x40" description="Ghost" animation="43" />
+	  <enemy no="0x41" description="Ghost" animation="43" />
+	  <enemy no="0x42" description="Ghost" animation="43" />
+	  <enemy no="0x43" description="Ghost" animation="43" />
+	  <enemy no="0x44" description="Ghost" animation="43" />
+	  <enemy no="0x45" description="Ghost" animation="43" />
+	  <enemy no="0x46" description="Ghost" animation="43" />
+	  <enemy no="0x47" description="Ghost" animation="43" />
+	  <enemy no="0x48" description="Ghost" animation="43" />
+	  <enemy no="0x49" description="Ghost" animation="43" />
+	  <enemy no="0x4a" description="Ghost" animation="43" />
+	  <enemy no="0x4b" description="Ghost" animation="43" />
+	  <enemy no="0x4c" description="Ghost" animation="43" />
+	  <enemy no="0x4d" description="Ghost" animation="43" />
+	  <enemy no="0x4e" description="Ghost" animation="43" />
+	  <enemy no="0x4f" description="Ghost" animation="43" />
+	
+	  <enemy no="0x28" description="Fireball" animation="44" />
+	  <enemy no="0x29" description="Fireball" animation="44" />
+	  <enemy no="0x2a" description="Fireball" animation="44" />
+	  <enemy no="0x2b" description="Fireball" animation="44" />
+	  <enemy no="0x2c" description="Fireball" animation="44" />
+	  <enemy no="0x2d" description="Fireball" animation="44" />
+	  <enemy no="0x2e" description="Fireball" animation="44" />
+	  <enemy no="0x2f" description="Fireball" animation="44" />
+	
+	  <enemy no="0x68" description="Dragon" animation="41" />
+	  <enemy no="0x69" description="Dragon" animation="41" />
+	  <enemy no="0x6d" description="Dragon" animation="41" />
+	
+	  <enemy no="0x70" description="Golem" animation="40" />
+	  <enemy no="0x71" description="Golem" animation="40" />
+	  <enemy no="0x72" description="Golem" animation="40" />
+	  <enemy no="0x73" description="Golem" animation="40" />
+	  <enemy no="0x74" description="Golem" animation="40" />
+	  <enemy no="0x75" description="Golem" animation="40" />
+	
+	  <enemy no="0x7d" description="Gargoyle" animation="46" />
+	  <enemy no="0x78" description="Gargoyle" animation="46" />
+	  <enemy no="0x79" description="Gargoyle" animation="46" />
+	
+	  <enemy no="0x80" description="Red Flame" animation="48" />
+	  <enemy no="0x81" description="White Flame" animation="47" />
+	</enemy_definitions>
+	
+	<!-- each enemy mapped from byte value (0-63) to description and tile graphics indexes  the higher bits determine properties "hidden" and "in block" -->
+	<item_definitions>
+	  <item no="0x04" description="Bat Symbol" animation="6" />
+	  <item no="0x08" description="Blue Diamond" animation="10" />
+	  <item no="0x0c" description="Orange Diamond" animation="11" />
+	  <item no="0x15" description="Firejar (orange)" animation="12" />
+	  <item no="0x16" description="Firejar (blue)" animation="13" />
+	  <item no="0x18" description="Bell" animation="8" />
+	  <item no="0x2b" description="Star Coin" animation="9" />
+	  <item no="0x33" description="E-bottle" animation="7" />
+	  
+	  <item no="0x13" description="Hourglass (blue)" animation="14" />
+	  <item no="0x14" description="Hourglass (orange)" animation="15" />
+	  <item no="0x22" description="Warp Item" animation="16" />
+	  <item no="0x1b" description="Jewels (blue)" animation="17" />
+	  <item no="0x0b" description="Jewels (orange)" animation="18" />
+	  
+	  <item no="0x27" description="Opal (blue)" animation="19" />
+	  <item no="0x2a" description="Opal (orange)" animation="20" />
+	  <item no="0x2c" description="Opal (orange)" animation="20" />
+	  <item no="0x2d" description="Opal (orange)" animation="20" />
+	  <item no="0x25" description="Coin (silver)" animation="21" />
+	  <item no="0x28" description="Coin (gold)" animation="22" />
+	  
+	  <item no="0x12" description="Timebottle (full)" animation="23" />
+	  <item no="0x19" description="Explosion Jar" animation="24" />
+	  <item no="0x1c" description="Shrine #1" animation="25" />
+	  <item no="0x1d" description="Shrine #2" animation="26" />
+	  <item no="0x1e" description="Shrine #3" animation="27" />
+	  <item no="0x1f" description="Shrine #4" animation="28" />
+	  
+	  <item no="0x20" description="Solomon's Seal" animation="29" />
+	  <item no="0x21" description="Egyptian Head" animation="30" />
+	  <item no="0x2f" description="Demonhead Coin" animation="31" />
+	  <item no="0x0e" description="Scroll" animation="33" />
+	  <item no="0x17" description="Scroll" animation="33" />
+	  
+	  <item no="0x26" description="Double Coin (silver)" animation="34" />
+	  <item no="0x29" description="Double Coin (gold)" animation="35" />
+	  <item no="0x2e" description="Origami Swan" animation="36" />
+	  <item no="0x11" description="Timebottle (half)" animation="37" />
+	  
+	  <item no="0x30" description="Sphinx" animation="38" />
+	  <item no="0x31" description="Egyptian Head" animation="30" />
+	  <item no="0x32" description="Magic Lamp" animation="39" />
+	  
+	</item_definitions>
+	
 <!-- gfx metadata - do not edit unless you know what you are doing -->
   <gfx_metadata>
     <palettes>
@@ -84,8 +208,8 @@
 	  
 	  <!-- origami swan TODO -->
 	  <tile no="36" palette_no="3" nes_tiles="424,425,330,330" />
-	  <!-- half bottle TODO -->
-	  <tile no="37" palette_no="0" nes_tiles="356,356,334,335" />
+	  <!-- half bottle -->
+	  <tile no="37" palette_no="0" nes_tiles="356,356:v,334,335" />
 	  
 	  <!-- sphinx -->
 	  <tile no="38" palette_no="3" nes_tiles="272,275,281,396" />
@@ -111,7 +235,14 @@
 	  <tile no="47" palette_no="6" nes_tiles="212,214,213,215" transparent="true" />
 	  <tile no="48" palette_no="7" nes_tiles="212,214,213,215" transparent="true" />
 	  <!-- fairy princess -->
-	  <tile no="48" palette_no="7" nes_tiles="216,202,217,203" transparent="true" />
+	  <tile no="49" palette_no="7" nes_tiles="216,202,217,203" transparent="true" />
+  
+      <!-- panel monster right -->
+	  <tile no="50" palette_no="6" nes_tiles="66:v,64:v,67:v,65:v" transparent="true" />
+	  <!-- panel monster up -->
+	  <tile no="51" palette_no="6" nes_tiles="68,70,69,71" transparent="true" />
+	  <!-- panel monster down -->
+	  <tile no="52" palette_no="6" nes_tiles="69:h,71:h,68:h,70:h" transparent="true" />
   
 	</tile_definitions>
 	

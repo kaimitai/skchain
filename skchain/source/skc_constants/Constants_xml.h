@@ -9,11 +9,16 @@ namespace skc {
 		constexpr char XML_TAG_GFX_METADATA[]{ "gfx_metadata" };
 		constexpr char XML_TAG_PALETTES[]{ "palettes" };
 		constexpr char XML_TAG_PALETTE[]{ "palette" };
+		constexpr char XML_TAG_ENEMY_DEFINITIONS[]{ "enemy_definitions" };
+		constexpr char XML_TAG_ITEM_DEFINITIONS[]{ "item_definitions" };
+		constexpr char XML_TAG_ENEMY[]{ "enemy" };
 		constexpr char XML_TAG_TILE_DEFINITIONS[]{ "tile_definitions" };
 		constexpr char XML_TAG_TILE[]{ "tile" };
 
 		constexpr char XML_ATTR_APP_VERSION[]{ "app_version" };
 		constexpr char XML_ATTR_NO[]{ "no" };
+		constexpr char XML_ATTR_DESCRIPTION[]{ "description" };
+		constexpr char XML_ATTR_ANIMATION[]{ "animation" };
 		constexpr char XML_ATTR_W[]{ "w" };
 		constexpr char XML_ATTR_TRANSPARENT[]{ "transparent" };
 		constexpr char XML_ATTR_OFFSET[]{ "offset" };
@@ -30,7 +35,6 @@ namespace skc {
 		constexpr char XML_TAG_ITEMS[]{ "items" };
 		constexpr char XML_TAG_ITEM[]{ "item" };
 		constexpr char XML_TAG_ENEMIES[]{ "enemies" };
-		constexpr char XML_TAG_ENEMY[]{ "enemy" };
 
 		constexpr char XML_ATTR_KEY_STATUS[]{ "key_status" };
 		constexpr char XML_ATTR_KEY_POSITION[]{ "key_position" };

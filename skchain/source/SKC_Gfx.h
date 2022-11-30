@@ -2,6 +2,7 @@
 #define SKC_GFX_H
 
 #include <SDL.h>
+#include <map>
 #include <vector>
 #include "./common/klib/NES_Gfx_tile.h"
 #include "./common/klib/NES_Palette.h"
@@ -16,12 +17,16 @@ namespace skc {
 		SDL_Surface* create_nes_sdl_surface(int p_w, int p_h) const;
 		void draw_tile_on_surface(SDL_Surface* p_surface,
 			std::size_t p_tile_no, std::size_t p_palette_no,
-			int p_x, int p_y, bool p_skip_transp = false, bool p_global_transp = false) const;
+			int p_x, int p_y,
+			bool p_flip_v = false, bool p_flip_h = false,
+			bool p_skip_transp = false, bool p_global_transp = false) const;
 
 		std::vector<klib::NES_Gfx_tile> m_tiles;
 		std::vector<skc::SKC_Tile_definition> m_tile_definitions;
 		std::vector<SDL_Texture*> m_tile_gfx;
 		std::vector<klib::NES_Palette> m_palettes;
+
+		std::map<byte, std::size_t> m_sprite_gfx_map, m_item_gfx_map;
 
 		void load_metadata(const std::vector<byte> p_rom_data);
 		void generate_tile_textures(SDL_Renderer* p_rnd);
@@ -33,6 +38,8 @@ namespace skc {
 		SKC_Gfx(SDL_Renderer* p_rnd,
 			const std::vector<unsigned char> p_chr_data);
 		SDL_Texture* get_tile_gfx(std::size_t p_gfx_no) const;
+		SDL_Texture* get_enemy_tile(byte p_enemy_no, int frame_no = 0) const;
+		SDL_Texture* get_item_tile(byte p_item_no, int frame_no = 0) const;
 	};
 }
 

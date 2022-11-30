@@ -18,6 +18,10 @@ klib::NES_Gfx_tile::NES_Gfx_tile(const std::vector<byte>& p_bytes) {
 	}
 }
 
-byte klib::NES_Gfx_tile::get_palette_index(int p_x, int p_y) const {
-	return m_pixels.at(p_y).at(p_x);
+byte klib::NES_Gfx_tile::get_palette_index(int p_x, int p_y,
+	bool p_flip_v,
+	bool p_flip_h) const {
+	return m_pixels.at(
+		p_flip_h ? c::NES_TILE_W - 1 - p_y : p_y).at(
+			p_flip_v ? c::NES_TILE_W - 1 - p_x : p_x);
 }

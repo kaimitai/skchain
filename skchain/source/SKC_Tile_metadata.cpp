@@ -1,8 +1,10 @@
 #include "SKC_Tile_metadata.h"
 
-skc::SKC_Tile_metadata::SKC_Tile_metadata(std::size_t p_tile_no, std::size_t p_palette_no) :
+skc::SKC_Tile_metadata::SKC_Tile_metadata(std::size_t p_tile_no, std::size_t p_palette_no,
+	bool p_flip_v, bool p_flip_h) :
 	m_tile_no{ p_tile_no },
-	m_palette_no{ p_palette_no }
+	m_palette_no{ p_palette_no },
+	m_flip_v{ p_flip_v }, m_flip_h{ p_flip_h }
 {}
 
 skc::SKC_Tile_definition::SKC_Tile_definition(int p_w, int p_h, bool p_transparent) :
@@ -27,6 +29,14 @@ int skc::SKC_Tile_definition::get_h(void) const {
 
 bool skc::SKC_Tile_definition::is_transparent(void) const {
 	return m_transparent;
+}
+
+bool skc::SKC_Tile_definition::is_flip_v(int p_x, int p_y) const {
+	return m_tile_metadata.at(p_y).at(p_x).m_flip_v;
+}
+
+bool skc::SKC_Tile_definition::is_flip_h(int p_x, int p_y) const {
+	return m_tile_metadata.at(p_y).at(p_x).m_flip_h;
 }
 
 std::size_t skc::SKC_Tile_definition::get_nes_tile_no(int p_x, int p_y) const {

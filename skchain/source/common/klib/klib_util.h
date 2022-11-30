@@ -34,6 +34,8 @@ namespace klib {
 				return atoi(p_value.c_str());
 		}
 
+		std::vector<std::string> string_split_strings(const std::string& p_values, char p_delimeter);
+
 		template <class T>
 		std::vector<T> string_split(const std::string& p_values, char p_delimeter) {
 			std::vector<T> result;

@@ -104,51 +104,19 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd) {
 			20 + l_key_pos.first * TILE_SIZE_VISUAL,
 			20 + l_key_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 
-	static std::map<byte, std::size_t> m_item_tiles{
-		{0x04, 6}, {0x33,7}, {0x18, 8}, {0x2b, 9},
-		{0x08, 10}, {0x0c, 11}, {0x15, 12}, {0x16, 13},
-		{0x13, 14}, {0x14, 15}, {0x22, 16}, {0x1b, 17}, {0x0b, 18},
-		{0x27, 19}, {0x2a, 20}, {0x2c, 20}, {0x2d, 20}, {0x25, 21}, {0x28, 22},
-		{0x12, 23}, {0x19, 24},
-		{0x1c, 25}, {0x1d, 26}, {0x1e, 27}, {0x1f, 28},
-		{0x20, 29}, {0x21, 30}, {0x2f, 31},
-		{0x0e, 33}, {0x17, 33},
-		{0x26, 34}, {0x29, 35},
-		{0x2e, 36}, {0x11, 37}, {0x30, 38}, {0x31, 30}, {0x32, 39}
-	};
-
 	// draw items
 	const auto& l_items = m_levels.at(m_current_level).get_elements();
 	for (const auto& item : l_items) {
 		byte l_no = item.get_item_no();
 		if (item.get_element_type() == skc::Element_type::Item) {
 			auto l_pos = item.get_position();
-			auto l_iter = m_item_tiles.find(l_no);
-			bool l_found = (l_iter != end(m_item_tiles));
 
 			klib::gfx::blit_scale(p_rnd,
-				m_gfx.get_tile_gfx(l_found ? l_iter->second : 32),
+				m_gfx.get_item_tile(item.get_item_no()),
 				20 + l_pos.first * TILE_SIZE_VISUAL,
 				20 + l_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 		}
 	}
-
-	static std::map<byte, std::size_t> m_enemy_tiles{
-		{0x70, 40}, {0x71, 40},{0x72, 40},{0x73, 40}, {0x74, 40}, {0x75, 40},
-		{0x68, 41}, {0x6d, 41}, {0x69, 41},
-		{0x1c, 42},
-		{0x30, 43}, {0x31, 43},{0x32, 43},{0x33, 43},{0x34, 43},{0x35, 43},{0x36, 43},
-		{0x37, 43}, {0x38, 43},{0x39, 43},{0x3a, 43},{0x3b, 43},{0x3c, 43},{0x3d, 43},{0x3e, 43},{0x3f, 43},
-		{0x40, 43}, {0x41, 43},{0x42, 43},{0x43, 43},
-		{0x44, 43}, {0x45, 43},{0x46, 43},{0x47, 43},{0x48, 43},{0x49, 43},{0x4a, 43},{0x4b, 43},
-		{0x4c, 43}, {0x4d, 43},{0x4e, 43},{0x4f, 43},
-		{0x20, 44}, {0x21, 44},{0x22, 44},{0x23, 44},
-		{0x24, 45}, {0x25, 45},{0x26, 45},{0x27, 45},
-		{0x28, 44}, {0x29, 44},{0x2a, 44},{0x2b, 44}, {0x2c, 44}, {0x2d, 44},{0x2e, 44},{0x2f, 44},
-		{0x78, 46}, {0x79, 46}, {0x7d, 46},
-		{0x80, 48}, {0x81, 47}, // red and white flames
-		{0x1d, 49} // princess
-	};
 
 	// draw enemies
 	const auto& l_enemies = m_levels.at(m_current_level).get_elements();
@@ -156,11 +124,9 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd) {
 		byte l_no = enemy.get_element_no();
 		if (enemy.get_element_type() == skc::Element_type::Enemy) {
 			auto l_pos = enemy.get_position();
-			auto l_iter = m_enemy_tiles.find(l_no);
-			bool l_found = (l_iter != end(m_enemy_tiles));
 
 			klib::gfx::blit_scale(p_rnd,
-				m_gfx.get_tile_gfx(l_found ? l_iter->second : 32),
+				m_gfx.get_enemy_tile(enemy.get_element_no()),
 				20 + l_pos.first * TILE_SIZE_VISUAL,
 				20 + l_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 		}
