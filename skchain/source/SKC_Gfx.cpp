@@ -61,17 +61,14 @@ SDL_Texture* skc::SKC_Gfx::get_item_tile(byte p_item_no, std::size_t p_tileset_n
 	return m_tile_gfx.at(iter == end(m_item_gfx_map) ? 32 : iter->second + p_tileset_no * m_tileset_tile_count);
 }
 
-SDL_Texture* skc::SKC_Gfx::get_constellation_gfx(byte p_constellation_no, std::size_t p_tileset_no) const {
-	return get_gfx_translated(53 + p_constellation_no, p_tileset_no);
-}
-
 SDL_Texture* skc::SKC_Gfx::get_enemy_tile(byte p_enemy_no, std::size_t p_tileset_no, int frame_no) const {
 	const auto iter{ m_sprite_gfx_map.find(p_enemy_no) };
 	return m_tile_gfx.at(iter == end(m_sprite_gfx_map) ? 32 : iter->second + p_tileset_no * m_tileset_tile_count);
 }
 
-SDL_Texture* skc::SKC_Gfx::get_tile_gfx(std::size_t p_gfx_no, std::size_t p_tileset_no) const {
-	return m_tile_gfx.at(p_gfx_no + p_tileset_no * m_tileset_tile_count);
+SDL_Texture* skc::SKC_Gfx::get_meta_tile(byte p_meta_no, std::size_t p_tileset_no, int p_frame_no) const {
+	const auto iter{ m_meta_gfx_map.find(p_meta_no) };
+	return get_gfx_translated(iter == end(m_meta_gfx_map) ? 32 : iter->second, p_tileset_no);
 }
 
 SDL_Surface* skc::SKC_Gfx::create_nes_sdl_surface(int p_w, int p_h) const {
@@ -118,6 +115,18 @@ void skc::SKC_Gfx::load_metadata(const std::vector<byte> p_rom_data) {
 		throw std::runtime_error("Could not load configuration xml");
 
 	auto n_meta = doc.child(skc::c::XML_TAG_META);
+
+	auto n_meta_defs = n_meta.child(c::XML_TAG_MD_DEFINITIONS);
+	for (auto n_meta = n_meta_defs.child(c::XML_TAG_METADATA);
+		n_meta;
+		n_meta = n_meta.next_sibling(c::XML_TAG_METADATA)) {
+		byte l_index{ klib::util::string_to_numeric<byte>(n_meta.attribute(c::XML_ATTR_NO).as_string()) };
+		auto l_animation{ klib::util::string_split<std::size_t>(
+			n_meta.attribute(c::XML_ATTR_ANIMATION).as_string(),
+			',') };
+
+		m_meta_gfx_map.insert(std::make_pair(l_index, l_animation.at(0)));
+	}
 
 	auto n_enemy_defs = n_meta.child(c::XML_TAG_ENEMY_DEFINITIONS);
 	for (auto n_enemy = n_enemy_defs.child(c::XML_TAG_ENEMY);
@@ -229,14 +238,16 @@ void skc::SKC_Gfx::load_metadata(const std::vector<byte> p_rom_data) {
 void skc::SKC_Gfx::generate_tile_textures(SDL_Renderer* p_rnd) {
 
 	for (const auto& l_meta : m_tile_definitions) {
-		auto l_srf = create_nes_sdl_surface(8 * l_meta.get_w(), 8 * l_meta.get_h());
+		auto l_srf = create_nes_sdl_surface(klib::c::NES_TILE_W * l_meta.get_w(),
+			klib::c::NES_TILE_W * l_meta.get_h());
 
 		for (int j{ 0 }; j < l_meta.get_h(); ++j)
 			for (int i{ 0 }; i < l_meta.get_w(); ++i) {
 				draw_tile_on_surface(l_srf,
 					l_meta.get_nes_tile_no(i, j),
 					l_meta.get_palette_no(i, j),
-					8 * i, 8 * j,
+					klib::c::NES_TILE_W * i,
+					klib::c::NES_TILE_W * j,
 					l_meta.is_flip_v(i, j),
 					l_meta.is_flip_h(i, j),
 					false, l_meta.is_transparent());

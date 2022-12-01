@@ -57,33 +57,46 @@ void skc::SKC_Main_window::move(int p_delta_ms, const klib::User_input& p_input)
 
 void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, const SKC_Config& p_config) {
 	constexpr int TILE_SIZE_VISUAL{ 48 };
+
+	constexpr byte MD_BYTE_NO_KEY{ 0x00 };
+	constexpr byte MD_BYTE_NO_DOOR{ 0x01 };
+	constexpr byte MD_BYTE_NO_PLAYER_START{ 0x02 };
+	constexpr byte MD_BYTE_NO_SPAWN01{ 0x03 };
+	constexpr byte MD_BYTE_NO_SPAWN02{ 0x04 };
+	constexpr byte MD_BYTE_NO_EMPTY_TILE{ 0x05 };
+	constexpr byte MD_BYTE_NO_BLOCK_BROWN{ 0x06 };
+	constexpr byte MD_BYTE_NO_BLOCK_WHITE{ 0x07 };
+	constexpr byte MD_BYTE_NO_PLAYER_BLOCK_BW{ 0x08 };
+
 	std::size_t l_tileset_no{ p_config.get_level_tileset(m_current_level) };
 
 	// draw background
 	for (int j{ 0 }; j < c::LEVEL_H; ++j)
 		for (int i{ 0 }; i < c::LEVEL_W; ++i) {
-			int l_tile_no{ 0 };
+			int l_tile_no{ MD_BYTE_NO_EMPTY_TILE };
 			auto l_ttype = m_levels.at(m_current_level).get_wall_type(i, j);
 			if (l_ttype == skc::Wall::Brown)
-				l_tile_no = 1;
+				l_tile_no = MD_BYTE_NO_BLOCK_BROWN;
 			else if (l_ttype == skc::Wall::White || l_ttype == skc::Wall::Brown_white)
-				l_tile_no = 2;
+				l_tile_no = MD_BYTE_NO_BLOCK_WHITE;
 
-			klib::gfx::blit_scale(p_rnd, m_gfx.get_tile_gfx(l_tile_no, l_tileset_no), 20 + i * TILE_SIZE_VISUAL, 20 + j * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
+			klib::gfx::blit_scale(p_rnd,
+				m_gfx.get_meta_tile(l_tile_no, l_tileset_no),
+				20 + i * TILE_SIZE_VISUAL, 20 + j * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 		}
 
 	// draw door
 	auto l_door_pos = m_levels.at(m_current_level).get_door_pos();
 	if (l_door_pos.second >= 0)
 		klib::gfx::blit_scale(p_rnd,
-			m_gfx.get_tile_gfx(4, l_tileset_no),
+			m_gfx.get_meta_tile(MD_BYTE_NO_DOOR, l_tileset_no),
 			20 + l_door_pos.first * TILE_SIZE_VISUAL,
 			20 + l_door_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 
 	// draw player start
 	auto l_pstart = m_levels.at(m_current_level).get_player_start_pos();
 	klib::gfx::blit_scale(p_rnd,
-		m_gfx.get_tile_gfx(3, l_tileset_no),
+		m_gfx.get_meta_tile(MD_BYTE_NO_PLAYER_START, l_tileset_no),
 		20 + l_pstart.first * TILE_SIZE_VISUAL,
 		20 + l_pstart.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 
@@ -91,7 +104,7 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, const SKC_Config& p_config)
 	auto l_key_pos = m_levels.at(m_current_level).get_key_pos();
 	if (l_key_pos.second >= 0)
 		klib::gfx::blit_scale(p_rnd,
-			m_gfx.get_tile_gfx(5, l_tileset_no),
+			m_gfx.get_meta_tile(MD_BYTE_NO_KEY, l_tileset_no),
 			20 + l_key_pos.first * TILE_SIZE_VISUAL,
 			20 + l_key_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 
@@ -127,8 +140,7 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, const SKC_Config& p_config)
 	if (m_levels.at(m_current_level).has_constellation()) {
 		auto l_pos = m_levels.at(m_current_level).get_constellation_pos();
 		klib::gfx::blit_scale(p_rnd,
-			m_gfx.get_constellation_gfx(m_levels.at(m_current_level).get_constellation_no() % 4,
-				l_tileset_no),
+			m_gfx.get_meta_tile(m_levels.at(m_current_level).get_constellation_no(), l_tileset_no),
 			20 + l_pos.first * TILE_SIZE_VISUAL,
 			20 + l_pos.second * TILE_SIZE_VISUAL, 3 * TILE_SIZE_VISUAL, 2 * TILE_SIZE_VISUAL);
 	}

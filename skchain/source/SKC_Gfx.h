@@ -28,7 +28,7 @@ namespace skc {
 		std::vector<klib::NES_Palette> m_palettes;
 		std::size_t m_tileset_tile_count;
 
-		std::map<byte, std::size_t> m_sprite_gfx_map, m_item_gfx_map;
+		std::map<byte, std::size_t> m_sprite_gfx_map, m_item_gfx_map, m_meta_gfx_map;
 
 		void load_metadata(const std::vector<byte> p_rom_data);
 		void generate_tile_textures(SDL_Renderer* p_rnd);
@@ -40,10 +40,9 @@ namespace skc {
 
 		~SKC_Gfx(void);
 		SKC_Gfx(SDL_Renderer* p_rnd, const SKC_Config& p_config);
-		SDL_Texture* get_tile_gfx(std::size_t p_gfx_no, std::size_t p_tileset_no = 0) const;
+		SDL_Texture* get_meta_tile(byte p_meta_no, std::size_t p_tileset_no = 0, int p_frame_no = 0) const;
 		SDL_Texture* get_enemy_tile(byte p_enemy_no, std::size_t p_tileset_no = 0, int p_frame_no = 0) const;
 		SDL_Texture* get_item_tile(byte p_item_no, std::size_t p_tilset_no = 0, int p_frame_no = 0) const;
-		SDL_Texture* get_constellation_gfx(byte p_constellation_no, std::size_t p_tileset_no = 0) const;
 	};
 }
 
