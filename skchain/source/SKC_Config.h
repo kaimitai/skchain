@@ -24,9 +24,12 @@ namespace skc {
 		std::size_t get_offset_enemy_table_hi(void) const;
 		std::size_t get_offset_item_table_lo(void) const;
 		std::size_t get_offset_item_table_hi(void) const;
+		std::size_t get_offset_enemy_data(void) const;
+		std::size_t get_offset_item_data(void) const;
 		unsigned int get_level_count(void) const;
 		unsigned int get_nes_tile_count(void) const;
 		std::size_t get_rom_address_from_ram(std::size_t p_ram_address) const;
+		std::size_t get_ram_address_from_rom(std::size_t p_rom_address) const;
 		std::size_t get_level_tileset(std::size_t p_level_no) const;
 	};
 

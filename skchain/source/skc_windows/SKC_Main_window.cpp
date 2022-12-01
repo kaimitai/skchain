@@ -1,5 +1,6 @@
 #include "SKC_Main_window.h"
 #include "./../common/klib/klib_gfx.h"
+#include "./../common/klib/klib_file.h"
 #include "./../skc_util/Xml_helper.h"
 #include "./../skc_constants/Constants_level.h"
 #include <map>
@@ -43,6 +44,8 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_c
 	//klib::file::write_bytes_to_file(l_original_item_bytes, "./dat/test-items-original.dat");
 	//klib::file::write_bytes_to_file(l_generated_item_bytes, "./dat/test-items.dat");
 	*/
+
+	// save_nes_file("sk_test.nes", p_config);
 }
 
 void skc::SKC_Main_window::move(int p_delta_ms, const klib::User_input& p_input) {
@@ -129,4 +132,56 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, const SKC_Config& p_config)
 			20 + l_pos.first * TILE_SIZE_VISUAL,
 			20 + l_pos.second * TILE_SIZE_VISUAL, 3 * TILE_SIZE_VISUAL, 2 * TILE_SIZE_VISUAL);
 	}
+}
+
+void skc::SKC_Main_window::save_nes_file(const std::string& p_file_path, const SKC_Config& p_config) const {
+	std::vector<byte> l_output{ p_config.get_rom_data() };
+	std::vector<std::size_t> l_item_offsets, l_enemy_offsets;
+	std::size_t l_item_offset{ 0 }, lenemy_offset{ 0 };
+
+	std::vector<byte> l_item_data, l_enemy_data;
+	for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
+		auto l_data = m_levels[i].get_item_bytes();
+		l_item_data.insert(end(l_item_data), begin(l_data), end(l_data));
+		l_item_offsets.push_back(l_item_offset);
+		l_item_offset += l_data.size();
+
+		l_data = m_levels[i].get_enemy_bytes();
+		l_enemy_data.insert(end(l_enemy_data), begin(l_data), end(l_data));
+		l_enemy_offsets.push_back(lenemy_offset);
+		lenemy_offset += l_data.size();
+	}
+
+	// patch item table
+	for (std::size_t i{ 0 }; i < l_item_offsets.size(); ++i) {
+		std::size_t l_ram_address = p_config.get_ram_address_from_rom(
+			p_config.get_offset_item_data() + l_item_offsets[i]);
+
+		byte l_hi = static_cast<byte>(l_ram_address / 256);
+		byte l_lo = static_cast<byte>(l_ram_address % 256);
+
+		l_output.at(p_config.get_offset_item_table_hi() + i) = l_hi;
+		l_output.at(p_config.get_offset_item_table_lo() + i) = l_lo;
+	}
+
+	// patch enemy table
+	for (std::size_t i{ 0 }; i < l_enemy_offsets.size(); ++i) {
+		std::size_t l_ram_address = p_config.get_ram_address_from_rom(
+			p_config.get_offset_enemy_data() + l_enemy_offsets[i]);
+
+		byte l_hi = static_cast<byte>(l_ram_address / 256);
+		byte l_lo = static_cast<byte>(l_ram_address % 256);
+
+		l_output.at(p_config.get_offset_enemy_table_hi() + i) = l_hi;
+		l_output.at(p_config.get_offset_enemy_table_lo() + i) = l_lo;
+	}
+
+	// patch item data
+	for (std::size_t i{ 0 }; i < l_item_data.size(); ++i)
+		l_output.at(p_config.get_offset_item_data() + i) = l_item_data[i];
+	// patch enemy data
+	for (std::size_t i{ 0 }; i < l_enemy_data.size(); ++i)
+		l_output.at(p_config.get_offset_enemy_data() + i) = l_enemy_data[i];
+
+	klib::file::write_bytes_to_file(l_output, p_file_path);
 }

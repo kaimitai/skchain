@@ -21,6 +21,8 @@ namespace skc {
 		SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_config);
 		void move(int p_delta_ms, const klib::User_input& p_input);
 		void draw(SDL_Renderer* p_rnd, const SKC_Config& p_config);
+
+		void save_nes_file(const std::string& p_file_path, const SKC_Config& p_config) const;
 	};
 
 }

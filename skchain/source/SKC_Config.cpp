@@ -69,6 +69,14 @@ std::size_t skc::SKC_Config::get_offset_item_table_hi(void) const {
 	return m_offset_item_table + m_level_count;
 }
 
+std::size_t skc::SKC_Config::get_offset_enemy_data(void) const {
+	return m_offset_enemy_table + 2 * m_level_count;
+}
+
+std::size_t skc::SKC_Config::get_offset_item_data(void) const {
+	return m_offset_item_table + 2 * m_level_count;
+}
+
 unsigned int skc::SKC_Config::get_level_count(void) const {
 	return m_level_count;
 }
@@ -79,6 +87,10 @@ unsigned int skc::SKC_Config::get_nes_tile_count(void) const {
 
 std::size_t skc::SKC_Config::get_rom_address_from_ram(std::size_t p_ram_address) const {
 	return p_ram_address - m_rom_ram_diff;
+}
+
+std::size_t skc::SKC_Config::get_ram_address_from_rom(std::size_t p_rom_address) const {
+	return p_rom_address + m_rom_ram_diff;
 }
 
 std::size_t skc::SKC_Config::get_level_tileset(std::size_t p_level_no) const {
