@@ -10,6 +10,9 @@
 	<rom_ram_diff value="0x7ff0" />
 	<level_count value="53" />
 	<nes_tile_count value="2048" />
+	<!-- values that could theoretically be read from the ROM data -->
+	<!-- as we learn more about the ROM data, the following values will be removed -->
+	<level_tilesets value="0,0,1,0, 5,3,4,3, 6,7,7,6, 9,9,10,9, 5,5,3,3, 0,2,1,1, 8,8,7,7, 1,0,1,1, 11,9,11,11, 4,4,5,5, 0,1,1,2, 7,7,6,8, 14,12,0,13,14" />
   </rom_metadata>
 
   <!-- each enemy mapped from byte value (0-255) to description and tile graphics indexes -->
@@ -145,13 +148,43 @@
 	  <!-- background palettes cyan -->
 	  <palette no="8" offset="0x1c,0x10,0x30" />
       <palette no="9" offset="0x1c,0x27,0x30" />
-      <palette no="10" offset="0x0edb" />
-      <palette no="11" offset="0x0edf" />
+      <palette no="10" offset="0x1c,0x2c,0x30" />
+      <palette no="11" offset="0x1c,0x27,0x38" />
       <!-- sprite palettes -->
       <palette no="12" offset="0x0ee3" />
       <palette no="13" offset="0x0ee7" />
       <palette no="14" offset="0x0eeb" />
       <palette no="15" offset="0x0eef" />
+	  <!-- background palettes purple -->
+	  <palette no="16" offset="0x04,0x10,0x30" />
+      <palette no="17" offset="0x04,0x27,0x30" />
+      <palette no="18" offset="0x04,0x2c,0x30" />
+      <palette no="19" offset="0x04,0x27,0x38" />
+      <!-- sprite palettes -->
+      <palette no="20" offset="0x0ee3" />
+      <palette no="21" offset="0x0ee7" />
+      <palette no="22" offset="0x0eeb" />
+      <palette no="23" offset="0x0eef" />
+	  <!-- background palettes dark green -->
+	  <palette no="24" offset="0x09,0x10,0x30" />
+      <palette no="25" offset="0x09,0x27,0x30" />
+      <palette no="26" offset="0x09,0x2c,0x30" />
+      <palette no="27" offset="0x09,0x27,0x38" />
+      <!-- sprite palettes -->
+      <palette no="28" offset="0x0ee3" />
+      <palette no="29" offset="0x0ee7" />
+      <palette no="30" offset="0x0eeb" />
+      <palette no="31" offset="0x0eef" />
+	  <!-- background palettes gray -->
+	  <palette no="32" offset="0x00,0x10,0x30" />
+      <palette no="33" offset="0x00,0x27,0x30" />
+      <palette no="34" offset="0x00,0x2c,0x30" />
+      <palette no="35" offset="0x00,0x27,0x38" />
+      <!-- sprite palettes -->
+      <palette no="36" offset="0x0ee3" />
+      <palette no="37" offset="0x0ee7" />
+      <palette no="38" offset="0x0eeb" />
+      <palette no="39" offset="0x0eef" />
 	  
     </palettes>
 
@@ -261,9 +294,27 @@
     </tile_definitions>
 	
 	<tilesets>
+	  <!-- for each palette, generate all 3 tilesets -->
+	  <!-- red -->
 	  <tileset palette_offset="0" tile_offset="0" />
-	  <!--tileset palette_offset="0" tile_offset="512" /-->
-	  <!--tileset palette_offset="8" tile_offset="1024" /-->
+	  <tileset palette_offset="0" tile_offset="512" />
+	  <tileset palette_offset="0" tile_offset="1024" />
+	  <!-- cyan -->
+	  <tileset palette_offset="8" tile_offset="0" />
+	  <tileset palette_offset="8" tile_offset="512" />
+	  <tileset palette_offset="8" tile_offset="1024" />
+	  <!-- purple -->
+	  <tileset palette_offset="16" tile_offset="0" />
+	  <tileset palette_offset="16" tile_offset="512" />
+	  <tileset palette_offset="16" tile_offset="1024" />
+	  <!-- dark green -->
+	  <tileset palette_offset="24" tile_offset="0" />
+	  <tileset palette_offset="24" tile_offset="512" />
+	  <tileset palette_offset="24" tile_offset="1024" />
+	  <!-- gray -->
+	  <tileset palette_offset="32" tile_offset="0" />
+	  <tileset palette_offset="32" tile_offset="512" />
+	  <tileset palette_offset="32" tile_offset="1024" />
 	</tilesets>
 
   </gfx_metadata>

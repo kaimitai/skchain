@@ -12,6 +12,7 @@ namespace skc {
 		int m_rom_ram_diff;
 		void load_config_xml(void);
 		std::vector<byte> m_rom_data;
+		std::vector<std::size_t> m_level_tilesets;
 
 	public:
 		SKC_Config(const std::vector<byte>& p_rom_data);
@@ -26,6 +27,7 @@ namespace skc {
 		unsigned int get_level_count(void) const;
 		unsigned int get_nes_tile_count(void) const;
 		std::size_t get_rom_address_from_ram(std::size_t p_ram_address) const;
+		std::size_t get_level_tileset(std::size_t p_level_no) const;
 	};
 
 }

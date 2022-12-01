@@ -52,18 +52,18 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 	*/
 }
 
-SDL_Texture* skc::SKC_Gfx::get_item_tile(byte p_item_no, int frame_no) const {
+SDL_Texture* skc::SKC_Gfx::get_item_tile(byte p_item_no, std::size_t p_tileset_no, int frame_no) const {
 	const auto iter{ m_item_gfx_map.find(p_item_no) };
-	return m_tile_gfx.at(iter == end(m_item_gfx_map) ? 32 : iter->second);
+	return m_tile_gfx.at(iter == end(m_item_gfx_map) ? 32 : iter->second + p_tileset_no * m_tileset_tile_count);
 }
 
-SDL_Texture* skc::SKC_Gfx::get_enemy_tile(byte p_enemy_no, int frame_no) const {
+SDL_Texture* skc::SKC_Gfx::get_enemy_tile(byte p_enemy_no, std::size_t p_tileset_no, int frame_no) const {
 	const auto iter{ m_sprite_gfx_map.find(p_enemy_no) };
-	return m_tile_gfx.at(iter == end(m_sprite_gfx_map) ? 32 : iter->second);
+	return m_tile_gfx.at(iter == end(m_sprite_gfx_map) ? 32 : iter->second + p_tileset_no * m_tileset_tile_count);
 }
 
-SDL_Texture* skc::SKC_Gfx::get_tile_gfx(std::size_t p_gfx_no) const {
-	return m_tile_gfx.at(p_gfx_no);
+SDL_Texture* skc::SKC_Gfx::get_tile_gfx(std::size_t p_gfx_no, std::size_t p_tileset_no) const {
+	return m_tile_gfx.at(p_gfx_no + p_tileset_no * m_tileset_tile_count);
 }
 
 SDL_Surface* skc::SKC_Gfx::create_nes_sdl_surface(int p_w, int p_h) const {
@@ -153,9 +153,11 @@ void skc::SKC_Gfx::load_metadata(const std::vector<byte> p_rom_data) {
 	}
 
 	// loop over all tilesets, and generate all tiles for each iteration
+	std::size_t l_tileset_count{ 0 };
 	auto n_tilesets = n_gfx_meta.child(c::XML_TAG_TILESETS);
 	for (auto n_tileset = n_tilesets.child(c::XML_TAG_TILESET); n_tileset;
 		n_tileset = n_tileset.next_sibling(c::XML_TAG_TILESET)) {
+		++l_tileset_count;
 		unsigned int l_palette_offset =
 			klib::util::string_to_numeric<unsigned int>(n_tileset.attribute(c::XML_ATTR_PALETTE_OFFSET).as_string());
 		unsigned int l_tile_offset =
@@ -166,7 +168,6 @@ void skc::SKC_Gfx::load_metadata(const std::vector<byte> p_rom_data) {
 		for (auto n_tile = n_tile_defs.child(skc::c::XML_TAG_TILE);
 			n_tile;
 			n_tile = n_tile.next_sibling(skc::c::XML_TAG_TILE)) {
-
 			auto l_values = klib::util::string_split_strings(
 				n_tile.attribute(skc::c::XML_ATTR_NES_TILES).as_string(), ',');
 			int l_w = n_tile.attribute(skc::c::XML_ATTR_W).as_int();
@@ -214,6 +215,7 @@ void skc::SKC_Gfx::load_metadata(const std::vector<byte> p_rom_data) {
 
 	}
 
+	m_tileset_tile_count = m_tile_definitions.size() / l_tileset_count;
 }
 
 void skc::SKC_Gfx::generate_tile_textures(SDL_Renderer* p_rnd) {

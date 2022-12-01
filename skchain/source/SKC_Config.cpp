@@ -35,6 +35,10 @@ void skc::SKC_Config::load_config_xml(void) {
 		n_rom_meta.child(c::XML_TAG_LEVEL_COUNT).attribute(c::XML_ATTR_VALUE).as_string());
 	m_gfx_tile_count = klib::util::string_to_numeric<unsigned int>(
 		n_rom_meta.child(c::XML_TAG_NES_TILE_COUNT).attribute(c::XML_ATTR_VALUE).as_string());
+
+	m_level_tilesets = klib::util::string_split<std::size_t>(
+		n_rom_meta.child(c::XML_TAG_LEVEL_TILESETS).attribute(c::XML_ATTR_VALUE).as_string(),
+		',');
 }
 
 const std::vector<byte>& skc::SKC_Config::get_rom_data(void) const {
@@ -75,4 +79,8 @@ unsigned int skc::SKC_Config::get_nes_tile_count(void) const {
 
 std::size_t skc::SKC_Config::get_rom_address_from_ram(std::size_t p_ram_address) const {
 	return p_ram_address - m_rom_ram_diff;
+}
+
+std::size_t skc::SKC_Config::get_level_tileset(std::size_t p_level_no) const {
+	return m_level_tilesets.at(p_level_no);
 }

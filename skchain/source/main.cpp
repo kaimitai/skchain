@@ -105,7 +105,7 @@ int main(int argc, char* args[]) try {
 
 				if (deltaDraw >= 25) { // capped frame rate of ~40 is ok
 					//main_window.draw(l_rnd, input, config, l_w, l_h);
-					main_window.draw(l_rnd);
+					main_window.draw(l_rnd, l_config);
 					last_draw_time = SDL_GetTicks();
 
 					//Update screen

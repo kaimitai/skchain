@@ -52,8 +52,9 @@ void skc::SKC_Main_window::move(int p_delta_ms, const klib::User_input& p_input)
 		--m_current_level;
 }
 
-void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd) {
+void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, const SKC_Config& p_config) {
 	constexpr int TILE_SIZE_VISUAL{ 32 };
+	std::size_t l_tileset_no{ p_config.get_level_tileset(m_current_level) };
 
 	// draw background
 	for (int j{ 0 }; j < c::LEVEL_H; ++j)
@@ -65,21 +66,21 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd) {
 			else if (l_ttype == skc::Wall::White || l_ttype == skc::Wall::Brown_white)
 				l_tile_no = 2;
 
-			klib::gfx::blit_scale(p_rnd, m_gfx.get_tile_gfx(l_tile_no), 20 + i * TILE_SIZE_VISUAL, 20 + j * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
+			klib::gfx::blit_scale(p_rnd, m_gfx.get_tile_gfx(l_tile_no, l_tileset_no), 20 + i * TILE_SIZE_VISUAL, 20 + j * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 		}
 
 	// draw door
 	auto l_door_pos = m_levels.at(m_current_level).get_door_pos();
 	if (l_door_pos.second >= 0)
 		klib::gfx::blit_scale(p_rnd,
-			m_gfx.get_tile_gfx(4),
+			m_gfx.get_tile_gfx(4, l_tileset_no),
 			20 + l_door_pos.first * TILE_SIZE_VISUAL,
 			20 + l_door_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 
 	// draw player start
 	auto l_pstart = m_levels.at(m_current_level).get_player_start_pos();
 	klib::gfx::blit_scale(p_rnd,
-		m_gfx.get_tile_gfx(3),
+		m_gfx.get_tile_gfx(3, l_tileset_no),
 		20 + l_pstart.first * TILE_SIZE_VISUAL,
 		20 + l_pstart.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 
@@ -87,7 +88,7 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd) {
 	auto l_key_pos = m_levels.at(m_current_level).get_key_pos();
 	if (l_key_pos.second >= 0)
 		klib::gfx::blit_scale(p_rnd,
-			m_gfx.get_tile_gfx(5),
+			m_gfx.get_tile_gfx(5, l_tileset_no),
 			20 + l_key_pos.first * TILE_SIZE_VISUAL,
 			20 + l_key_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 
@@ -99,7 +100,7 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd) {
 			auto l_pos = item.get_position();
 
 			klib::gfx::blit_scale(p_rnd,
-				m_gfx.get_item_tile(item.get_item_no()),
+				m_gfx.get_item_tile(item.get_item_no(), l_tileset_no),
 				20 + l_pos.first * TILE_SIZE_VISUAL,
 				20 + l_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 		}
@@ -113,7 +114,7 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd) {
 			auto l_pos = enemy.get_position();
 
 			klib::gfx::blit_scale(p_rnd,
-				m_gfx.get_enemy_tile(enemy.get_element_no()),
+				m_gfx.get_enemy_tile(enemy.get_element_no(), l_tileset_no),
 				20 + l_pos.first * TILE_SIZE_VISUAL,
 				20 + l_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 		}
