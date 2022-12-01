@@ -53,7 +53,7 @@ void skc::SKC_Main_window::move(int p_delta_ms, const klib::User_input& p_input)
 }
 
 void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, const SKC_Config& p_config) {
-	constexpr int TILE_SIZE_VISUAL{ 32 };
+	constexpr int TILE_SIZE_VISUAL{ 48 };
 	std::size_t l_tileset_no{ p_config.get_level_tileset(m_current_level) };
 
 	// draw background
@@ -118,5 +118,15 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, const SKC_Config& p_config)
 				20 + l_pos.first * TILE_SIZE_VISUAL,
 				20 + l_pos.second * TILE_SIZE_VISUAL, TILE_SIZE_VISUAL, TILE_SIZE_VISUAL);
 		}
+	}
+
+	// draw constellation
+	if (m_levels.at(m_current_level).has_constellation()) {
+		auto l_pos = m_levels.at(m_current_level).get_constellation_pos();
+		klib::gfx::blit_scale(p_rnd,
+			m_gfx.get_constellation_gfx(m_levels.at(m_current_level).get_constellation_no() % 4,
+				l_tileset_no),
+			20 + l_pos.first * TILE_SIZE_VISUAL,
+			20 + l_pos.second * TILE_SIZE_VISUAL, 3 * TILE_SIZE_VISUAL, 2 * TILE_SIZE_VISUAL);
 	}
 }

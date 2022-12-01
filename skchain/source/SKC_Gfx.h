@@ -33,6 +33,8 @@ namespace skc {
 		void load_metadata(const std::vector<byte> p_rom_data);
 		void generate_tile_textures(SDL_Renderer* p_rnd);
 
+		SDL_Texture* get_gfx_translated(std::size_t p_tile_no, std::size_t p_tileset_no) const;
+
 	public:
 		static SDL_Color nes_color_to_sdl(const klib::NES_Color& p_col);
 
@@ -41,6 +43,7 @@ namespace skc {
 		SDL_Texture* get_tile_gfx(std::size_t p_gfx_no, std::size_t p_tileset_no = 0) const;
 		SDL_Texture* get_enemy_tile(byte p_enemy_no, std::size_t p_tileset_no = 0, int p_frame_no = 0) const;
 		SDL_Texture* get_item_tile(byte p_item_no, std::size_t p_tilset_no = 0, int p_frame_no = 0) const;
+		SDL_Texture* get_constellation_gfx(byte p_constellation_no, std::size_t p_tileset_no = 0) const;
 	};
 }
 

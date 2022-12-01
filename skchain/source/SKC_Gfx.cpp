@@ -52,9 +52,17 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 	*/
 }
 
+SDL_Texture* skc::SKC_Gfx::get_gfx_translated(std::size_t p_tile_no, std::size_t p_tileset_no) const {
+	return m_tile_gfx.at(p_tile_no + p_tileset_no * m_tileset_tile_count);
+}
+
 SDL_Texture* skc::SKC_Gfx::get_item_tile(byte p_item_no, std::size_t p_tileset_no, int frame_no) const {
 	const auto iter{ m_item_gfx_map.find(p_item_no) };
 	return m_tile_gfx.at(iter == end(m_item_gfx_map) ? 32 : iter->second + p_tileset_no * m_tileset_tile_count);
+}
+
+SDL_Texture* skc::SKC_Gfx::get_constellation_gfx(byte p_constellation_no, std::size_t p_tileset_no) const {
+	return get_gfx_translated(53 + p_constellation_no, p_tileset_no);
 }
 
 SDL_Texture* skc::SKC_Gfx::get_enemy_tile(byte p_enemy_no, std::size_t p_tileset_no, int frame_no) const {
@@ -224,7 +232,7 @@ void skc::SKC_Gfx::generate_tile_textures(SDL_Renderer* p_rnd) {
 		auto l_srf = create_nes_sdl_surface(8 * l_meta.get_w(), 8 * l_meta.get_h());
 
 		for (int j{ 0 }; j < l_meta.get_h(); ++j)
-			for (int i{ 0 }; i < l_meta.get_h(); ++i) {
+			for (int i{ 0 }; i < l_meta.get_w(); ++i) {
 				draw_tile_on_surface(l_srf,
 					l_meta.get_nes_tile_no(i, j),
 					l_meta.get_palette_no(i, j),
