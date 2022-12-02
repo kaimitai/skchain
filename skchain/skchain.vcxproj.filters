@@ -58,6 +58,12 @@
     <Filter Include="Source Files\skc_util">
       <UniqueIdentifier>{50432085-0001-419e-9fd3-fb0a15b907bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\common\imgui">
+      <UniqueIdentifier>{87ae5593-e86b-4a94-9cab-ad571fe706e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\imgui">
+      <UniqueIdentifier>{7e8eaa6d-8328-4321-8ecd-9842fb61877d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\common\klib\klib_file.h">
@@ -114,6 +120,30 @@
     <ClInclude Include="source\SKC_Config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\common\imgui\imconfig.h">
+      <Filter>Header Files\common\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\imgui\imgui.h">
+      <Filter>Header Files\common\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\imgui\imgui_impl_sdl.h">
+      <Filter>Header Files\common\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\imgui\imgui_impl_sdlrenderer.h">
+      <Filter>Header Files\common\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\imgui\imgui_internal.h">
+      <Filter>Header Files\common\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\imgui\imstb_rectpack.h">
+      <Filter>Header Files\common\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\imgui\imstb_textedit.h">
+      <Filter>Header Files\common\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common\imgui\imstb_truetype.h">
+      <Filter>Header Files\common\imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\klib\klib_file.cpp">
@@ -160,6 +190,27 @@
     </ClCompile>
     <ClCompile Include="source\SKC_Config.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\imgui\imgui.cpp">
+      <Filter>Source Files\common\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\imgui\imgui_demo.cpp">
+      <Filter>Source Files\common\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\imgui\imgui_draw.cpp">
+      <Filter>Source Files\common\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\imgui\imgui_impl_sdl.cpp">
+      <Filter>Source Files\common\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\imgui\imgui_impl_sdlrenderer.cpp">
+      <Filter>Source Files\common\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\imgui\imgui_tables.cpp">
+      <Filter>Source Files\common\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\common\imgui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

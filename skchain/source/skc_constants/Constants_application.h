@@ -10,6 +10,7 @@ namespace skc {
 
 		constexpr char FILENAME_CONFIG_XML[]{ "skc_config.xml" };
 		constexpr char FILENAME_ERROR_LOG[]{"skc_errors.log"};
+		constexpr char FILENAME_IMGUI_INI[]{ "skc_windows.ini" };
 	}
 }
 

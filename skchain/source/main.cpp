@@ -1,4 +1,7 @@
 #include <SDL.h>
+#include "./common/imgui/imgui.h"
+#include "./common/imgui/imgui_impl_sdl.h"
+#include "./common/imgui/imgui_impl_sdlrenderer.h"
 #include "./skc_constants/Constants_application.h"
 #include "./common/klib/klib_file.h"
 #include "./common/klib/User_input.h"
@@ -36,7 +39,7 @@ int main(int argc, char* args[]) try {
 				//Initialize renderer color
 				SDL_SetRenderDrawColor(l_rnd, 0x00, 0x00, 0x00, 0x00);
 			}
-			/*
+
 			// Setup Dear ImGui context
 			IMGUI_CHECKVERSION();
 			ImGui::CreateContext();
@@ -48,11 +51,8 @@ int main(int argc, char* args[]) try {
 			// Setup Platform/Renderer backends
 			ImGui_ImplSDL2_InitForSDLRenderer(l_window, l_rnd);
 			ImGui_ImplSDLRenderer_Init(l_rnd);
-			ImGui::GetIO().IniFilename = c::SP_IMGUI_INI_FILENAME;
+			ImGui::GetIO().IniFilename = skc::c::FILENAME_IMGUI_INI;
 
-			// main window object to handle all logic and drawing
-			SP_Config config(argc > 1 ? args[1] : std::string());
-			*/
 			//skc::SKC_Config l_config(klib::file::read_file_as_bytes("Solomon's Key (U) [!].nes"));
 			skc::SKC_Config l_config(klib::file::read_file_as_bytes("sk_test.nes"));
 			skc::SKC_Main_window main_window(l_rnd, l_config);
@@ -83,7 +83,7 @@ int main(int argc, char* args[]) try {
 				SDL_PumpEvents();
 
 				if (SDL_PollEvent(&e) != 0) {
-					//ImGui_ImplSDL2_ProcessEvent(&e);
+					ImGui_ImplSDL2_ProcessEvent(&e);
 
 					if (e.type == SDL_QUIT)
 						l_exit = true;

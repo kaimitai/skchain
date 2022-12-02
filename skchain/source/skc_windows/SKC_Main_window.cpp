@@ -3,6 +3,9 @@
 #include "./../common/klib/klib_file.h"
 #include "./../skc_util/Xml_helper.h"
 #include "./../skc_constants/Constants_level.h"
+#include "./../common/imgui/imgui.h"
+#include "./../common/imgui/imgui_impl_sdl.h"
+#include "./../common/imgui/imgui_impl_sdlrenderer.h"
 #include <map>
 #include <vector>
 
@@ -144,6 +147,18 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, const SKC_Config& p_config)
 			20 + l_pos.first * TILE_SIZE_VISUAL,
 			20 + l_pos.second * TILE_SIZE_VISUAL, 3 * TILE_SIZE_VISUAL, 2 * TILE_SIZE_VISUAL);
 	}
+
+	ImGui_ImplSDLRenderer_NewFrame();
+	ImGui_ImplSDL2_NewFrame();
+	ImGui::NewFrame();
+
+	std::string l_level_str{ "Level " + std::to_string(m_current_level + 1) + "###lvl" };
+	ImGui::Begin(l_level_str.c_str());
+
+	ImGui::End();
+
+	ImGui::Render();
+	ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
 }
 
 void skc::SKC_Main_window::save_nes_file(const std::string& p_file_path, const SKC_Config& p_config) const {

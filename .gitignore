@@ -5,3 +5,5 @@ Debug
 *.log
 Release
 xml
+*.ini
+*.bmp
