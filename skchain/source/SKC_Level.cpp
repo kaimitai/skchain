@@ -57,7 +57,8 @@ skc::Level::Level(void) :
 	m_key_status{ c::DEFAULT_KEY_STATUS },
 	m_spawn_rate{ c::DEFAULT_SPAWN_RATE },
 	m_spawn01{ c::DEFAULT_SPAWN_VALUE },
-	m_spawn02{ c::DEFAULT_SPAWN_VALUE }
+	m_spawn02{ c::DEFAULT_SPAWN_VALUE },
+	m_tileset_no{ 0 }
 { }
 
 void skc::Level::load_block_data(const std::vector<byte>& p_bytes, std::size_t p_offset) {
@@ -178,6 +179,10 @@ byte skc::Level::get_spawn02(void) const {
 	return m_spawn02;
 }
 
+byte skc::Level::get_tileset_no(void) const {
+	return m_tileset_no;
+}
+
 const std::vector<skc::Level_element>& skc::Level::get_elements(void) const {
 	return m_elements;
 }
@@ -187,14 +192,42 @@ const std::vector<byte>& skc::Level::get_item_header(void) const {
 }
 
 // setters
-void skc::Level::set_player_start_pos(int p_x, int p_y) {
-	m_fixed_start_pos = std::make_pair(p_x, p_y);
+void skc::Level::set_player_start_pos(const std::pair<int, int>& p_pos) {
+	m_fixed_start_pos = p_pos;
+}
+
+void skc::Level::set_key_pos(const std::pair<int, int>& p_pos) {
+	m_fixed_key_pos = p_pos;
+}
+
+void skc::Level::set_door_pos(const std::pair<int, int>& p_pos) {
+	m_fixed_door_pos = p_pos;
+}
+
+void skc::Level::set_constellation(byte p_constellation_no, const std::pair<int, int>& p_pos) {
+	m_constellation = Level_element(Element_type::Item, p_pos, p_constellation_no);
+}
+
+void skc::Level::set_block(skc::Wall p_wall_type, const std::pair<int, int>& p_pos) {
+	m_tiles.at(p_pos.second).at(p_pos.first) = p_wall_type;
+}
+
+void skc::Level::set_tileset_no(byte p_tileset_no) {
+	m_tileset_no = p_tileset_no;
 }
 
 // static functions
 bool skc::Level::is_item_constellation(byte p_item_no) {
 	return p_item_no >= c::ITEM_CONSTELLATION_ARIES &&
 		p_item_no <= c::ITEM_CONSTELLATION_SAGITTARIUS;
+}
+
+bool skc::Level::is_item_in_block(byte p_item_no) {
+	return klib::file::get_bit(p_item_no, 7);
+}
+
+bool skc::Level::is_item_hidden(byte p_item_no) {
+	return klib::file::get_bit(p_item_no, 6);
 }
 
 std::vector<std::size_t> skc::Level::get_item_indexes(byte p_item_no, std::set<std::size_t>& p_ignored_indexes) const {
@@ -219,6 +252,40 @@ std::pair<int, int> skc::Level::get_position_from_byte(byte b) {
 
 byte skc::Level::get_byte_from_position(const std::pair<int, int>& p_position) {
 	return static_cast<byte>(p_position.second + 1) * 16 + static_cast<byte>(p_position.first);
+}
+
+std::vector<byte> skc::Level::get_block_bytes(void) const {
+	std::vector<byte> result;
+
+	const auto get_block_bit = [](const Wall p_target, int p_pos) -> int {
+		return 0;
+	};
+
+	for (int j{ 0 }; j < c::LEVEL_H; ++j)
+		for (int i{ 0 }; i < c::LEVEL_W; i += 8) {
+			byte l_byte{ 0 };
+			for (int b{ 0 }; b < 8; ++b) {
+				auto l_wall = m_tiles.at(j).at(i + b);
+				byte l_bit = (l_wall == Wall::Brown || l_wall == Wall::Brown_white);
+				l_byte *= 2;
+				l_byte += l_bit;
+			}
+			result.push_back(l_byte);
+		}
+
+	for (int j{ 0 }; j < c::LEVEL_H; ++j)
+		for (int i{ 0 }; i < c::LEVEL_W; i += 8) {
+			byte l_byte{ 0 };
+			for (int b{ 0 }; b < 8; ++b) {
+				auto l_wall = m_tiles.at(j).at(i + b);
+				byte l_bit = (l_wall == Wall::White || l_wall == Wall::Brown_white);
+				l_byte *= 2;
+				l_byte += l_bit;
+			}
+			result.push_back(l_byte);
+		}
+
+	return result;
 }
 
 std::vector<byte> skc::Level::get_item_bytes(void) const {
@@ -289,4 +356,20 @@ std::vector<byte> skc::Level::get_enemy_bytes(void) const {
 
 bool skc::Level::is_item_delimiter(byte p_value) {
 	return (p_value == 0) || (p_value >= 0xd0 && p_value < 0xf0);
+}
+
+bool skc::Level::is_key_hidden(void) const {
+	return is_item_hidden(m_key_status);
+}
+
+bool skc::Level::is_key_in_block(void) const {
+	return is_item_in_block(m_key_status);
+}
+
+bool skc::Level::is_key_removed(void) const {
+	return m_fixed_key_pos.second < 0;
+}
+
+bool skc::Level::is_door_removed(void) const {
+	return m_fixed_door_pos.second < 0;
 }

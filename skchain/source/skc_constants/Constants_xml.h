@@ -15,6 +15,9 @@ namespace skc {
 		constexpr char XML_TAG_ITEM_DEFINITIONS[]{ "item_definitions" };
 		constexpr char XML_TAG_METADATA[]{ "metadata" };
 		constexpr char XML_TAG_ENEMY[]{ "enemy" };
+		constexpr char XML_TAG_TILE_PICKERS[]{ "tile_pickers" };
+		constexpr char XML_TAG_TILE_PICKER[]{ "tile_picker" };
+		constexpr char XML_TAG_SECTION[]{ "section" };
 		constexpr char XML_TAG_TILE_DEFINITIONS[]{ "tile_definitions" };
 		constexpr char XML_TAG_TILESETS[]{ "tilesets" };
 		constexpr char XML_TAG_TILESET[]{ "tileset" };

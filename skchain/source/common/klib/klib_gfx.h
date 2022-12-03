@@ -12,7 +12,7 @@ namespace klib {
 
 		// texture blitting
 		void blit(SDL_Renderer* p_rnd, SDL_Texture* p_texture, int p_x, int p_y);
-		void blit_scale(SDL_Renderer* p_rnd, SDL_Texture* p_texture, int p_x, int p_y, int p_w, int p_h);
+		void blit_scale(SDL_Renderer* p_rnd, SDL_Texture* p_texture, int p_x, int p_y, int p_scale);
 		void blit_full_spec(SDL_Renderer* p_rnd, SDL_Texture* p_txt, int s_x, int s_y, int s_w, int s_h, int t_x, int t_y, int t_w, int t_h);
 
 		// drawing

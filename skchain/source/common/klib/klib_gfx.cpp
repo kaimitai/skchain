@@ -8,8 +8,12 @@ void klib::gfx::blit(SDL_Renderer* p_rnd, SDL_Texture* p_texture, int p_x, int p
 	SDL_RenderCopy(p_rnd, p_texture, nullptr, &t_rect);
 }
 
-void klib::gfx::blit_scale(SDL_Renderer* p_rnd, SDL_Texture* p_texture, int p_x, int p_y, int p_w, int p_h) {
-	SDL_Rect t_rect{ p_x, p_y, p_w, p_h };
+void klib::gfx::blit_scale(SDL_Renderer* p_rnd, SDL_Texture* p_texture, int p_x, int p_y, int p_scale) {
+	SDL_Rect t_rect{ p_x, p_y };
+	SDL_QueryTexture(p_texture, nullptr, nullptr, &t_rect.w, &t_rect.h);
+	t_rect.w *= p_scale;
+	t_rect.h *= p_scale;
+
 	SDL_RenderCopy(p_rnd, p_texture, nullptr, &t_rect);
 }
 

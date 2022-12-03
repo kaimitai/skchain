@@ -1,6 +1,8 @@
 #ifndef SKC_CONFIG_H
 #define SKC_CONFIG_H
 
+#include <map>
+#include <string>
 #include <vector>
 using byte = unsigned char;
 
@@ -13,6 +15,8 @@ namespace skc {
 		void load_config_xml(void);
 		std::vector<byte> m_rom_data;
 		std::vector<std::size_t> m_level_tilesets;
+		std::vector<std::vector<std::string>> m_descriptions;
+		std::vector<std::vector<std::pair<std::string, std::vector<byte>>>> m_tile_pickers;
 
 	public:
 		SKC_Config(const std::vector<byte>& p_rom_data);
@@ -31,6 +35,10 @@ namespace skc {
 		std::size_t get_rom_address_from_ram(std::size_t p_ram_address) const;
 		std::size_t get_ram_address_from_rom(std::size_t p_rom_address) const;
 		std::size_t get_level_tileset(std::size_t p_level_no) const;
+
+		const std::vector<std::pair<std::string, std::vector<byte>>>& get_tile_picker(std::size_t p_element_type) const;
+		const std::string& get_description(std::size_t p_element_type,
+			byte p_element_no) const;
 	};
 
 }

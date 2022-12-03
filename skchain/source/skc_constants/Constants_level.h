@@ -33,8 +33,27 @@ namespace skc {
 		constexpr byte ITEM_CONSTELLATION_SAGITTARIUS{ 0xfb };
 
 		constexpr unsigned int LEVEL_W{ 16 }, LEVEL_H{ 12 };
+		constexpr unsigned int TILE_WIDTH{ 16 };
+		constexpr unsigned int TILE_SCALE{ 2 };
+		constexpr unsigned int TILE_GFX_SIZE{ TILE_WIDTH * TILE_SCALE };
 		constexpr unsigned int SIZE_LEVEL_WALL_LAYER{ (LEVEL_W * LEVEL_H) / 8 };
 		constexpr unsigned int SIZE_LEVEL_WALLS{ 2 * SIZE_LEVEL_WALL_LAYER };
+
+		// metadata keys
+		constexpr byte MD_BYTE_NO_KEY{ 0x00 };
+		constexpr byte MD_BYTE_NO_DOOR{ 0x01 };
+		constexpr byte MD_BYTE_NO_PLAYER_START{ 0x02 };
+		constexpr byte MD_BYTE_NO_SPAWN01{ 0x03 };
+		constexpr byte MD_BYTE_NO_SPAWN02{ 0x04 };
+		constexpr byte MD_BYTE_NO_EMPTY_TILE{ 0x05 };
+		constexpr byte MD_BYTE_NO_BLOCK_BROWN{ 0x06 };
+		constexpr byte MD_BYTE_NO_BLOCK_WHITE{ 0x07 };
+		constexpr byte MD_BYTE_NO_BLOCK_BW{ 0x08 };
+
+		// item types
+		constexpr std::size_t ELM_TYPE_METADATA{ 0 };
+		constexpr std::size_t ELM_TYPE_ITEM{ 1 };
+		constexpr std::size_t ELM_TYPE_ENEMY{ 2 };
 	}
 
 }

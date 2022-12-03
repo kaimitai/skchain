@@ -158,6 +158,16 @@
     <item no="0x33" description="E-bottle" animation="7" />
   </item_definitions>
 
+  <tile_pickers>
+    <!-- metadata tile picker -->
+    <tile_picker no="0">
+	  <section no="0" description="Blocks" value="0x05,0x06,0x07" />
+	  <section no="1" description="Items" value="0x00,0x01,0x02,0x03,0x04" />
+	  <!-- constellations will be filtered in the application as they depend on the level's tileset -->
+	  <section no="2" description="Constellations" value="0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,0xf8,0xf9,0xfa,0xfb" />
+	</tile_picker>
+  </tile_pickers>
+
   <!-- gfx metadata - do not edit unless you know what you are doing -->
   <gfx_metadata>
     <palettes>
@@ -299,7 +309,7 @@
       <!-- ghost/wyvern -->
       <tile no="43" palette_no="6" nes_tiles="148,150,149,151" transparent="true" />
       <!-- fireball -->
-      <tile no="44" palette_no="6" nes_tiles="60,62,61,63" transparent="true" />
+      <tile no="44" palette_no="7" nes_tiles="60,62,61,63" transparent="true" />
       <!-- panel monster -->
       <tile no="45" palette_no="6" nes_tiles="64,66,65,67" transparent="true" />
       <!-- gargoyle -->
