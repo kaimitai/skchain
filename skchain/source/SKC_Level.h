@@ -30,7 +30,7 @@ namespace skc {
 
 	class Level {
 		std::vector<std::vector<skc::Wall>> m_tiles;
-		std::vector<Level_element> m_elements;
+		std::vector<Level_element> m_items, m_enemies;
 		std::vector<byte> m_item_header;
 		std::optional<Level_element> m_constellation;
 		std::optional<byte> m_item_eof;
@@ -68,7 +68,8 @@ namespace skc {
 		bool has_item_eof(void) const;
 		byte get_item_eof(void) const;
 
-		const std::vector<skc::Level_element>& get_elements(void) const;
+		const std::vector<skc::Level_element>& get_enemies(void) const;
+		const std::vector<skc::Level_element>& get_items(void) const;
 
 		void set_player_start_pos(const std::pair<int, int>& p_pos);
 		void set_key_pos(const std::pair<int, int>& p_pos);
@@ -76,12 +77,22 @@ namespace skc {
 		void set_constellation(byte p_constellation_no, const std::pair<int, int>& p_pos);
 		void set_block(skc::Wall p_wall_type, const std::pair<int, int>& p_pos);
 		void set_tileset_no(byte p_tileset_no);
+		void add_item(byte p_item_no, const position& p_pos);
+		void delete_item(int p_index);
+		void add_enemy(byte p_enemy_no, const position& p_pos);
+		void delete_enemy(int p_index);
 
 		static bool is_item_constellation(byte p_item_no);
 		static bool is_item_in_block(byte p_item_no);
 		static bool is_item_hidden(byte p_item_no);
 
 		// logical getters
+		int get_item_index(const position& p_pos) const;
+		int get_enemy_index(const position& p_pos) const;
+
+		bool has_item_at_position(const std::pair<int, int>& p_pos) const;
+		bool has_enemy_at_position(const std::pair<int, int>& p_pos) const;
+
 		std::vector<byte> get_block_bytes(void) const;
 		std::vector<byte> get_item_bytes(void) const;
 		std::vector<byte> get_enemy_bytes(void) const;

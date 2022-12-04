@@ -43,6 +43,7 @@ namespace skc {
 		SDL_Texture* get_meta_tile(byte p_meta_no, std::size_t p_tileset_no = 0, int p_frame_no = 0) const;
 		SDL_Texture* get_enemy_tile(byte p_enemy_no, std::size_t p_tileset_no = 0, int p_frame_no = 0) const;
 		SDL_Texture* get_item_tile(byte p_item_no, std::size_t p_tilset_no = 0, int p_frame_no = 0) const;
+		SDL_Texture* get_tile(std::size_t p_element_type, byte p_item_no, std::size_t p_tileset_no, int p_frame_no = 0) const;
 	};
 }
 

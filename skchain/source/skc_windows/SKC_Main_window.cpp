@@ -66,34 +66,84 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 		if (l_tile_pos.first < c::LEVEL_W && l_tile_pos.second < c::LEVEL_H)
 			right_click(l_tile_pos);
 	}
+	else if (p_input.mouse_held()) {
+		auto l_tile_pos = pixel_to_tile_pos(p_screen_h, p_input.mx(), p_input.my());
+		if (l_tile_pos.first < c::LEVEL_W && l_tile_pos.second < c::LEVEL_H)
+			left_click(l_tile_pos);
+	}
 
 	if (p_input.is_ctrl_pressed() && p_input.is_pressed(SDL_SCANCODE_S))
 		save_nes_file("sk_test.nes", p_config);
 }
 
-void skc::SKC_Main_window::right_click(std::pair<int, int> p_tile_pos) {
+void skc::SKC_Main_window::right_click(const std::pair<int, int>& p_tile_pos) {
 	if (m_selected_type == c::ELM_TYPE_METADATA)
 		right_click_md(p_tile_pos);
+	else if (m_selected_type == c::ELM_TYPE_ITEM)
+		right_click_item(p_tile_pos);
+	else
+		right_click_enemy(p_tile_pos);
 }
 
-void skc::SKC_Main_window::right_click_md(std::pair<int, int> tile_pos) {
+void skc::SKC_Main_window::left_click(const std::pair<int, int>& p_tile_pos) {
+	if (m_selected_type == c::ELM_TYPE_ENEMY)
+		left_click_enemy(p_tile_pos);
+	else if (m_selected_type == c::ELM_TYPE_ITEM)
+		left_click_item(p_tile_pos);
+}
+
+void skc::SKC_Main_window::left_click_enemy(const std::pair<int, int>& tile_pos) {
+	auto& l_level{ get_level() };
+
+	int l_index = l_level.get_enemy_index(tile_pos);
+	if (l_index >= 0)
+		l_level.delete_enemy(l_index);
+}
+
+void skc::SKC_Main_window::left_click_item(const std::pair<int, int>& tile_pos) {
+	auto& l_level{ get_level() };
+
+	int l_index = l_level.get_item_index(tile_pos);
+	if (l_index >= 0)
+		l_level.delete_item(l_index);
+}
+
+void skc::SKC_Main_window::right_click_enemy(const std::pair<int, int>& tile_pos) {
+	auto& l_level{ get_level() };
+
+	if (!l_level.has_enemy_at_position(tile_pos)) {
+		l_level.add_enemy(m_selected, tile_pos);
+	}
+}
+
+void skc::SKC_Main_window::right_click_item(const std::pair<int, int>& tile_pos) {
+	auto& l_level{ get_level() };
+
+	if (!l_level.has_item_at_position(tile_pos)) {
+		l_level.add_item(m_selected, tile_pos);
+	}
+}
+
+void skc::SKC_Main_window::right_click_md(const std::pair<int, int>& tile_pos) {
+	auto& l_level{ get_level() };
+
 	if (m_selected == c::MD_BYTE_NO_BLOCK_BROWN)
-		get_level().set_block(skc::Wall::Brown, tile_pos);
+		l_level.set_block(skc::Wall::Brown, tile_pos);
 	else if (m_selected == c::MD_BYTE_NO_EMPTY_TILE)
-		get_level().set_block(skc::Wall::None, tile_pos);
+		l_level.set_block(skc::Wall::None, tile_pos);
 	else if (m_selected == c::MD_BYTE_NO_BLOCK_WHITE)
-		get_level().set_block(skc::Wall::White, tile_pos);
+		l_level.set_block(skc::Wall::White, tile_pos);
 	else if (m_selected == c::MD_BYTE_NO_BLOCK_BW)
-		get_level().set_block(skc::Wall::Brown_white, tile_pos);
+		l_level.set_block(skc::Wall::Brown_white, tile_pos);
 
 	else if (m_selected == c::MD_BYTE_NO_PLAYER_START)
-		get_level().set_player_start_pos(tile_pos);
+		l_level.set_player_start_pos(tile_pos);
 	else if (m_selected == c::MD_BYTE_NO_KEY)
-		get_level().set_key_pos(tile_pos);
+		l_level.set_key_pos(tile_pos);
 	else if (m_selected == c::MD_BYTE_NO_DOOR)
-		get_level().set_door_pos(tile_pos);
+		l_level.set_door_pos(tile_pos);
 	else if (m_selected >= c::ITEM_CONSTELLATION_ARIES)
-		get_level().set_constellation(m_selected, tile_pos);
+		l_level.set_constellation(m_selected, tile_pos);
 }
 
 std::pair<int, int> skc::SKC_Main_window::pixel_to_tile_pos(int p_screen_h, int p_x, int p_y) const {
@@ -119,45 +169,52 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 	SDL_SetRenderTarget(p_rnd, m_texture);
 
 	std::size_t l_tileset_no{ p_config.get_level_tileset(m_current_level) };
+	const auto& l_level{ get_level() };
+
+	// draw empty background
+	for (int j{ 0 }; j < c::LEVEL_H; ++j)
+		for (int i{ 0 }; i < c::LEVEL_W; ++i)
+			draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_EMPTY_TILE, l_tileset_no), i, j);
+
+	// draw constellation
+	if (l_level.has_constellation()) {
+		auto l_pos = l_level.get_constellation_pos();
+		draw_tile(p_rnd, m_gfx.get_meta_tile(l_level.get_constellation_no(), l_tileset_no),
+			l_pos.first, l_pos.second);
+	}
 
 	// draw background
 	for (int j{ 0 }; j < c::LEVEL_H; ++j)
 		for (int i{ 0 }; i < c::LEVEL_W; ++i) {
-			int l_tile_no{ c::MD_BYTE_NO_EMPTY_TILE };
-			auto l_ttype = m_levels.at(m_current_level).get_wall_type(i, j);
+			byte l_tile_no{ 0 };
+			auto l_ttype = l_level.get_wall_type(i, j);
 			if (l_ttype == skc::Wall::Brown)
 				l_tile_no = c::MD_BYTE_NO_BLOCK_BROWN;
 			else if (l_ttype == skc::Wall::White || l_ttype == skc::Wall::Brown_white)
 				l_tile_no = c::MD_BYTE_NO_BLOCK_WHITE;
 
-			draw_tile(p_rnd, m_gfx.get_meta_tile(l_tile_no, l_tileset_no), i, j);
+			if (l_tile_no != 0)
+				draw_tile(p_rnd, m_gfx.get_meta_tile(l_tile_no, l_tileset_no), i, j);
 		}
 
-	// draw constellation
-	if (m_levels.at(m_current_level).has_constellation()) {
-		auto l_pos = m_levels.at(m_current_level).get_constellation_pos();
-		draw_tile(p_rnd, m_gfx.get_meta_tile(m_levels.at(m_current_level).get_constellation_no(), l_tileset_no),
-			l_pos.first, l_pos.second);
-	}
-
 	// draw door
-	auto l_door_pos = m_levels.at(m_current_level).get_door_pos();
+	auto l_door_pos = l_level.get_door_pos();
 	if (l_door_pos.second >= 0)
 		draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_DOOR, l_tileset_no),
 			l_door_pos.first, l_door_pos.second);
 
 	// draw player start
-	auto l_pstart = m_levels.at(m_current_level).get_player_start_pos();
+	auto l_pstart = l_level.get_player_start_pos();
 	draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_PLAYER_START, l_tileset_no),
 		l_pstart.first, l_pstart.second);
 
 	// draw key
-	if (!get_level().is_key_removed()) {
+	if (!l_level.is_key_removed()) {
 		auto l_key_pos = m_levels.at(m_current_level).get_key_pos();
 
 		draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_KEY, l_tileset_no),
-			l_key_pos.first, l_key_pos.second, get_level().is_key_hidden());
-		if (get_level().is_key_in_block()) {
+			l_key_pos.first, l_key_pos.second, l_level.is_key_hidden());
+		if (l_level.is_key_in_block()) {
 			draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
 				l_tileset_no), l_key_pos.first, l_key_pos.second, true);
 		}
@@ -165,29 +222,25 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 	}
 
 	// draw items
-	const auto& l_items = m_levels.at(m_current_level).get_elements();
+	const auto& l_items = l_level.get_items();
 	for (const auto& item : l_items) {
 		byte l_no = item.get_item_no();
-		if (item.get_element_type() == skc::Element_type::Item) {
-			auto l_pos = item.get_position();
-			draw_tile(p_rnd, m_gfx.get_item_tile(item.get_item_no(), l_tileset_no),
-				l_pos.first, l_pos.second,
-				skc::Level::is_item_hidden(item.get_element_no()));
-			if (skc::Level::is_item_in_block(item.get_element_no()))
-				draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
-					l_tileset_no), l_pos.first, l_pos.second, true);
-		}
+		auto l_pos = item.get_position();
+		draw_tile(p_rnd, m_gfx.get_item_tile(item.get_item_no(), l_tileset_no),
+			l_pos.first, l_pos.second,
+			skc::Level::is_item_hidden(item.get_element_no()));
+		if (skc::Level::is_item_in_block(item.get_element_no()))
+			draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
+				l_tileset_no), l_pos.first, l_pos.second, true);
 	}
 
 	// draw enemies
-	const auto& l_enemies = m_levels.at(m_current_level).get_elements();
+	const auto& l_enemies = l_level.get_enemies();
 	for (const auto& enemy : l_enemies) {
 		byte l_no = enemy.get_element_no();
-		if (enemy.get_element_type() == skc::Element_type::Enemy) {
-			auto l_pos = enemy.get_position();
-			draw_tile(p_rnd, m_gfx.get_enemy_tile(enemy.get_element_no(), l_tileset_no),
-				l_pos.first, l_pos.second);
-		}
+		auto l_pos = enemy.get_position();
+		draw_tile(p_rnd, m_gfx.get_enemy_tile(enemy.get_element_no(), l_tileset_no),
+			l_pos.first, l_pos.second);
 	}
 
 	SDL_SetRenderTarget(p_rnd, nullptr);
@@ -203,30 +256,48 @@ void skc::SKC_Main_window::draw_ui(const SKC_Config& p_config) {
 	ImGui::NewFrame();
 
 	this->draw_ui_level_window(p_config);
+	this->draw_ui_item_window(p_config);
+	this->draw_ui_enemy_window(p_config);
 
 	ImGui::Render();
 	ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
+}
+
+void skc::SKC_Main_window::draw_ui_item_window(const SKC_Config& p_config) {
+	ImGui::Begin("Items");
+
+	draw_tile_picker(p_config, c::ELM_TYPE_ITEM);
+
+	ImGui::End();
+}
+
+void skc::SKC_Main_window::draw_ui_enemy_window(const SKC_Config& p_config) {
+	ImGui::Begin("Enemies");
+
+	draw_tile_picker(p_config, c::ELM_TYPE_ENEMY);
+
+	ImGui::End();
 }
 
 void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
 	std::string l_level_str{ "Level " + std::to_string(m_current_level + 1) + "###lvl" };
 	ImGui::Begin(l_level_str.c_str());
 
-	draw_tile_picker(p_config, 0);
+	draw_tile_picker(p_config, c::ELM_TYPE_METADATA);
 
 	ImGui::End();
 }
 
 void skc::SKC_Main_window::draw_tile_picker(const SKC_Config& p_config, std::size_t p_element_types) {
-	const auto& l_tile_picker = p_config.get_tile_picker(c::ELM_TYPE_METADATA);
+	const auto& l_tile_picker = p_config.get_tile_picker(p_element_types);
 
 	std::size_t l_tileset_no{ p_config.get_level_tileset(m_current_level) };
 
 	for (const auto& kv : l_tile_picker) {
 		ImGui::Text(kv.first.c_str());
 		for (byte n : kv.second) {
-			bool l_is_selected{ m_selected == n };
-			bool l_is_constellation = (m_selected_type == c::ELM_TYPE_METADATA &&
+			bool l_is_selected{ m_selected_type == p_element_types && m_selected == n };
+			bool l_is_constellation = (p_element_types == c::ELM_TYPE_METADATA &&
 				skc::Level::is_item_constellation(n));
 
 			if (!l_is_constellation || is_valid_constellation(n)) {
@@ -234,14 +305,15 @@ void skc::SKC_Main_window::draw_tile_picker(const SKC_Config& p_config, std::siz
 					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
 				ImGui::PushID(n);
 
-				if (ImGui::ImageButton(m_gfx.get_meta_tile(n, l_tileset_no),
+				if (ImGui::ImageButton(m_gfx.get_tile(p_element_types, n, l_tileset_no),
 					{ l_is_constellation ? 1.5f * c::TILE_GFX_SIZE : c::TILE_GFX_SIZE,
 					c::TILE_GFX_SIZE })) {
 					m_selected = n;
+					m_selected_type = p_element_types;
 				}
 
 				if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-					ImGui::SetTooltip(p_config.get_description(0, n).c_str());
+					ImGui::SetTooltip(p_config.get_description(p_element_types, n).c_str());
 
 				ImGui::PopID();
 				if (l_is_selected)

@@ -28,6 +28,8 @@ namespace skc {
 
 		void draw_ui(const SKC_Config& p_config);
 		void draw_ui_level_window(const SKC_Config& p_config);
+		void draw_ui_item_window(const SKC_Config& p_config);
+		void draw_ui_enemy_window(const SKC_Config& p_config);
 		void draw_tile_picker(const SKC_Config& p_config, std::size_t p_element_types);
 
 		bool is_valid_constellation(byte p_constellation) const;
@@ -36,9 +38,15 @@ namespace skc {
 		skc::Level& get_level(void);
 
 		std::pair<int, int> pixel_to_tile_pos(int p_screen_h, int p_x, int p_y) const;
-		void right_click(std::pair<int, int> tile_pos);
+		void right_click(const std::pair<int, int>& tile_pos);
+		void left_click(const std::pair<int, int>& tile_pos);
 
-		void right_click_md(std::pair<int, int> tile_pos);
+		void right_click_md(const std::pair<int, int>& tile_pos);
+		void right_click_item(const std::pair<int, int>& tile_pos);
+		void right_click_enemy(const std::pair<int, int>& tile_pos);
+
+		void left_click_item(const std::pair<int, int>& tile_pos);
+		void left_click_enemy(const std::pair<int, int>& tile_pos);
 
 	public:
 		SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_config);

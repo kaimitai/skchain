@@ -3,6 +3,7 @@
 #include "./common/klib/klib_util.h"
 #include "./skc_constants/Constants_application.h"
 #include "./skc_constants/Constants_xml.h"
+#include "./skc_constants/Constants_level.h"
 #include "./common/pugixml/pugixml.hpp"
 #include "./common/pugixml/pugiconfig.hpp"
 #include <stdexcept>
@@ -54,6 +55,16 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 
 SDL_Texture* skc::SKC_Gfx::get_gfx_translated(std::size_t p_tile_no, std::size_t p_tileset_no) const {
 	return m_tile_gfx.at(p_tile_no + p_tileset_no * m_tileset_tile_count);
+}
+
+SDL_Texture* skc::SKC_Gfx::get_tile(std::size_t p_element_type, byte p_item_no,
+	std::size_t p_tileset_no, int p_frame_no) const {
+	if (p_element_type == c::ELM_TYPE_METADATA)
+		return get_meta_tile(p_item_no, p_tileset_no, p_frame_no);
+	else if (p_element_type == c::ELM_TYPE_ITEM)
+		return get_item_tile(p_item_no, p_tileset_no, p_frame_no);
+	else
+		return get_enemy_tile(p_item_no, p_tileset_no, p_frame_no);
 }
 
 SDL_Texture* skc::SKC_Gfx::get_item_tile(byte p_item_no, std::size_t p_tileset_no, int frame_no) const {

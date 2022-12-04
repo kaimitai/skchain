@@ -2,6 +2,7 @@
 #include "skc_constants/Constants_level.h"
 #include "./common/klib/klib_file.h"
 #include <set>
+#include <stdexcept>
 
 using byte = unsigned char;
 
@@ -76,7 +77,7 @@ void skc::Level::load_enemy_data(const std::vector<byte>& p_bytes, std::size_t p
 		if (l_enemy_no == 0)
 			break;
 		else
-			m_elements.push_back(Level_element(skc::Element_type::Enemy,
+			m_enemies.push_back(Level_element(skc::Element_type::Enemy,
 				get_position_from_byte(p_bytes.at(p_offset + i + 1)),
 				l_enemy_no));
 	}
@@ -110,7 +111,7 @@ void skc::Level::load_item_data(const std::vector<byte>& p_bytes, std::size_t p_
 		}
 		// found a regular item, store it in the list
 		else if (l_next_elm / 16 != 0xc) {
-			m_elements.push_back(Level_element(skc::Element_type::Item,
+			m_items.push_back(Level_element(skc::Element_type::Item,
 				get_position_from_byte(p_bytes.at(i + 1)),
 				l_next_elm));
 		}
@@ -119,7 +120,7 @@ void skc::Level::load_item_data(const std::vector<byte>& p_bytes, std::size_t p_
 			std::size_t l_repeat_count{ static_cast<std::size_t>(l_next_elm % 16) + 1 };
 			l_next_elm = p_bytes.at(i + 1);
 			for (std::size_t j{ 0 }; j < l_repeat_count; ++j)
-				m_elements.push_back(Level_element(skc::Element_type::Item,
+				m_items.push_back(Level_element(skc::Element_type::Item,
 					get_position_from_byte(p_bytes.at(i + 2 + j)),
 					l_next_elm));
 			i += l_repeat_count;
@@ -183,8 +184,12 @@ byte skc::Level::get_tileset_no(void) const {
 	return m_tileset_no;
 }
 
-const std::vector<skc::Level_element>& skc::Level::get_elements(void) const {
-	return m_elements;
+const std::vector<skc::Level_element>& skc::Level::get_items(void) const {
+	return m_items;
+}
+
+const std::vector<skc::Level_element>& skc::Level::get_enemies(void) const {
+	return m_enemies;
 }
 
 const std::vector<byte>& skc::Level::get_item_header(void) const {
@@ -216,6 +221,22 @@ void skc::Level::set_tileset_no(byte p_tileset_no) {
 	m_tileset_no = p_tileset_no;
 }
 
+void skc::Level::add_item(byte p_item_no, const position& p_pos) {
+	m_items.push_back(skc::Level_element(skc::Element_type::Item, p_pos, p_item_no));
+}
+
+void skc::Level::add_enemy(byte p_item_no, const position& p_pos) {
+	m_enemies.push_back(skc::Level_element(skc::Element_type::Enemy, p_pos, p_item_no));
+}
+
+void skc::Level::delete_item(int p_index) {
+	m_items.erase(begin(m_items) + p_index);
+}
+
+void skc::Level::delete_enemy(int p_index) {
+	m_enemies.erase(begin(m_enemies) + p_index);
+}
+
 // static functions
 bool skc::Level::is_item_constellation(byte p_item_no) {
 	return p_item_no >= c::ITEM_CONSTELLATION_ARIES &&
@@ -233,10 +254,9 @@ bool skc::Level::is_item_hidden(byte p_item_no) {
 std::vector<std::size_t> skc::Level::get_item_indexes(byte p_item_no, std::set<std::size_t>& p_ignored_indexes) const {
 	std::vector<std::size_t> result;
 
-	for (std::size_t i{ 0 }; result.size() <= 16 && i < m_elements.size(); ++i)
+	for (std::size_t i{ 0 }; result.size() <= 16 && i < m_items.size(); ++i)
 		if (p_ignored_indexes.find(i) == end(p_ignored_indexes) &&
-			m_elements[i].get_element_type() == Element_type::Item &&
-			m_elements[i].get_element_no() == p_item_no) {
+			m_items[i].get_element_no() == p_item_no) {
 			result.push_back(i);
 			p_ignored_indexes.insert(i);
 		}
@@ -303,9 +323,9 @@ std::vector<byte> skc::Level::get_item_bytes(void) const {
 
 	// add all item data, and apply "0xC"-compression whenever more than one item of the same type exists
 	std::set<std::size_t> l_handled_offsets;
-	for (std::size_t i{ 0 }; i < m_elements.size(); ++i)
+	for (std::size_t i{ 0 }; i < m_items.size(); ++i)
 		if (l_handled_offsets.find(i) == end(l_handled_offsets)) {
-			byte l_item_no = m_elements[i].get_element_no();
+			byte l_item_no = m_items[i].get_element_no();
 			auto l_indexes = get_item_indexes(l_item_no, l_handled_offsets);
 
 			// when two items are the same, it does not matter if we compress or not
@@ -315,12 +335,12 @@ std::vector<byte> skc::Level::get_item_bytes(void) const {
 				result.push_back(l_repeat_count);
 				result.push_back(l_item_no);
 				for (std::size_t li{ 0 }; li < l_indexes.size(); ++li)
-					result.push_back(get_byte_from_position(m_elements[l_indexes[li]].get_position()));
+					result.push_back(get_byte_from_position(m_items[l_indexes[li]].get_position()));
 			}
 			else {
 				for (std::size_t li{ 0 }; li < l_indexes.size(); ++li) {
 					result.push_back(l_item_no);
-					result.push_back(get_byte_from_position(m_elements[l_indexes[li]].get_position()));
+					result.push_back(get_byte_from_position(m_items[l_indexes[li]].get_position()));
 				}
 			}
 		}
@@ -343,11 +363,10 @@ std::vector<byte> skc::Level::get_enemy_bytes(void) const {
 	result.push_back(m_spawn_rate);
 
 	// add data (element number and position) for each enemy
-	for (const auto& element : m_elements)
-		if (element.get_element_type() == Element_type::Enemy) {
-			result.push_back(element.get_element_no());
-			result.push_back(get_byte_from_position(element.get_position()));
-		}
+	for (const auto& element : m_enemies) {
+		result.push_back(element.get_element_no());
+		result.push_back(get_byte_from_position(element.get_position()));
+	}
 
 	// append end-of-stream symbol
 	result.push_back(0x00);
@@ -372,4 +391,28 @@ bool skc::Level::is_key_removed(void) const {
 
 bool skc::Level::is_door_removed(void) const {
 	return m_fixed_door_pos.second < 0;
+}
+
+int skc::Level::get_item_index(const position& p_pos) const {
+	for (std::size_t i{ 0 }; i < m_items.size(); ++i)
+		if (m_items[i].get_position() == p_pos)
+			return static_cast<int>(i);
+
+	return -1;
+}
+
+int skc::Level::get_enemy_index(const position& p_pos) const {
+	for (std::size_t i{ 0 }; i < m_enemies.size(); ++i)
+		if (m_enemies[i].get_position() == p_pos)
+			return static_cast<int>(i);
+
+	return -1;
+}
+
+bool skc::Level::has_item_at_position(const std::pair<int, int>& p_pos) const {
+	return get_item_index(p_pos) != -1;
+}
+
+bool skc::Level::has_enemy_at_position(const std::pair<int, int>& p_pos) const {
+	return get_enemy_index(p_pos) != -1;
 }

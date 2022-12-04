@@ -58,25 +58,25 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 		n_row.attribute(c::XML_ATTR_VALUE).set_value(klib::util::string_join<int>(l_row_data, ',').c_str());
 	}
 
-	const auto& l_elements{ p_level.get_elements() };
+	const auto& l_items{ p_level.get_items() };
 
 	auto n_items = n_level.append_child(c::XML_TAG_ITEMS);
 	int l_counter{ 0 };
-	for (const auto& element : l_elements) {
-		if (element.get_element_type() == skc::Element_type::Item) {
-			auto n_item = n_items.append_child(c::XML_TAG_ITEM);
-			n_item.append_attribute(c::XML_ATTR_NO);
-			n_item.attribute(c::XML_ATTR_NO).set_value(l_counter++);
-			n_item.append_attribute(c::XML_ATTR_ELEMENT_NO);
-			n_item.attribute(c::XML_ATTR_ELEMENT_NO).set_value(element.get_element_no());
-			n_item.append_attribute(c::XML_ATTR_POSITION);
-			n_item.attribute(c::XML_ATTR_POSITION).set_value(get_position_string(element.get_position()).c_str());
-		}
+	for (const auto& element : l_items) {
+		auto n_item = n_items.append_child(c::XML_TAG_ITEM);
+		n_item.append_attribute(c::XML_ATTR_NO);
+		n_item.attribute(c::XML_ATTR_NO).set_value(l_counter++);
+		n_item.append_attribute(c::XML_ATTR_ELEMENT_NO);
+		n_item.attribute(c::XML_ATTR_ELEMENT_NO).set_value(element.get_element_no());
+		n_item.append_attribute(c::XML_ATTR_POSITION);
+		n_item.attribute(c::XML_ATTR_POSITION).set_value(get_position_string(element.get_position()).c_str());
 	}
+
+	const auto& l_enemies{ p_level.get_enemies() };
 
 	auto n_enemies = n_level.append_child(c::XML_TAG_ENEMIES);
 	l_counter = 0;
-	for (const auto& element : l_elements) {
+	for (const auto& element : l_enemies) {
 		if (element.get_element_type() == skc::Element_type::Enemy) {
 			auto n_enemy = n_enemies.append_child(c::XML_TAG_ENEMY);
 			n_enemy.append_attribute(c::XML_ATTR_NO);

@@ -51,6 +51,24 @@ void skc::SKC_Config::load_config_xml(void) {
 		) = n_md.attribute(c::XML_ATTR_DESCRIPTION).as_string();
 	}
 
+	auto n_items = n_meta.child(c::XML_TAG_ITEM_DEFINITIONS);
+	for (auto n_item = n_items.child(c::XML_TAG_ITEM);
+		n_item; n_item = n_item.next_sibling(c::XML_TAG_ITEM)) {
+
+		m_descriptions[c::ELM_TYPE_ITEM].at(
+			klib::util::string_to_numeric<std::size_t>(n_item.attribute(c::XML_ATTR_NO).as_string())
+		) = n_item.attribute(c::XML_ATTR_DESCRIPTION).as_string();
+	}
+
+	auto n_enemies = n_meta.child(c::XML_TAG_ENEMY_DEFINITIONS);
+	for (auto n_enemy = n_enemies.child(c::XML_TAG_ENEMY);
+		n_enemy; n_enemy = n_enemy.next_sibling(c::XML_TAG_ENEMY)) {
+
+		m_descriptions[c::ELM_TYPE_ENEMY].at(
+			klib::util::string_to_numeric<std::size_t>(n_enemy.attribute(c::XML_ATTR_NO).as_string())
+		) = n_enemy.attribute(c::XML_ATTR_DESCRIPTION).as_string();
+	}
+
 	auto n_tilepickers = n_meta.child(c::XML_TAG_TILE_PICKERS);
 	for (auto n_tilepicker = n_tilepickers.child(c::XML_TAG_TILE_PICKER);
 		n_tilepicker;
