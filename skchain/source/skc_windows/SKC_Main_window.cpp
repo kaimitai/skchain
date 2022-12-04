@@ -35,6 +35,10 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_c
 		m_levels.at(i).set_tileset_no(p_config.get_level_tileset(i) % 3);
 	}
 
+	m_board_selection = std::vector<std::vector<int>>(
+		p_config.get_level_count(), std::vector<int>(3, 0)
+		);
+
 	// DEBUG
 	// #include "./../common/klib/klib_file.h"
 	/*
@@ -74,6 +78,8 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 
 	if (p_input.is_ctrl_pressed() && p_input.is_pressed(SDL_SCANCODE_S))
 		save_nes_file("sk_test.nes", p_config);
+	else if (p_input.is_pressed(SDL_SCANCODE_DELETE))
+		delete_selected_index();
 }
 
 void skc::SKC_Main_window::right_click(const std::pair<int, int>& p_tile_pos) {
@@ -97,7 +103,7 @@ void skc::SKC_Main_window::left_click_enemy(const std::pair<int, int>& tile_pos)
 
 	int l_index = l_level.get_enemy_index(tile_pos);
 	if (l_index >= 0)
-		l_level.delete_enemy(l_index);
+		set_selected_index(l_index);
 }
 
 void skc::SKC_Main_window::left_click_item(const std::pair<int, int>& tile_pos) {
@@ -105,7 +111,23 @@ void skc::SKC_Main_window::left_click_item(const std::pair<int, int>& tile_pos) 
 
 	int l_index = l_level.get_item_index(tile_pos);
 	if (l_index >= 0)
-		l_level.delete_item(l_index);
+		set_selected_index(l_index);
+	//l_level.delete_item(l_index);
+}
+
+void skc::SKC_Main_window::delete_selected_index(void) {
+	if (is_selected_index_valid()) {
+		auto& l_level{ get_level() };
+		auto l_index = get_selected_index();
+
+		if (m_selected_type == c::ELM_TYPE_ITEM)
+			l_level.delete_item(l_index);
+		else if (m_selected_type == c::ELM_TYPE_ENEMY)
+			l_level.delete_enemy(l_index);
+
+		if (l_index > 0)
+			--m_board_selection[m_current_level][m_selected_type];
+	}
 }
 
 void skc::SKC_Main_window::right_click_enemy(const std::pair<int, int>& tile_pos) {
@@ -243,6 +265,18 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 			l_pos.first, l_pos.second);
 	}
 
+	if (is_selected_index_valid()) {
+		std::pair<int, int> l_pos{ 0,0 };
+		if (m_selected_type == c::ELM_TYPE_ITEM)
+			l_pos = l_level.get_items().at(get_selected_index()).get_position();
+		else if (m_selected_type == c::ELM_TYPE_ENEMY)
+			l_pos = l_level.get_enemies().at(get_selected_index()).get_position();
+
+		klib::gfx::draw_rect(p_rnd,
+			l_pos.first * c::TILE_GFX_SIZE, l_pos.second * c::TILE_GFX_SIZE,
+			c::TILE_GFX_SIZE, c::TILE_GFX_SIZE, SDL_Color{ 255, 255, 0 }, 2);
+	}
+
 	SDL_SetRenderTarget(p_rnd, nullptr);
 }
 
@@ -282,6 +316,13 @@ void skc::SKC_Main_window::draw_ui_enemy_window(const SKC_Config& p_config) {
 void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
 	std::string l_level_str{ "Level " + std::to_string(m_current_level + 1) + "###lvl" };
 	ImGui::Begin(l_level_str.c_str());
+
+	if (ImGui::Button("Save xml")) {
+		for (std::size_t i{ 0 }; i < m_levels.size(); ++i)
+			save_level_xml(m_levels.at(i), "./xml", "level-" + std::to_string(i + 1) + ".xml");
+	}
+
+	ImGui::Separator();
 
 	draw_tile_picker(p_config, c::ELM_TYPE_METADATA);
 
@@ -417,4 +458,22 @@ const skc::Level& skc::SKC_Main_window::get_level(void) const {
 
 skc::Level& skc::SKC_Main_window::get_level(void) {
 	return m_levels.at(m_current_level);
+}
+
+int skc::SKC_Main_window::get_selected_index(void) const {
+	return m_board_selection[m_current_level][m_selected_type];
+}
+
+void skc::SKC_Main_window::set_selected_index(int p_index) {
+	m_board_selection[m_current_level][m_selected_type] = p_index;
+}
+
+bool skc::SKC_Main_window::is_selected_index_valid(void) const {
+	int l_index{ get_selected_index() };
+	const auto& l_level{ get_level() };
+
+	return (m_selected_type == c::ELM_TYPE_ITEM &&
+		l_index < static_cast<int>(l_level.get_items().size())) ||
+		(m_selected_type == c::ELM_TYPE_ENEMY &&
+			l_index < static_cast<int>(l_level.get_enemies().size()));
 }

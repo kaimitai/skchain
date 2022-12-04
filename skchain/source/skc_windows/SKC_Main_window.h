@@ -21,6 +21,13 @@ namespace skc {
 
 		std::size_t m_selected_type; // 0 - metadata, 1 - items, 2 - enemies
 		byte m_selected;			 // sub-selection
+		// selected board item - one entry per level, with one entry per type
+		std::vector<std::vector<int>> m_board_selection;
+
+		bool is_selected_index_valid(void) const;
+		int get_selected_index(void) const;
+		void set_selected_index(int p_index);
+		void delete_selected_index(void);
 
 		int get_tile_w(int p_screen_h) const;
 		void draw_tile(SDL_Renderer* p_rnd, SDL_Texture* p_texture, int p_x, int p_y, bool p_transp = false) const;
