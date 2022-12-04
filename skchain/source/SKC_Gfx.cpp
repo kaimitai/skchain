@@ -14,6 +14,10 @@ skc::SKC_Gfx::~SKC_Gfx(void) {
 	for (auto l_texture : m_tile_gfx)
 		if (l_texture != nullptr)
 			SDL_DestroyTexture(l_texture);
+
+	for (auto l_texture : m_hex_gfx)
+		if (l_texture != nullptr)
+			SDL_DestroyTexture(l_texture);
 }
 
 skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
@@ -34,6 +38,7 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 
 	this->load_metadata(lr_rom_data);
 	this->generate_tile_textures(p_rnd);
+	this->generate_hex_textures(p_rnd);
 
 	// code for generating tilemap bmp-file
 	/*
@@ -69,12 +74,14 @@ SDL_Texture* skc::SKC_Gfx::get_tile(std::size_t p_element_type, byte p_item_no,
 
 SDL_Texture* skc::SKC_Gfx::get_item_tile(byte p_item_no, std::size_t p_tileset_no, int frame_no) const {
 	const auto iter{ m_item_gfx_map.find(p_item_no) };
-	return m_tile_gfx.at(iter == end(m_item_gfx_map) ? 32 : iter->second + p_tileset_no * m_tileset_tile_count);
+	return iter == end(m_item_gfx_map) ? m_hex_gfx[p_item_no] :
+		m_tile_gfx.at(iter->second + p_tileset_no * m_tileset_tile_count);
 }
 
 SDL_Texture* skc::SKC_Gfx::get_enemy_tile(byte p_enemy_no, std::size_t p_tileset_no, int frame_no) const {
 	const auto iter{ m_sprite_gfx_map.find(p_enemy_no) };
-	return m_tile_gfx.at(iter == end(m_sprite_gfx_map) ? 32 : iter->second + p_tileset_no * m_tileset_tile_count);
+	return iter == end(m_sprite_gfx_map) ? m_hex_gfx[p_enemy_no] :
+		m_tile_gfx.at(iter->second + p_tileset_no * m_tileset_tile_count);
 }
 
 SDL_Texture* skc::SKC_Gfx::get_meta_tile(byte p_meta_no, std::size_t p_tileset_no, int p_frame_no) const {
@@ -244,6 +251,24 @@ void skc::SKC_Gfx::load_metadata(const std::vector<byte> p_rom_data) {
 	}
 
 	m_tileset_tile_count = m_tile_definitions.size() / l_tileset_count;
+}
+
+void skc::SKC_Gfx::generate_hex_textures(SDL_Renderer* p_rnd) {
+	auto l_srf = create_nes_sdl_surface(2 * klib::c::NES_TILE_W, 2 * klib::c::NES_TILE_W);
+	std::size_t l_hex_pal_np{ 6 };
+
+	for (std::size_t i{ 0 }; i < 256; ++i) {
+		std::size_t d1{ i / 16 };
+		std::size_t d2{ i % 16 };
+
+		draw_tile_on_surface(l_srf, 1792, l_hex_pal_np, 0, 0);
+		draw_tile_on_surface(l_srf, 1792 + 33, l_hex_pal_np, klib::c::NES_TILE_W, 0);
+
+		draw_tile_on_surface(l_srf, 1792 + d1, l_hex_pal_np, 0, klib::c::NES_TILE_W);
+		draw_tile_on_surface(l_srf, 1792 + d2, l_hex_pal_np, klib::c::NES_TILE_W, klib::c::NES_TILE_W);
+
+		m_hex_gfx.push_back(klib::gfx::surface_to_texture(p_rnd, l_srf, i == 255));
+	}
 }
 
 void skc::SKC_Gfx::generate_tile_textures(SDL_Renderer* p_rnd) {

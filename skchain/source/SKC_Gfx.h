@@ -25,6 +25,7 @@ namespace skc {
 		std::vector<klib::NES_Gfx_tile> m_tiles;
 		std::vector<skc::SKC_Tile_definition> m_tile_definitions;
 		std::vector<SDL_Texture*> m_tile_gfx;
+		std::vector<SDL_Texture*> m_hex_gfx;
 		std::vector<klib::NES_Palette> m_palettes;
 		std::size_t m_tileset_tile_count;
 
@@ -32,6 +33,7 @@ namespace skc {
 
 		void load_metadata(const std::vector<byte> p_rom_data);
 		void generate_tile_textures(SDL_Renderer* p_rnd);
+		void generate_hex_textures(SDL_Renderer* p_rnd);
 
 		SDL_Texture* get_gfx_translated(std::size_t p_tile_no, std::size_t p_tileset_no) const;
 
