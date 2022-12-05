@@ -29,6 +29,18 @@ byte skc::Level_element::get_item_no(void) const {
 		return m_element_no % 0x40;
 }
 
+void skc::Level_element::set_item_hidden(bool p_value) {
+	klib::util::set_bit(m_element_no, 6, p_value);
+	if (p_value)
+		set_item_in_block(false);
+}
+
+void skc::Level_element::set_item_in_block(bool p_value) {
+	klib::util::set_bit(m_element_no, 7, p_value);
+	if (p_value)
+		set_item_hidden(false);
+}
+
 skc::Level::Level(void) :
 	m_key_status{ c::DEFAULT_KEY_STATUS },
 	m_spawn_rate{ c::DEFAULT_SPAWN_RATE },
@@ -223,6 +235,14 @@ void skc::Level::delete_enemy(int p_index) {
 	m_enemies.erase(begin(m_enemies) + p_index);
 }
 
+void skc::Level::set_item_hidden(int p_index, bool p_value) {
+	m_items.at(p_index).set_item_hidden(p_value);
+}
+
+void skc::Level::set_item_in_block(int p_index, bool p_value) {
+	m_items.at(p_index).set_item_in_block(p_value);
+}
+
 // static functions
 bool skc::Level::is_item_constellation(byte p_item_no) {
 	return p_item_no >= c::ITEM_CONSTELLATION_MIN &&
@@ -240,7 +260,7 @@ bool skc::Level::is_item_hidden(byte p_item_no) {
 std::vector<std::size_t> skc::Level::get_item_indexes(byte p_item_no, std::set<std::size_t>& p_ignored_indexes) const {
 	std::vector<std::size_t> result;
 
-	for (std::size_t i{ 0 }; result.size() <= c::ITEM_COMPRESS_MAX_COUNT
+	for (std::size_t i{ 0 }; result.size() < c::ITEM_COMPRESS_MAX_COUNT
 		&& i < m_items.size(); ++i)
 		if (p_ignored_indexes.find(i) == end(p_ignored_indexes) &&
 			m_items[i].get_element_no() == p_item_no) {

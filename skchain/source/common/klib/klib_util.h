@@ -13,6 +13,7 @@ namespace klib {
 	namespace util {
 
 		bool get_bit(byte p_byte, unsigned int p_position);
+		void set_bit(byte& p_byte, unsigned int p_position, bool p_value);
 		std::vector<std::vector<bool>> bytes_to_bitmask(const std::vector<byte>& p_bytes, int p_w, int p_h, std::size_t p_start_pos = 0);
 		std::vector<byte> bitmask_to_bytes(const std::vector<std::vector<bool>>& p_bitmask);
 

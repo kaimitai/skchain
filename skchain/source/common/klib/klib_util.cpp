@@ -26,6 +26,13 @@ bool klib::util::get_bit(byte p_byte, unsigned int p_position) {
 	return (p_byte >> p_position) & 1;
 }
 
+void klib::util::set_bit(byte& p_byte, unsigned int p_position, bool p_value) {
+	if (p_value)
+		p_byte |= 0x01 << p_position;
+	else
+		p_byte &= ~(0x01 << p_position);
+}
+
 // assume that the input vector has a width which is 0 mod 8
 std::vector<byte> klib::util::bitmask_to_bytes(const std::vector<std::vector<bool>>& p_bitmask) {
 	std::vector<byte> result;

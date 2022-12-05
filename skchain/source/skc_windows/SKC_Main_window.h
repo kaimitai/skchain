@@ -37,6 +37,7 @@ namespace skc {
 		void draw_ui_level_window(const SKC_Config& p_config);
 		void draw_ui_item_window(const SKC_Config& p_config);
 		void draw_ui_enemy_window(const SKC_Config& p_config);
+		void draw_ui_selected_tile_window(const SKC_Config& p_config);
 		void draw_tile_picker(const SKC_Config& p_config, std::size_t p_element_types);
 
 		bool is_valid_constellation(byte p_constellation) const;

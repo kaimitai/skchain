@@ -53,8 +53,8 @@ int main(int argc, char* args[]) try {
 			ImGui_ImplSDLRenderer_Init(l_rnd);
 			ImGui::GetIO().IniFilename = skc::c::FILENAME_IMGUI_INI;
 
-			//skc::SKC_Config l_config(klib::file::read_file_as_bytes("Solomon's Key (U) [!].nes"));
-			skc::SKC_Config l_config(klib::file::read_file_as_bytes("sk_test.nes"));
+			skc::SKC_Config l_config(klib::file::read_file_as_bytes("Solomon's Key (U) [!].nes"));
+			//kc::SKC_Config l_config(klib::file::read_file_as_bytes("sk_test.nes"));
 			skc::SKC_Main_window main_window(l_rnd, l_config);
 			//main_window.set_application_icon(l_window);
 

@@ -26,6 +26,9 @@ namespace skc {
 		Element_type get_element_type(void) const;
 		byte get_element_no(void) const;
 		byte get_item_no(void) const;
+
+		void set_item_hidden(bool p_value);
+		void set_item_in_block(bool p_value);
 	};
 
 	class Level {
@@ -79,6 +82,9 @@ namespace skc {
 		void delete_item(int p_index);
 		void add_enemy(byte p_enemy_no, const position& p_pos);
 		void delete_enemy(int p_index);
+
+		void set_item_hidden(int p_index, bool p_value);
+		void set_item_in_block(int p_index, bool p_value);
 
 		static bool is_item_constellation(byte p_item_no);
 		static bool is_item_in_block(byte p_item_no);

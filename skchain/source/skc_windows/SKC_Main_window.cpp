@@ -78,7 +78,7 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 
 	if (p_input.is_ctrl_pressed() && p_input.is_pressed(SDL_SCANCODE_S))
 		save_nes_file("sk_test.nes", p_config);
-	else if (p_input.is_pressed(SDL_SCANCODE_DELETE))
+	else if (p_input.is_pressed(SDL_SCANCODE_DELETE) && is_selected_index_valid())
 		delete_selected_index();
 	else if (p_input.is_pressed(SDL_SCANCODE_KP_PLUS)) {
 		byte l_tileset_no = get_level().get_tileset_no() + 1;
@@ -297,9 +297,34 @@ void skc::SKC_Main_window::draw_ui(const SKC_Config& p_config) {
 	this->draw_ui_level_window(p_config);
 	this->draw_ui_item_window(p_config);
 	this->draw_ui_enemy_window(p_config);
+	this->draw_ui_selected_tile_window(p_config);
 
 	ImGui::Render();
 	ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
+}
+
+void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_config) {
+	ImGui::Begin("Selected Element");
+
+	if (is_selected_index_valid()) {
+		auto& l_level{ get_level() };
+
+		if (m_selected_type == c::ELM_TYPE_ITEM) {
+			bool l_hidden{ skc::Level::is_item_hidden(get_level().get_items().at(get_selected_index()).get_element_no()) };
+			bool l_in_block{ skc::Level::is_item_in_block(get_level().get_items().at(get_selected_index()).get_element_no()) };
+
+			if (ImGui::Checkbox("Hidden", &l_hidden)) {
+				l_level.set_item_hidden(get_selected_index(), l_hidden);
+			}
+			if (ImGui::Checkbox("In Block", &l_in_block)) {
+				l_level.set_item_in_block(get_selected_index(), l_in_block);
+			}
+		}
+	}
+	else {
+		ImGui::Text("No element selected");
+	}
+	ImGui::End();
 }
 
 void skc::SKC_Main_window::draw_ui_item_window(const SKC_Config& p_config) {
