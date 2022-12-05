@@ -33,7 +33,6 @@ namespace skc {
 		std::vector<Level_element> m_items, m_enemies;
 		std::vector<byte> m_item_header;
 		std::optional<Level_element> m_constellation;
-		std::optional<byte> m_item_eof;
 
 		byte m_key_status, m_spawn_rate, m_spawn01, m_spawn02, m_tileset_no;
 		std::pair<int, int> m_fixed_start_pos, m_fixed_key_pos, m_fixed_door_pos;
@@ -63,10 +62,9 @@ namespace skc {
 		byte get_spawn01(void) const;
 		byte get_spawn02(void) const;
 		byte get_tileset_no(void) const;
+		byte get_item_delimiter(void) const;
 
 		const std::vector<byte>& get_item_header(void) const;
-		bool has_item_eof(void) const;
-		byte get_item_eof(void) const;
 
 		const std::vector<skc::Level_element>& get_enemies(void) const;
 		const std::vector<skc::Level_element>& get_items(void) const;

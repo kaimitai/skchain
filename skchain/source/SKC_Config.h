@@ -14,7 +14,7 @@ namespace skc {
 		int m_rom_ram_diff;
 		void load_config_xml(void);
 		std::vector<byte> m_rom_data;
-		std::vector<std::size_t> m_level_tilesets;
+		std::vector<std::size_t> m_level_palettes;
 		std::vector<std::vector<std::string>> m_descriptions;
 		std::vector<std::vector<std::pair<std::string, std::vector<byte>>>> m_tile_pickers;
 
@@ -34,7 +34,7 @@ namespace skc {
 		unsigned int get_nes_tile_count(void) const;
 		std::size_t get_rom_address_from_ram(std::size_t p_ram_address) const;
 		std::size_t get_ram_address_from_rom(std::size_t p_rom_address) const;
-		std::size_t get_level_tileset(std::size_t p_level_no) const;
+		std::size_t get_level_tileset(std::size_t p_level_no, byte p_tileset_no) const;
 
 		const std::vector<std::pair<std::string, std::vector<byte>>>& get_tile_picker(std::size_t p_element_type) const;
 		const std::string& get_description(std::size_t p_element_type,

@@ -31,7 +31,7 @@ namespace skc {
 		constexpr char XML_TAG_ROM_RAM_DIFF[]{ "rom_ram_diff" };
 		constexpr char XML_TAG_LEVEL_COUNT[]{ "level_count" };
 		constexpr char XML_TAG_NES_TILE_COUNT[]{ "nes_tile_count" };
-		constexpr char XML_TAG_LEVEL_TILESETS[]{ "level_tilesets" };
+		constexpr char XML_TAG_LEVEL_PALETTES[]{ "level_palettes" };
 
 		constexpr char XML_ATTR_NO[]{ "no" };
 		constexpr char XML_ATTR_DESCRIPTION[]{ "description" };
@@ -65,7 +65,7 @@ namespace skc {
 		constexpr char XML_ATTR_CONSTELLATION_NO[]{ "constellation_no" };
 		constexpr char XML_ATTR_CONSTELLATION_POSITION[]{ "constellation_position" };
 		constexpr char XML_ATTR_ITEM_HEADER[]{ "item_header" };
-		constexpr char XML_ATTR_ITEM_EOF[]{ "item_eof" };
+		constexpr char XML_ATTR_TILESET[]{ "tileset" };
 
 		constexpr char XML_ATTR_ELEMENT_NO[]{ "element_no" };
 		constexpr char XML_ATTR_POSITION[]{ "position" };

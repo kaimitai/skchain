@@ -1,6 +1,7 @@
 #include "SKC_Main_window.h"
 #include "./../common/klib/klib_gfx.h"
 #include "./../common/klib/klib_file.h"
+#include "./../common/klib/klib_util.h"
 #include "./../skc_util/Xml_helper.h"
 #include "./../skc_constants/Constants_level.h"
 #include "./../common/imgui/imgui.h"
@@ -32,7 +33,6 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_c
 		m_levels.at(i).load_block_data(lr_rom_data, p_config.get_offset_block_data() + i * c::SIZE_LEVEL_WALLS);
 		m_levels.at(i).load_item_data(lr_rom_data, l_item_offsets.at(i));
 		m_levels.at(i).load_enemy_data(lr_rom_data, l_enemy_offsets.at(i));
-		m_levels.at(i).set_tileset_no(p_config.get_level_tileset(i) % 3);
 	}
 
 	m_board_selection = std::vector<std::vector<int>>(
@@ -80,6 +80,10 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 		save_nes_file("sk_test.nes", p_config);
 	else if (p_input.is_pressed(SDL_SCANCODE_DELETE))
 		delete_selected_index();
+	else if (p_input.is_pressed(SDL_SCANCODE_KP_PLUS)) {
+		byte l_tileset_no = get_level().get_tileset_no() + 1;
+		get_level().set_tileset_no(l_tileset_no > 2 ? 0 : l_tileset_no);
+	}
 }
 
 void skc::SKC_Main_window::right_click(const std::pair<int, int>& p_tile_pos) {
@@ -189,8 +193,10 @@ void skc::SKC_Main_window::draw_tile(SDL_Renderer* p_rnd, SDL_Texture* p_texture
 void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Config& p_config) {
 	SDL_SetRenderTarget(p_rnd, m_texture);
 
-	std::size_t l_tileset_no{ p_config.get_level_tileset(m_current_level) };
 	const auto& l_level{ get_level() };
+	std::size_t l_tileset_no{ p_config.get_level_tileset(m_current_level,
+		l_level.get_tileset_no()) };
+
 
 	// draw empty background
 	for (int j{ 0 }; j < c::LEVEL_H; ++j)
@@ -318,7 +324,7 @@ void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
 
 	if (ImGui::Button("Save xml")) {
 		for (std::size_t i{ 0 }; i < m_levels.size(); ++i)
-			save_level_xml(m_levels.at(i), "./xml", "level-" + std::to_string(i + 1) + ".xml");
+			save_level_xml(m_levels.at(i), "./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
 	}
 
 	ImGui::Separator();
@@ -331,7 +337,7 @@ void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
 void skc::SKC_Main_window::draw_tile_picker(const SKC_Config& p_config, std::size_t p_element_types) {
 	const auto& l_tile_picker = p_config.get_tile_picker(p_element_types);
 
-	std::size_t l_tileset_no{ p_config.get_level_tileset(m_current_level) };
+	std::size_t l_tileset_no{ p_config.get_level_tileset(m_current_level, get_level().get_tileset_no()) };
 
 	for (const auto& kv : l_tile_picker) {
 		ImGui::Text(kv.first.c_str());

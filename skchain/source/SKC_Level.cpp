@@ -82,7 +82,7 @@ void skc::Level::load_item_data(const std::vector<byte>& p_bytes, std::size_t p_
 		byte l_next_elm{ p_bytes.at(i) };
 		// found a 0-terminator, end stream read
 		if (is_item_delimiter(l_next_elm)) {
-			m_item_eof = l_next_elm;
+			m_tileset_no = (l_next_elm >> 2) & 3;
 			break;
 		}
 		// if we hit a constellation, store it as an optional in the level metadata (as 0 or 1 of these can be present)
@@ -91,6 +91,7 @@ void skc::Level::load_item_data(const std::vector<byte>& p_bytes, std::size_t p_
 			m_constellation = Level_element(skc::Element_type::Item,
 				get_position_from_byte(p_bytes.at(i + 1)),
 				l_next_elm);
+			m_tileset_no = (get_constellation_no() >> 2) & 3;
 			break;
 		}
 		// found a regular item, store it in the list
@@ -136,16 +137,8 @@ bool skc::Level::has_constellation(void) const {
 	return m_constellation != std::nullopt;
 }
 
-bool skc::Level::has_item_eof(void) const {
-	return m_item_eof != std::nullopt;
-}
-
 byte skc::Level::get_constellation_no(void) const {
 	return m_constellation.value().get_element_no();
-}
-
-byte skc::Level::get_item_eof(void) const {
-	return m_item_eof.value();
 }
 
 position skc::Level::get_constellation_pos(void) const {
@@ -166,6 +159,10 @@ byte skc::Level::get_spawn02(void) const {
 
 byte skc::Level::get_tileset_no(void) const {
 	return m_tileset_no;
+}
+
+byte skc::Level::get_item_delimiter(void) const {
+	return c::ITEM_DELIMITER_MIN + 4 * m_tileset_no;
 }
 
 const std::vector<skc::Level_element>& skc::Level::get_items(void) const {
@@ -202,6 +199,11 @@ void skc::Level::set_block(skc::Wall p_wall_type, const std::pair<int, int>& p_p
 }
 
 void skc::Level::set_tileset_no(byte p_tileset_no) {
+	if (has_constellation()) {
+		byte four{ 4 };
+		int l_base_constellation{ (get_constellation_no() - c::ITEM_CONSTELLATION_MIN) % 4 };
+		set_constellation(c::ITEM_CONSTELLATION_MIN + 4 * p_tileset_no, get_constellation_pos());
+	}
 	m_tileset_no = p_tileset_no;
 }
 
@@ -330,7 +332,7 @@ std::vector<byte> skc::Level::get_item_bytes(void) const {
 		result.push_back(get_byte_from_position(m_constellation.value().get_position()));
 	}
 	else
-		result.push_back(has_item_eof() ? get_item_eof() : 0x00);
+		result.push_back(get_item_delimiter());
 
 	return result;
 }

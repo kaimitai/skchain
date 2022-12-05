@@ -12,7 +12,7 @@
 	<nes_tile_count value="2048" />
 	<!-- values that could theoretically be read from the ROM data -->
 	<!-- as we learn more about the ROM data, the following values will be removed -->
-	<level_tilesets value="0,0,1,0, 5,3,4,3, 6,7,7,6, 10,9,10,9, 5,5,3,3, 0,2,2,1, 8,8,7,7, 1,0,1,1, 11,9,11,11, 4,4,5,5, 0,1,1,2, 7,7,6,8, 14,12,0,13,14" />
+	<level_palettes value="0,0,0,0, 1,1,1,1, 2,2,2,2, 3,3,3,3, 2,2,2,2, 0,0,0,0, 2,2,2,2, 0,0,0,0, 3,3,3,3, 2,2,2,2, 0,0,0,0, 2,2,2,2, 4,4,0,4,4" />
   </rom_metadata>
 
   <!-- virtual metadata tiles mapped from byte value (0-255) to description and tile graphics indexes (do not add new items to this list) -->
