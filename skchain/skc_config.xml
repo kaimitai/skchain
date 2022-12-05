@@ -345,8 +345,8 @@
       <tile no="34" palette_no="2" nes_tiles="308,384,310,386" />
       <tile no="35" palette_no="3" nes_tiles="308,384,310,386" />
 
-      <!-- origami swan TODO -->
-      <tile no="36" palette_no="3" nes_tiles="424,425,330,330" />
+      <!-- origami swan -->
+      <tile no="36" palette_no="3" nes_tiles="424,425,329,331" />
       <!-- half bottle -->
       <tile no="37" palette_no="0" nes_tiles="356,356:v,334,335" />
 
@@ -413,6 +413,8 @@
 	  
 	  <!-- blue key -->
 	  <tile no="68" palette_no="2" nes_tiles="300,397,398,399" />
+	  <!-- tecmo bunny -->
+      <tile no="69" palette_no="1" nes_tiles="440,441,442,443" />
 
     </tile_definitions>
 	

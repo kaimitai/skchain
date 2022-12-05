@@ -38,7 +38,3 @@ void klib::file::append_string_to_file(const std::string& p_text, const std::str
 
 	output.close();
 }
-
-bool klib::file::get_bit(byte p_byte, unsigned int p_position) {
-	return (p_byte >> p_position) & 1;
-}

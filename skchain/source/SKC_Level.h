@@ -35,12 +35,12 @@ namespace skc {
 		std::optional<Level_element> m_constellation;
 		std::optional<byte> m_item_eof;
 
-		void add_blocks(byte p_b1, byte p_b2, byte p_w1, byte p_w2);
 		byte m_key_status, m_spawn_rate, m_spawn01, m_spawn02, m_tileset_no;
 		std::pair<int, int> m_fixed_start_pos, m_fixed_key_pos, m_fixed_door_pos;
 
 		std::vector<std::size_t> get_item_indexes(byte p_item_no, std::set<std::size_t>& p_ignored_indexes) const;
 
+		static skc::Wall walls_to_wall_type(bool p_bblock, bool p_wblock);
 		static std::pair<int, int> get_position_from_byte(byte b);
 		static byte get_byte_from_position(const std::pair<int, int>& p_position);
 		static bool is_item_delimiter(byte p_value);

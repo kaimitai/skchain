@@ -112,7 +112,6 @@ void skc::SKC_Main_window::left_click_item(const std::pair<int, int>& tile_pos) 
 	int l_index = l_level.get_item_index(tile_pos);
 	if (l_index >= 0)
 		set_selected_index(l_index);
-	//l_level.delete_item(l_index);
 }
 
 void skc::SKC_Main_window::delete_selected_index(void) {

@@ -1,6 +1,6 @@
 #include "SKC_Level.h"
 #include "skc_constants/Constants_level.h"
-#include "./common/klib/klib_file.h"
+#include "./common/klib/klib_util.h"
 #include <set>
 #include <stdexcept>
 
@@ -23,35 +23,10 @@ byte skc::Level_element::get_element_no(void) const {
 }
 
 byte skc::Level_element::get_item_no(void) const {
-	if (m_element_no >= 0xc0)
+	if (m_element_no >= c::ITEM_COPY_INDICATOR_MIN)
 		return m_element_no;
 	else
 		return m_element_no % 0x40;
-}
-
-void skc::Level::add_blocks(byte p_b1, byte p_b2, byte p_w1, byte p_w2) {
-	std::vector<Wall> l_row;
-
-	for (int b{ 0 }; b < 2; ++b) {
-		byte l_b = (b == 0 ? p_b1 : p_b2);
-		byte l_w = (b == 0 ? p_w1 : p_w2);
-
-		for (int i{ 7 }; i >= 0; --i) {
-			bool l_is_b = klib::file::get_bit(l_b, i);
-			bool l_is_w = klib::file::get_bit(l_w, i);
-
-			if (l_is_b && l_is_w)
-				l_row.push_back(skc::Wall::Brown_white);
-			else if (l_is_b)
-				l_row.push_back(skc::Wall::Brown);
-			else if (l_is_w)
-				l_row.push_back(skc::Wall::White);
-			else
-				l_row.push_back(skc::Wall::None);
-		}
-	}
-
-	m_tiles.push_back(l_row);
 }
 
 skc::Level::Level(void) :
@@ -63,9 +38,18 @@ skc::Level::Level(void) :
 { }
 
 void skc::Level::load_block_data(const std::vector<byte>& p_bytes, std::size_t p_offset) {
-	for (std::size_t i{ 0 }; i < 24; i += 2) {
-		add_blocks(p_bytes.at(p_offset + i), p_bytes.at(p_offset + i + 1),
-			p_bytes.at(p_offset + 24 + i), p_bytes.at(p_offset + 24 + i + 1));
+	auto l_bblocks = klib::util::bytes_to_bitmask(p_bytes, c::LEVEL_W, c::LEVEL_H, p_offset);
+	auto l_wblocks = klib::util::bytes_to_bitmask(p_bytes, c::LEVEL_W, c::LEVEL_H, p_offset + c::TILE_BITMASK_BYTE_SIZE);
+
+	for (int j{ 0 }; j < c::LEVEL_H; ++j) {
+		std::vector<Wall> l_row;
+		for (int i{ 0 }; i < c::LEVEL_W; ++i)
+			l_row.push_back(walls_to_wall_type(
+				l_bblocks.at(j).at(i),
+				l_wblocks.at(j).at(i)
+			));
+
+		m_tiles.push_back(l_row);
 	}
 }
 
@@ -110,14 +94,14 @@ void skc::Level::load_item_data(const std::vector<byte>& p_bytes, std::size_t p_
 			break;
 		}
 		// found a regular item, store it in the list
-		else if (l_next_elm / 16 != 0xc) {
+		else if (l_next_elm < c::ITEM_COPY_INDICATOR_MIN) {
 			m_items.push_back(Level_element(skc::Element_type::Item,
 				get_position_from_byte(p_bytes.at(i + 1)),
 				l_next_elm));
 		}
 		// found a repeating item, store them all in the list
 		else {
-			std::size_t l_repeat_count{ static_cast<std::size_t>(l_next_elm % 16) + 1 };
+			std::size_t l_repeat_count{ static_cast<std::size_t>(l_next_elm - c::ITEM_COPY_INDICATOR_MIN) + 1 };
 			l_next_elm = p_bytes.at(i + 1);
 			for (std::size_t j{ 0 }; j < l_repeat_count; ++j)
 				m_items.push_back(Level_element(skc::Element_type::Item,
@@ -239,22 +223,23 @@ void skc::Level::delete_enemy(int p_index) {
 
 // static functions
 bool skc::Level::is_item_constellation(byte p_item_no) {
-	return p_item_no >= c::ITEM_CONSTELLATION_ARIES &&
-		p_item_no <= c::ITEM_CONSTELLATION_SAGITTARIUS;
+	return p_item_no >= c::ITEM_CONSTELLATION_MIN &&
+		p_item_no <= c::ITEM_CONSTELLATION_MAX;
 }
 
 bool skc::Level::is_item_in_block(byte p_item_no) {
-	return klib::file::get_bit(p_item_no, 7);
+	return klib::util::get_bit(p_item_no, 7);
 }
 
 bool skc::Level::is_item_hidden(byte p_item_no) {
-	return klib::file::get_bit(p_item_no, 6);
+	return klib::util::get_bit(p_item_no, 6);
 }
 
 std::vector<std::size_t> skc::Level::get_item_indexes(byte p_item_no, std::set<std::size_t>& p_ignored_indexes) const {
 	std::vector<std::size_t> result;
 
-	for (std::size_t i{ 0 }; result.size() <= 16 && i < m_items.size(); ++i)
+	for (std::size_t i{ 0 }; result.size() <= c::ITEM_COMPRESS_MAX_COUNT
+		&& i < m_items.size(); ++i)
 		if (p_ignored_indexes.find(i) == end(p_ignored_indexes) &&
 			m_items[i].get_element_no() == p_item_no) {
 			result.push_back(i);
@@ -262,6 +247,17 @@ std::vector<std::size_t> skc::Level::get_item_indexes(byte p_item_no, std::set<s
 		}
 
 	return result;
+}
+
+skc::Wall skc::Level::walls_to_wall_type(bool p_bblock, bool p_wblock) {
+	if (p_bblock && p_wblock)
+		return skc::Wall::Brown_white;
+	else if (p_bblock)
+		return skc::Wall::Brown;
+	else if (p_wblock)
+		return skc::Wall::White;
+	else
+		return skc::Wall::None;
 }
 
 std::pair<int, int> skc::Level::get_position_from_byte(byte b) {
@@ -277,33 +273,15 @@ byte skc::Level::get_byte_from_position(const std::pair<int, int>& p_position) {
 std::vector<byte> skc::Level::get_block_bytes(void) const {
 	std::vector<byte> result;
 
-	const auto get_block_bit = [](const Wall p_target, int p_pos) -> int {
-		return 0;
-	};
+	const std::vector<byte> l_brown_bytes{ klib::util::bitmask_to_bytes(
+		klib::util::vec2_to_bitmask(m_tiles, {Wall::Brown, Wall::Brown_white})
+	) };
+	const std::vector<byte> l_white_bytes{ klib::util::bitmask_to_bytes(
+		klib::util::vec2_to_bitmask(m_tiles, {Wall::White, Wall::Brown_white})
+	) };
 
-	for (int j{ 0 }; j < c::LEVEL_H; ++j)
-		for (int i{ 0 }; i < c::LEVEL_W; i += 8) {
-			byte l_byte{ 0 };
-			for (int b{ 0 }; b < 8; ++b) {
-				auto l_wall = m_tiles.at(j).at(i + b);
-				byte l_bit = (l_wall == Wall::Brown || l_wall == Wall::Brown_white);
-				l_byte *= 2;
-				l_byte += l_bit;
-			}
-			result.push_back(l_byte);
-		}
-
-	for (int j{ 0 }; j < c::LEVEL_H; ++j)
-		for (int i{ 0 }; i < c::LEVEL_W; i += 8) {
-			byte l_byte{ 0 };
-			for (int b{ 0 }; b < 8; ++b) {
-				auto l_wall = m_tiles.at(j).at(i + b);
-				byte l_bit = (l_wall == Wall::White || l_wall == Wall::Brown_white);
-				l_byte *= 2;
-				l_byte += l_bit;
-			}
-			result.push_back(l_byte);
-		}
+	klib::util::append_vector(result, l_brown_bytes);
+	klib::util::append_vector(result, l_white_bytes);
 
 	return result;
 }
@@ -331,7 +309,7 @@ std::vector<byte> skc::Level::get_item_bytes(void) const {
 			// when two items are the same, it does not matter if we compress or not
 			// the original game seems to prefer compression when item count > 1, so we will go with the same cutoff
 			if (l_indexes.size() > 1) {
-				byte l_repeat_count = 0xc0 + static_cast<byte>(l_indexes.size() - 1);
+				byte l_repeat_count = c::ITEM_COPY_INDICATOR_MIN + static_cast<byte>(l_indexes.size() - 1);
 				result.push_back(l_repeat_count);
 				result.push_back(l_item_no);
 				for (std::size_t li{ 0 }; li < l_indexes.size(); ++li)
@@ -374,7 +352,7 @@ std::vector<byte> skc::Level::get_enemy_bytes(void) const {
 }
 
 bool skc::Level::is_item_delimiter(byte p_value) {
-	return (p_value == 0) || (p_value >= 0xd0 && p_value < 0xf0);
+	return (p_value == 0x00) || (p_value >= c::ITEM_DELIMITER_MIN && p_value < c::ITEM_CONSTELLATION_MIN);
 }
 
 bool skc::Level::is_key_hidden(void) const {

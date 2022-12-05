@@ -32,7 +32,14 @@ namespace skc {
 		constexpr byte ITEM_CONSTELLATION_LIBRA{ 0xfa };
 		constexpr byte ITEM_CONSTELLATION_SAGITTARIUS{ 0xfb };
 
+		constexpr byte ITEM_COPY_INDICATOR_MIN{ 0xc0 };
+		constexpr byte ITEM_DELIMITER_MIN{ 0xe0 };
+		constexpr byte ITEM_CONSTELLATION_MIN{ ITEM_CONSTELLATION_ARIES };
+		constexpr byte ITEM_CONSTELLATION_MAX{ ITEM_CONSTELLATION_SAGITTARIUS };
+		constexpr byte ITEM_COMPRESS_MAX_COUNT{ ITEM_DELIMITER_MIN - ITEM_COPY_INDICATOR_MIN };
+
 		constexpr unsigned int LEVEL_W{ 16 }, LEVEL_H{ 12 };
+		constexpr unsigned int TILE_BITMASK_BYTE_SIZE{ (LEVEL_W * LEVEL_H) / 8 };
 		constexpr unsigned int TILE_WIDTH{ 16 };
 		constexpr unsigned int TILE_SCALE{ 2 };
 		constexpr unsigned int TILE_GFX_SIZE{ TILE_WIDTH * TILE_SCALE };

@@ -1,5 +1,5 @@
 #include "NES_Gfx_tile.h"
-#include "klib_file.h"
+#include "klib_util.h"
 
 klib::NES_Gfx_tile::NES_Gfx_tile(const std::vector<byte>& p_bytes) {
 	for (int i{ 0 }; i < 8; ++i) {
@@ -9,8 +9,8 @@ klib::NES_Gfx_tile::NES_Gfx_tile(const std::vector<byte>& p_bytes) {
 		byte l_b = p_bytes.at(i + 8);
 
 		for (int e{ 7 }; e >= 0; --e) {
-			byte l_pal_index = klib::file::get_bit(l_a, e) +
-				2 * klib::file::get_bit(l_b, e);
+			byte l_pal_index = klib::util::get_bit(l_a, e) +
+				2 * klib::util::get_bit(l_b, e);
 			l_row.push_back(l_pal_index);
 		}
 

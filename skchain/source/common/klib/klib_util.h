@@ -1,13 +1,34 @@
 #ifndef KLIB_UTIL_H
 #define KLIB_UTIL_H
 
+#include <set>
 #include <string>
 #include <vector>
 #include <stdexcept>
 
+using byte = unsigned char;
+
 namespace klib {
 
 	namespace util {
+
+		bool get_bit(byte p_byte, unsigned int p_position);
+		std::vector<std::vector<bool>> bytes_to_bitmask(const std::vector<byte>& p_bytes, int p_w, int p_h, std::size_t p_start_pos = 0);
+		std::vector<byte> bitmask_to_bytes(const std::vector<std::vector<bool>>& p_bitmask);
+
+		template<class T>
+		std::vector<std::vector<bool>> vec2_to_bitmask(const std::vector<std::vector<T>>& p_data, const std::set<T>& p_true_vals) {
+			std::vector<std::vector<bool>> result;
+
+			for (const auto& l_datarow : p_data) {
+				std::vector<bool> l_row;
+				for (const T& l_item : l_datarow)
+					l_row.push_back(p_true_vals.find(l_item) != end(p_true_vals));
+				result.push_back(l_row);
+			}
+
+			return result;
+		}
 
 		template <class T>
 		T string_to_numeric(const std::string& p_value) {
@@ -106,6 +127,11 @@ namespace klib {
 				result.insert(begin(result), '0');
 
 			return result;
+		}
+
+		template<class T>
+		void append_vector(std::vector<T>& p_target, const std::vector<T>& p_source) {
+			p_target.insert(end(p_target), begin(p_source), end(p_source));
 		}
 
 	}

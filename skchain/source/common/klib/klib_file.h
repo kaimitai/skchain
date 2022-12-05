@@ -13,8 +13,6 @@ namespace klib {
 		void write_bytes_to_file(const std::vector<byte>&, const std::string&);
 		void append_string_to_file(const std::string& p_text, const std::string& p_file_name);
 
-		// utility
-		bool get_bit(byte p_byte, unsigned int p_position);
 	}
 }
 
