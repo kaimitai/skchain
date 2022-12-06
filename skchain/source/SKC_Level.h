@@ -29,6 +29,7 @@ namespace skc {
 
 		void set_item_hidden(bool p_value);
 		void set_item_in_block(bool p_value);
+		void set_position(const position& p_pos);
 	};
 
 	class Level {
@@ -85,6 +86,7 @@ namespace skc {
 
 		void set_item_hidden(int p_index, bool p_value);
 		void set_item_in_block(int p_index, bool p_value);
+		void set_item_position(int p_index, const position& l_pos);
 
 		static bool is_item_constellation(byte p_item_no);
 		static bool is_item_in_block(byte p_item_no);

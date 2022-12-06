@@ -299,20 +299,50 @@ void skc::SKC_Main_window::draw_ui(const SKC_Config& p_config) {
 
 void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_config) {
 	ImGui::Begin("Selected Element");
+	int l_index{ get_selected_index() };
 
 	if (is_selected_index_valid()) {
 		auto& l_level{ get_level() };
 
 		if (m_selected_type == c::ELM_TYPE_ITEM) {
-			bool l_hidden{ skc::Level::is_item_hidden(get_level().get_items().at(get_selected_index()).get_element_no()) };
-			bool l_in_block{ skc::Level::is_item_in_block(get_level().get_items().at(get_selected_index()).get_element_no()) };
+			const auto& l_items{ get_level().get_items() };
+			auto l_elm_no{ l_items.at(get_selected_index()).get_element_no() };
+			auto l_item_no{ l_items.at(get_selected_index()).get_item_no() };
+
+			ImGui::Image(m_gfx.get_tile(c::ELM_TYPE_ITEM, l_items.at(l_index).get_item_no(),
+				p_config.get_level_tileset(m_current_level, l_level.get_tileset_no())),
+				{ 2 * c::TILE_GFX_SIZE, 2 * c::TILE_GFX_SIZE });
+
+			std::string l_desc{ "Item #" + std::to_string(l_item_no) + ": "
+			+ p_config.get_description(c::ELM_TYPE_ITEM, l_item_no) };
+
+			ImGui::Text(l_desc.c_str());
+			ImGui::Separator();
+
+			bool l_hidden{ skc::Level::is_item_hidden(l_elm_no) };
+			bool l_in_block{ skc::Level::is_item_in_block(l_elm_no) };
 
 			if (ImGui::Checkbox("Hidden", &l_hidden)) {
-				l_level.set_item_hidden(get_selected_index(), l_hidden);
+				l_level.set_item_hidden(l_index, l_hidden);
 			}
+			ImGui::SameLine();
 			if (ImGui::Checkbox("In Block", &l_in_block)) {
-				l_level.set_item_in_block(get_selected_index(), l_in_block);
+				l_level.set_item_in_block(l_index, l_in_block);
 			}
+
+			ImGui::Separator();
+
+			auto l_pos{ l_items.at(l_index).get_position() };
+			int l_x{ l_pos.first };
+			int l_y{ l_pos.second };
+
+			if (ImGui::SliderInt("x-pos", &l_x, 0, c::LEVEL_W - 1)) {
+				l_level.set_item_position(l_index, std::make_pair(l_x, l_y));
+			}
+			if (ImGui::SliderInt("y-pos", &l_y, 0, c::LEVEL_H - 1)) {
+				l_level.set_item_position(l_index, std::make_pair(l_x, l_y));
+			}
+
 		}
 	}
 	else {

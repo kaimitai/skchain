@@ -41,6 +41,10 @@ void skc::Level_element::set_item_in_block(bool p_value) {
 		set_item_hidden(false);
 }
 
+void skc::Level_element::set_position(const position& p_pos) {
+	m_position = p_pos;
+}
+
 skc::Level::Level(void) :
 	m_key_status{ c::DEFAULT_KEY_STATUS },
 	m_spawn_rate{ c::DEFAULT_SPAWN_RATE },
@@ -241,6 +245,10 @@ void skc::Level::set_item_hidden(int p_index, bool p_value) {
 
 void skc::Level::set_item_in_block(int p_index, bool p_value) {
 	m_items.at(p_index).set_item_in_block(p_value);
+}
+
+void skc::Level::set_item_position(int p_index, const position& l_pos) {
+	m_items.at(p_index).set_position(l_pos);
 }
 
 // static functions
