@@ -308,8 +308,15 @@ std::vector<byte> skc::Level::get_block_bytes(void) const {
 	return result;
 }
 
-std::vector<byte> skc::Level::get_item_bytes(void) const {
+std::vector<byte> skc::Level::get_item_bytes(const std::vector<byte>& p_ignore_item_elements) const {
 	std::vector<byte> result(m_item_header);
+	std::set<std::size_t> l_handled_offsets;
+
+	// if we ignore any elements, set them as handled before starting
+	for (std::size_t i{ 0 }; i < m_items.size(); ++i)
+		for (byte b : p_ignore_item_elements)
+			if (m_items[i].get_element_no() == b)
+				l_handled_offsets.insert(i);
 
 	// level metadata
 	result.push_back(m_key_status);
@@ -322,7 +329,6 @@ std::vector<byte> skc::Level::get_item_bytes(void) const {
 	result.push_back(m_spawn02);
 
 	// add all item data, and apply "0xC"-compression whenever more than one item of the same type exists
-	std::set<std::size_t> l_handled_offsets;
 	for (std::size_t i{ 0 }; i < m_items.size(); ++i)
 		if (l_handled_offsets.find(i) == end(l_handled_offsets)) {
 			byte l_item_no = m_items[i].get_element_no();
@@ -371,6 +377,19 @@ std::vector<byte> skc::Level::get_enemy_bytes(void) const {
 	// append end-of-stream symbol
 	result.push_back(0x00);
 	return result;
+}
+
+std::vector<byte> skc::Level::get_item_bitmask_bytes(byte p_item_element_no) const {
+	std::vector<std::vector<bool>> l_item_bitmask(c::LEVEL_H, std::vector<bool>(c::LEVEL_W, false));
+
+	for (const auto& l_item : m_items)
+		if (l_item.get_element_no() == p_item_element_no) {
+			auto l_pos = l_item.get_position();
+			if (l_pos.first >= 0 && l_pos.first < c::LEVEL_W && l_pos.second >= 0 && l_pos.second < c::LEVEL_H)
+				l_item_bitmask[l_pos.second][l_pos.first] = true;
+		}
+
+	return klib::util::bitmask_to_bytes(l_item_bitmask);
 }
 
 bool skc::Level::is_item_delimiter(byte p_value) {

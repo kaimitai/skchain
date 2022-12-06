@@ -135,6 +135,18 @@ namespace klib {
 			p_target.insert(end(p_target), begin(p_source), end(p_source));
 		}
 
+		template<class T>
+		void append_or_overwrite_vector(std::vector<T>& p_target, const std::vector<T>& p_source, std::size_t p_target_offset) {
+			while (p_target.size() < p_target_offset)
+				p_target.push_back(T());
+			for (std::size_t i{ 0 }; i < p_source.size(); ++i) {
+				if (p_target.size() < p_target_offset + i)
+					p_target.push_back(p_source[i]);
+				else
+					p_target[p_target_offset + i] = p_source[i];
+			}
+		}
+
 	}
 
 }

@@ -39,22 +39,16 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_c
 		p_config.get_level_count(), std::vector<int>(3, 0)
 		);
 
-	// DEBUG
-	// #include "./../common/klib/klib_file.h"
-	/*
-	std::vector<byte> l_generated_item_bytes;
-	std::vector<byte> l_original_item_bytes(begin(p_bytes) + l_item_offsets.at(0),
-		begin(p_bytes) + l_item_offsets.at(0) + 1300);
-	for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
-		std::string l_filename = "level-" + std::to_string(i) + ".xml";
-		skc::save_level_xml(m_levels.at(i), "./xml", l_filename);
-		auto l_lvl_item_bytes{ m_levels[i].get_item_bytes() };
-		//klib::file::write_bytes_to_file(l_lvl_item_bytes, "./dat/test-items-" + std::to_string(i) + ".dat");
-		l_generated_item_bytes.insert(end(l_generated_item_bytes), begin(l_lvl_item_bytes), end(l_lvl_item_bytes));
+	for (const auto& kv : p_config.get_item_bitmasks()) {
+		std::size_t l_level_no = kv.first;
+		auto l_bitmask = klib::util::bytes_to_bitmask(lr_rom_data, c::LEVEL_W, c::LEVEL_H, kv.second.second);
+		byte l_item_no = kv.second.first;
+
+		for (std::size_t j{ 0 }; j < c::LEVEL_H; ++j)
+			for (std::size_t i{ 0 }; i < c::LEVEL_W; ++i)
+				if (l_bitmask[j][i])
+					m_levels.at(l_level_no).add_item(l_item_no, std::make_pair(static_cast<int>(i), static_cast<int>(j)));
 	}
-	//klib::file::write_bytes_to_file(l_original_item_bytes, "./dat/test-items-original.dat");
-	//klib::file::write_bytes_to_file(l_generated_item_bytes, "./dat/test-items.dat");
-	*/
 }
 
 void skc::SKC_Main_window::move(int p_delta_ms,
@@ -419,10 +413,16 @@ void skc::SKC_Main_window::save_nes_file(const std::string& p_file_path, const S
 	std::vector<byte> l_output{ p_config.get_rom_data() };
 	std::vector<std::size_t> l_item_offsets, l_enemy_offsets;
 	std::size_t l_item_offset{ 0 }, lenemy_offset{ 0 };
+	const auto& l_item_bitmasks{ p_config.get_item_bitmasks() };
 
 	std::vector<byte> l_item_data, l_enemy_data, l_block_data;
 	for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
-		auto l_data = m_levels[i].get_item_bytes();
+
+		std::vector<byte> l_ignore_item_element_nos;
+		if (l_item_bitmasks.find(i) != end(l_item_bitmasks))
+			l_ignore_item_element_nos.push_back(l_item_bitmasks.at(i).first);
+
+		auto l_data = m_levels[i].get_item_bytes(l_ignore_item_element_nos);
 		l_item_data.insert(end(l_item_data), begin(l_data), end(l_data));
 		l_item_offsets.push_back(l_item_offset);
 		l_item_offset += l_data.size();
@@ -470,6 +470,15 @@ void skc::SKC_Main_window::save_nes_file(const std::string& p_file_path, const S
 	// patch enemy data
 	for (std::size_t i{ 0 }; i < l_enemy_data.size(); ++i)
 		l_output.at(p_config.get_offset_enemy_data() + i) = l_enemy_data[i];
+
+	// patch item bitmasks
+	for (const auto& kv : l_item_bitmasks) {
+		byte l_item_element_no{ kv.second.first };
+		std::size_t l_offset{ kv.second.second };
+		auto l_bitmask_bytes{ m_levels.at(kv.first).get_item_bitmask_bytes(l_item_element_no) };
+
+		klib::util::append_or_overwrite_vector(l_output, l_bitmask_bytes, l_offset);
+	}
 
 	klib::file::write_bytes_to_file(l_output, p_file_path);
 }

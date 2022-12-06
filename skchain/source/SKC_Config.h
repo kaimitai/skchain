@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
 using byte = unsigned char;
 
@@ -17,6 +18,7 @@ namespace skc {
 		std::vector<std::size_t> m_level_palettes;
 		std::vector<std::vector<std::string>> m_descriptions;
 		std::vector<std::vector<std::pair<std::string, std::vector<byte>>>> m_tile_pickers;
+		std::map<std::size_t, std::pair<byte, std::size_t>> m_item_bitmasks;
 
 	public:
 		SKC_Config(const std::vector<byte>& p_rom_data);
@@ -39,6 +41,7 @@ namespace skc {
 		const std::vector<std::pair<std::string, std::vector<byte>>>& get_tile_picker(std::size_t p_element_type) const;
 		const std::string& get_description(std::size_t p_element_type,
 			byte p_element_no) const;
+		const std::map<std::size_t, std::pair<byte, std::size_t>>& get_item_bitmasks(void) const;
 	};
 
 }

@@ -13,6 +13,8 @@ namespace skc {
 		constexpr char XML_TAG_MD_DEFINITIONS[]{ "metadata_definitions" };
 		constexpr char XML_TAG_ENEMY_DEFINITIONS[]{ "enemy_definitions" };
 		constexpr char XML_TAG_ITEM_DEFINITIONS[]{ "item_definitions" };
+		constexpr char XML_TAG_ITEM_BITMASKS[]{ "item_bitmasks" };
+		constexpr char XML_TAG_ITEM_BITMASK[]{ "item_bitmask" };
 		constexpr char XML_TAG_METADATA[]{ "metadata" };
 		constexpr char XML_TAG_ENEMY[]{ "enemy" };
 		constexpr char XML_TAG_TILE_PICKERS[]{ "tile_pickers" };
@@ -25,6 +27,8 @@ namespace skc {
 
 		constexpr char XML_ATTR_APP_VERSION[]{ "app_version" };
 		constexpr char XML_TAG_OFFSET_GFX[]{ "offset_gfx" };
+		constexpr char XML_ATTR_ITEM_NO[]{ "item_no" };
+		constexpr char XML_ATTR_LEVEL_NO[]{ "level_no" };
 		constexpr char XML_TAG_OFFSET_BLOCKS[]{ "offset_block_data" };
 		constexpr char XML_TAG_OFFSET_ENEMIES[]{ "offset_enemy_table" };
 		constexpr char XML_TAG_OFFSET_ITEMS[]{ "offset_item_table" };

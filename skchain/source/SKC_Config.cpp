@@ -42,6 +42,15 @@ void skc::SKC_Config::load_config_xml(void) {
 		n_rom_meta.child(c::XML_TAG_LEVEL_PALETTES).attribute(c::XML_ATTR_VALUE).as_string(),
 		',');
 
+	auto n_item_bitmasks = n_rom_meta.child(c::XML_TAG_ITEM_BITMASKS);
+	for (auto n_item_bitmask = n_item_bitmasks.child(c::XML_TAG_ITEM_BITMASK); n_item_bitmask;
+		n_item_bitmask = n_item_bitmask.next_sibling(c::XML_TAG_ITEM_BITMASK)) {
+		std::size_t l_level_no{ klib::util::string_to_numeric<std::size_t>(n_item_bitmask.attribute(c::XML_ATTR_LEVEL_NO).as_string()) };
+		byte l_item_no{ klib::util::string_to_numeric<byte>(n_item_bitmask.attribute(c::XML_ATTR_ITEM_NO).as_string()) };
+		std::size_t l_offset{ klib::util::string_to_numeric<std::size_t>(n_item_bitmask.attribute(c::XML_ATTR_OFFSET).as_string()) };
+		m_item_bitmasks.insert(std::make_pair(l_level_no, std::make_pair(l_item_no, l_offset)));
+	}
+
 	auto n_metadatas = n_meta.child(c::XML_TAG_MD_DEFINITIONS);
 	for (auto n_md = n_metadatas.child(c::XML_TAG_METADATA);
 		n_md; n_md = n_md.next_sibling(c::XML_TAG_METADATA)) {
@@ -154,4 +163,8 @@ const std::string& skc::SKC_Config::get_description(std::size_t p_element_type,
 
 const std::vector<std::pair<std::string, std::vector<byte>>>& skc::SKC_Config::get_tile_picker(std::size_t p_element_type) const {
 	return m_tile_pickers.at(p_element_type);
+}
+
+const std::map<std::size_t, std::pair<byte, std::size_t>>& skc::SKC_Config::get_item_bitmasks(void) const {
+	return m_item_bitmasks;
 }

@@ -98,8 +98,10 @@ namespace skc {
 		bool has_enemy_at_position(const std::pair<int, int>& p_pos) const;
 
 		std::vector<byte> get_block_bytes(void) const;
-		std::vector<byte> get_item_bytes(void) const;
+		std::vector<byte> get_item_bytes(const std::vector<byte>& p_ignore_item_elements) const;
 		std::vector<byte> get_enemy_bytes(void) const;
+		std::vector<byte> get_item_bitmask_bytes(byte p_item_element_no) const;
+
 		bool is_key_hidden(void) const;
 		bool is_key_removed(void) const;
 		bool is_key_in_block(void) const;

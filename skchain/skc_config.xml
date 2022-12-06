@@ -10,6 +10,12 @@
 	<rom_ram_diff value="0x7ff0" />
 	<level_count value="53" />
 	<nes_tile_count value="2048" />
+	<!-- bitmasks which indicate a certain item overlay on a certain level; in the original game this is the bat symbols in level 20 and blue opals in level 30 -->
+    <!-- this configuration will be used both when loading and saving data, to perform the necessary conversions -->
+	<item_bitmasks>
+	  <item_bitmask level_no="19" item_no="0x04" offset="0x3ff2" />
+	  <item_bitmask level_no="29" item_no="0x27" offset="0x400a" />
+	</item_bitmasks>
 	<!-- values that could theoretically be read from the ROM data -->
 	<!-- as we learn more about the ROM data, the following values will be removed -->
 	<level_palettes value="0,0,0,0, 1,1,1,1, 2,2,2,2, 3,3,3,3, 2,2,2,2, 0,0,0,0, 2,2,2,2, 0,0,0,0, 3,3,3,3, 2,2,2,2, 0,0,0,0, 2,2,2,2, 4,4,0,4,4" />
@@ -213,6 +219,7 @@
 	  <section no="0" description="Weapons" value="0x0e,0x15,0x16,0x08,0x19" />
 	  <section no="1" description="Time" value="0x11,0x12,0x13,0x14" />
 	  <section no="2" description="Special" value="0x22,0x33,0x2e,0x2f,0x30,0x31,0x32" />
+	  <section no="3" description="Misc" value="0x04,0x27" />
 	</tile_picker>
 	<!-- enemy tile picker -->
 	<tile_picker no="2">
