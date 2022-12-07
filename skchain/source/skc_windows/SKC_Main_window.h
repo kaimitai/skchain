@@ -37,8 +37,6 @@ namespace skc {
 
 		void draw_ui(const SKC_Config& p_config);
 		void draw_ui_level_window(const SKC_Config& p_config);
-		void draw_ui_item_window(const SKC_Config& p_config);
-		void draw_ui_enemy_window(const SKC_Config& p_config);
 		void draw_ui_selected_tile_window(const SKC_Config& p_config);
 		void draw_tile_picker(const SKC_Config& p_config, std::size_t p_element_types);
 
@@ -57,6 +55,8 @@ namespace skc {
 
 		void left_click_item(const std::pair<int, int>& tile_pos);
 		void left_click_enemy(const std::pair<int, int>& tile_pos);
+
+		void set_meta_tile_position(std::size_t p_index, const position& p_pos);
 
 	public:
 		SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_config);

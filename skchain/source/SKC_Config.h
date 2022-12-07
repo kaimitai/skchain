@@ -10,10 +10,12 @@ using byte = unsigned char;
 namespace skc {
 
 	struct Metadata_item {
+		std::string m_description;
 		std::size_t m_level_no, m_rom_offset, m_tile_no;
 		bool m_transparent;
 		std::pair<int, int> m_position;
-		Metadata_item(std::size_t p_level_no, std::size_t p_tile_no, bool p_transparent, std::size_t p_rom_offset, const std::pair<int, int>& p_position);
+		Metadata_item(std::size_t p_level_no, std::size_t p_tile_no, const std::string& p_description,
+			bool p_transparent, std::size_t p_rom_offset, const std::pair<int, int>& p_position);
 	};
 
 	class SKC_Config {
@@ -59,6 +61,7 @@ namespace skc {
 		bool get_meta_tile_transparent(std::size_t p_index) const;
 		std::pair<int, int> get_meta_tile_position(std::size_t p_index) const;
 		bool get_meta_tile_movable(std::size_t p_index) const;
+		const std::string& get_meta_tile_description(std::size_t p_index) const;
 
 	};
 

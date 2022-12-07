@@ -114,6 +114,10 @@ void skc::SKC_Main_window::left_click_enemy(const std::pair<int, int>& tile_pos)
 		set_selected_index(l_index);
 }
 
+void skc::SKC_Main_window::set_meta_tile_position(std::size_t p_index, const position& p_pos) {
+	m_meta_tiles.at(m_current_level).at(p_index).second = p_pos;
+}
+
 void skc::SKC_Main_window::left_click_item(const std::pair<int, int>& tile_pos) {
 	auto& l_level{ get_level() };
 
@@ -173,6 +177,13 @@ void skc::SKC_Main_window::right_click_md(const std::pair<int, int>& tile_pos) {
 		l_level.set_door_pos(tile_pos);
 	else if (m_selected >= c::ITEM_CONSTELLATION_ARIES)
 		l_level.set_constellation(m_selected, tile_pos);
+	else {
+		std::size_t l_selected_meta_index = m_selected - c::MD_BYTE_NO_META_TILE_MIN;
+		auto iter = m_meta_tiles.find(m_current_level);
+		if (iter != end(m_meta_tiles) && l_selected_meta_index < iter->second.size()) {
+			set_meta_tile_position(l_selected_meta_index, tile_pos);
+		}
+	}
 }
 
 std::pair<int, int> skc::SKC_Main_window::pixel_to_tile_pos(int p_screen_h, int p_x, int p_y) const {
@@ -309,8 +320,6 @@ void skc::SKC_Main_window::draw_ui(const SKC_Config& p_config) {
 	ImGui::NewFrame();
 
 	this->draw_ui_level_window(p_config);
-	this->draw_ui_item_window(p_config);
-	this->draw_ui_enemy_window(p_config);
 	this->draw_ui_selected_tile_window(p_config);
 
 	ImGui::Render();
@@ -371,22 +380,6 @@ void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_conf
 	ImGui::End();
 }
 
-void skc::SKC_Main_window::draw_ui_item_window(const SKC_Config& p_config) {
-	ImGui::Begin("Items");
-
-	draw_tile_picker(p_config, c::ELM_TYPE_ITEM);
-
-	ImGui::End();
-}
-
-void skc::SKC_Main_window::draw_ui_enemy_window(const SKC_Config& p_config) {
-	ImGui::Begin("Enemies");
-
-	draw_tile_picker(p_config, c::ELM_TYPE_ENEMY);
-
-	ImGui::End();
-}
-
 void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
 	std::string l_level_str{ "Level " + std::to_string(m_current_level + 1) + "###lvl" };
 	ImGui::Begin(l_level_str.c_str());
@@ -400,7 +393,46 @@ void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
 
 	ImGui::Separator();
 
-	draw_tile_picker(p_config, c::ELM_TYPE_METADATA);
+	byte l_tmp_selected_type = m_selected_type;
+
+	if (l_tmp_selected_type == c::ELM_TYPE_METADATA) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.0f, 0.0f, 0.0f, 1.0f });
+	}
+	if (ImGui::Button("Meta"))
+		m_selected_type = c::ELM_TYPE_METADATA;
+	if (l_tmp_selected_type == c::ELM_TYPE_METADATA) {
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
+	}
+
+	if (l_tmp_selected_type == c::ELM_TYPE_ITEM) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.0f, 0.0f, 0.0f, 1.0f });
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Items"))
+		m_selected_type = c::ELM_TYPE_ITEM;
+	if (l_tmp_selected_type == c::ELM_TYPE_ITEM) {
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
+	}
+
+	if (l_tmp_selected_type == c::ELM_TYPE_ENEMY) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.0f, 0.0f, 0.0f, 1.0f });
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Enemies"))
+		m_selected_type = c::ELM_TYPE_ENEMY;
+	if (l_tmp_selected_type == c::ELM_TYPE_ENEMY) {
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
+	}
+
+	ImGui::Separator();
+
+	draw_tile_picker(p_config, m_selected_type);
 
 	ImGui::End();
 }
@@ -426,7 +458,6 @@ void skc::SKC_Main_window::draw_tile_picker(const SKC_Config& p_config, std::siz
 					{ l_is_constellation ? 1.5f * c::TILE_GFX_SIZE : c::TILE_GFX_SIZE,
 					c::TILE_GFX_SIZE })) {
 					m_selected = n;
-					m_selected_type = p_element_types;
 				}
 
 				if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
@@ -440,6 +471,37 @@ void skc::SKC_Main_window::draw_tile_picker(const SKC_Config& p_config, std::siz
 			}
 		}
 		ImGui::NewLine();
+	}
+
+	if (p_element_types == c::ELM_TYPE_METADATA) {
+		auto iter = m_meta_tiles.find(m_current_level);
+		if (iter != end(m_meta_tiles)) {
+			ImGui::Text("Meta Tiles");
+			for (std::size_t i{ 0 }; i < iter->second.size(); ++i) {
+				std::size_t l_meta_elm_no{ iter->second[i].first };
+				std::size_t l_tile_gfx_no{ p_config.get_meta_tile_tile_no(l_meta_elm_no) };
+				byte l_id{ static_cast<byte>(c::MD_BYTE_NO_META_TILE_MIN + static_cast<byte>(i)) };
+				bool l_is_selected{ m_selected_type == p_element_types && m_selected == l_id };
+
+				if (l_is_selected)
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+				ImGui::PushID(l_id);
+
+				if (ImGui::ImageButton(m_gfx.get_absolute_tile(l_tile_gfx_no, l_tileset_no),
+					{ c::TILE_GFX_SIZE, c::TILE_GFX_SIZE })) {
+					m_selected = l_id;
+				}
+
+				if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+					ImGui::SetTooltip(p_config.get_meta_tile_description(l_meta_elm_no).c_str());
+
+				ImGui::PopID();
+				if (l_is_selected)
+					ImGui::PopStyleColor();
+
+				ImGui::SameLine();
+			}
+		}
 	}
 
 }

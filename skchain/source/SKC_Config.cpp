@@ -60,8 +60,9 @@ void skc::SKC_Config::load_config_xml(void) {
 		bool l_transparent{ n_lvl_meta.attribute(c::XML_ATTR_TRANSPARENT).as_bool() };
 		auto l_pos_vec{ klib::util::string_split<int>(n_lvl_meta.attribute(c::XML_ATTR_POSITION).as_string(), ',') };
 		std::pair<int, int> l_position{ l_offset == 0 ? std::make_pair(l_pos_vec.at(0), l_pos_vec.at(1)) : std::make_pair(0,0) };
+		std::string l_description{ n_lvl_meta.attribute(c::XML_ATTR_DESCRIPTION).as_string() };
 
-		m_meta_items.push_back(Metadata_item(l_level_no, l_animation, l_transparent, l_offset, l_position));
+		m_meta_items.push_back(Metadata_item(l_level_no, l_animation, l_description, l_transparent, l_offset, l_position));
 	}
 
 	auto n_metadatas = n_meta.child(c::XML_TAG_MD_DEFINITIONS);
@@ -183,10 +184,12 @@ const std::map<std::size_t, std::pair<byte, std::size_t>>& skc::SKC_Config::get_
 }
 
 // metadata items
-skc::Metadata_item::Metadata_item(std::size_t p_level_no, std::size_t p_tile_no, bool p_transparent,
-	std::size_t p_rom_offset, const std::pair<int, int>& p_position) :
-	m_level_no{ p_level_no }, m_tile_no{ p_tile_no }, m_transparent{ p_transparent },
-	m_rom_offset{ p_rom_offset }, m_position{ p_position }
+skc::Metadata_item::Metadata_item(std::size_t p_level_no, std::size_t p_tile_no, const std::string& p_description,
+	bool p_transparent, std::size_t p_rom_offset, const std::pair<int, int>& p_position) :
+	m_level_no{ p_level_no }, m_tile_no{ p_tile_no }, m_description{ p_description }, m_transparent{
+	p_transparent
+},
+m_rom_offset{ p_rom_offset }, m_position{ p_position }
 { }
 
 std::size_t skc::SKC_Config::get_meta_tile_count(void) const {
@@ -215,4 +218,8 @@ std::pair<int, int> skc::SKC_Config::get_meta_tile_position(std::size_t p_index)
 
 bool skc::SKC_Config::get_meta_tile_movable(std::size_t p_index) const {
 	return get_meta_tile_rom_offset(p_index) != 0;
+}
+
+const std::string& skc::SKC_Config::get_meta_tile_description(std::size_t p_index) const {
+	return m_meta_items.at(p_index).m_description;
 }
