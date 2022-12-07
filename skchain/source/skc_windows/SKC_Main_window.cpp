@@ -241,12 +241,12 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 	// draw door
 	auto l_door_pos = l_level.get_door_pos();
 	if (l_door_pos.second >= 0)
-		draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_DOOR, l_tileset_no),
+		draw_tile(p_rnd, m_gfx.get_meta_tile(m_current_level == 49 ? c::MD_BYTE_NO_SOLOMONS_KEY : c::MD_BYTE_NO_DOOR, l_tileset_no),
 			l_door_pos.first, l_door_pos.second);
 
 	// draw player start
 	auto l_pstart = l_level.get_player_start_pos();
-	draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_PLAYER_START, l_tileset_no),
+	draw_tile(p_rnd, m_gfx.get_meta_tile(l_pstart.first >= c::LEVEL_W / 2 ? c::MD_BYTE_NO_PLAYER_START_LEFT : c::MD_BYTE_NO_PLAYER_START, l_tileset_no),
 		l_pstart.first, l_pstart.second);
 
 	// draw key

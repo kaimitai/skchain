@@ -56,6 +56,8 @@ namespace skc {
 		constexpr byte MD_BYTE_NO_BLOCK_BROWN{ 0x06 };
 		constexpr byte MD_BYTE_NO_BLOCK_WHITE{ 0x07 };
 		constexpr byte MD_BYTE_NO_BLOCK_BW{ 0x08 };
+		constexpr byte MD_BYTE_NO_PLAYER_START_LEFT{ 0x09 };
+		constexpr byte MD_BYTE_NO_SOLOMONS_KEY{ 0x10 };
 
 		// item types
 		constexpr std::size_t ELM_TYPE_METADATA{ 0 };
