@@ -62,6 +62,10 @@ SDL_Texture* skc::SKC_Gfx::get_gfx_translated(std::size_t p_tile_no, std::size_t
 	return m_tile_gfx.at(p_tile_no + p_tileset_no * m_tileset_tile_count);
 }
 
+SDL_Texture* skc::SKC_Gfx::get_absolute_tile(std::size_t p_tile_no, std::size_t p_tileset_no) const {
+	return get_gfx_translated(p_tile_no, p_tileset_no);
+}
+
 SDL_Texture* skc::SKC_Gfx::get_tile(std::size_t p_element_type, byte p_item_no,
 	std::size_t p_tileset_no, int p_frame_no) const {
 	if (p_element_type == c::ELM_TYPE_METADATA)

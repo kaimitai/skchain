@@ -15,6 +15,8 @@ namespace skc {
 		constexpr char XML_TAG_ITEM_DEFINITIONS[]{ "item_definitions" };
 		constexpr char XML_TAG_ITEM_BITMASKS[]{ "item_bitmasks" };
 		constexpr char XML_TAG_ITEM_BITMASK[]{ "item_bitmask" };
+		constexpr char XML_TAG_LEVEL_META_ITEMS[]{ "level_meta_items" };
+		constexpr char XML_TAG_LEVEL_META_ITEM[]{ "level_meta_item" };
 		constexpr char XML_TAG_METADATA[]{ "metadata" };
 		constexpr char XML_TAG_ENEMY[]{ "enemy" };
 		constexpr char XML_TAG_TILE_PICKERS[]{ "tile_pickers" };
@@ -48,7 +50,8 @@ namespace skc {
 		constexpr char XML_ATTR_PALETTE_OFFSET[]{ "palette_offset" };
 		constexpr char XML_ATTR_TILE_OFFSET[]{ "tile_offset" };
 
-		// level xml file
+		// level/metadata xml files
+		constexpr char XML_META_COMMENTS[]{ " Solomon's Key level metadata file created with Solomon's Keychain (https://github.com/kaimitai/skchain) " };
 		constexpr char XML_LEVEL_COMMENTS[]{ " Solomon's Key level file created with Solomon's Keychain (https://github.com/kaimitai/skchain) " };
 
 		constexpr char XML_TAG_LEVEL[]{ "level" };

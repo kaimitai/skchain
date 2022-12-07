@@ -44,11 +44,12 @@ namespace skc {
 		std::vector<std::size_t> get_item_indexes(byte p_item_no, std::set<std::size_t>& p_ignored_indexes) const;
 
 		static skc::Wall walls_to_wall_type(bool p_bblock, bool p_wblock);
-		static std::pair<int, int> get_position_from_byte(byte b);
-		static byte get_byte_from_position(const std::pair<int, int>& p_position);
 		static bool is_item_delimiter(byte p_value);
 
 	public:
+		static std::pair<int, int> get_position_from_byte(byte b);
+		static byte get_byte_from_position(const std::pair<int, int>& p_position);
+
 		Level(void);
 		void load_block_data(const std::vector<byte>& p_bytes, std::size_t p_offset);
 		void load_item_data(const std::vector<byte>& p_bytes, std::size_t p_offset);

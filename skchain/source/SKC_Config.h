@@ -9,6 +9,13 @@ using byte = unsigned char;
 
 namespace skc {
 
+	struct Metadata_item {
+		std::size_t m_level_no, m_rom_offset, m_tile_no;
+		bool m_transparent;
+		std::pair<int, int> m_position;
+		Metadata_item(std::size_t p_level_no, std::size_t p_tile_no, bool p_transparent, std::size_t p_rom_offset, const std::pair<int, int>& p_position);
+	};
+
 	class SKC_Config {
 		std::size_t m_offset_gfx, m_offset_blocks, m_offset_enemy_table, m_offset_item_table;
 		unsigned int m_level_count, m_gfx_tile_count;
@@ -19,6 +26,7 @@ namespace skc {
 		std::vector<std::vector<std::string>> m_descriptions;
 		std::vector<std::vector<std::pair<std::string, std::vector<byte>>>> m_tile_pickers;
 		std::map<std::size_t, std::pair<byte, std::size_t>> m_item_bitmasks;
+		std::vector<Metadata_item> m_meta_items;
 
 	public:
 		SKC_Config(const std::vector<byte>& p_rom_data);
@@ -42,6 +50,16 @@ namespace skc {
 		const std::string& get_description(std::size_t p_element_type,
 			byte p_element_no) const;
 		const std::map<std::size_t, std::pair<byte, std::size_t>>& get_item_bitmasks(void) const;
+
+		// metadata items
+		std::size_t get_meta_tile_count(void) const;
+		std::size_t get_meta_tile_level_no(std::size_t p_index) const;
+		std::size_t get_meta_tile_rom_offset(std::size_t p_index) const;
+		std::size_t get_meta_tile_tile_no(std::size_t p_index) const;
+		bool get_meta_tile_transparent(std::size_t p_index) const;
+		std::pair<int, int> get_meta_tile_position(std::size_t p_index) const;
+		bool get_meta_tile_movable(std::size_t p_index) const;
+
 	};
 
 }

@@ -16,6 +16,31 @@
 	  <item_bitmask level_no="19" item_no="0x04" offset="0x3ff2" />
 	  <item_bitmask level_no="29" item_no="0x27" offset="0x400a" />
 	</item_bitmasks>
+	<!-- meta items are solomon's seals, mighty bomb jack and tecmo bunny (position offset unknown) -->
+	<!-- in the future we hope to find out how to move these between levels -->
+	<!-- the tecmo bunny and page offsets are unknown at this point, so its position is static -->
+	<!-- TODO: Add overlay to breakable white blocks, and see if we can find the offsets -->
+	<level_meta_items>
+	  <!-- solomon's seal -->
+	  <level_meta_item no="0" level_no="8" animation="29" transparent="true" offset="0x3fd6" />
+	  <level_meta_item no="1" level_no="12" animation="29" transparent="true" offset="0x3fd7" />
+	  <level_meta_item no="2" level_no="16" animation="29" transparent="true" offset="0x3fd8" />
+	  <level_meta_item no="3" level_no="18" animation="29" transparent="true" offset="0x3fd9" />
+	  <level_meta_item no="4" level_no="20" animation="29" transparent="true" offset="0x3fda" />
+	  <level_meta_item no="5" level_no="28" animation="29" transparent="true" offset="0x3fdb" />
+	  <level_meta_item no="6" level_no="45" animation="29" transparent="true" offset="0x3fdc" />
+	  <level_meta_item no="7" level_no="46" animation="29" transparent="true" offset="0x3fdd" />
+	  <!-- mighty bomb jack -->
+	  <level_meta_item no="8" level_no="16" animation="67" offset="0x389f" />
+	  <level_meta_item no="9" level_no="38" animation="67" offset="0x3994" />
+	  <!-- tecmo bunny -->
+	  <level_meta_item no="10" level_no="19" animation="69" transparent="true" position="0,1" />
+	  <level_meta_item no="11" level_no="37" animation="69" transparent="true" position="14,8" />
+	  <!-- page of time -->
+	  <level_meta_item no="12" level_no="51" animation="30" position="7,2" />
+	  <!-- page of space -->
+	  <level_meta_item no="13" level_no="52" animation="30" position="7,9" />
+	</level_meta_items>
 	<!-- values that could theoretically be read from the ROM data -->
 	<!-- as we learn more about the ROM data, the following values will be removed -->
 	<level_palettes value="0,0,0,0, 1,1,1,1, 2,2,2,2, 3,3,3,3, 2,2,2,2, 0,0,0,0, 2,2,2,2, 0,0,0,0, 3,3,3,3, 2,2,2,2, 0,0,0,0, 2,2,2,2, 4,4,0,4,4" />
@@ -341,7 +366,7 @@
       <!-- solomon's seal -->
       <tile no="29" palette_no="2" nes_tiles="360,361,362,363" />
       <!-- egyptian head -->
-      <tile no="30" palette_no="1" nes_tiles="392,393,394,395" />
+      <tile no="30" palette_no="3" nes_tiles="392,393,394,395" />
       <!-- demonhead coin -->
       <tile no="31" palette_no="1" nes_tiles="288,289,282,291" />
       <!-- double star coin -->

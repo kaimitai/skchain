@@ -5,6 +5,37 @@
 #include "./../skc_constants/Constants_xml.h"
 #include "./../common/klib/klib_util.h"
 
+void skc::save_metadata_xml(const std::string p_folder, const std::string p_filename,
+	const std::map<std::size_t, std::vector<std::pair<std::size_t, position>>>& p_meta_tiles,
+	const skc::SKC_Config& p_config) {
+
+	pugi::xml_document doc;
+	auto n_comments = doc.append_child(pugi::node_comment);
+	n_comments.set_value(c::XML_META_COMMENTS);
+
+	auto n_metadata = doc.append_child(c::XML_TAG_META);
+	n_metadata.append_attribute(c::XML_ATTR_APP_VERSION);
+	n_metadata.attribute(c::XML_ATTR_APP_VERSION).set_value(c::APP_VERSION);
+
+	auto n_lvl_meta = n_metadata.append_child(c::XML_TAG_LEVEL_META_ITEMS);
+	for (const auto& kv : p_meta_tiles)
+		for (const auto& l_md_tile : kv.second) {
+			std::size_t l_md_index{ l_md_tile.first };
+			if (p_config.get_meta_tile_movable(l_md_index)) {
+				auto n_lvl_meta_item = n_lvl_meta.append_child(c::XML_TAG_LEVEL_META_ITEM);
+				n_lvl_meta_item.append_attribute(c::XML_ATTR_NO);
+				n_lvl_meta_item.attribute(c::XML_ATTR_NO).set_value(l_md_index);
+				n_lvl_meta_item.append_attribute(c::XML_ATTR_POSITION);
+				n_lvl_meta_item.attribute(c::XML_ATTR_POSITION).set_value(get_position_string(l_md_tile.second).c_str());
+			}
+		}
+
+	std::filesystem::create_directory(p_folder);
+	std::string l_file_path = p_folder + '/' + p_filename;
+	if (!doc.save_file(l_file_path.c_str()))
+		throw std::runtime_error("Could not save " + l_file_path);
+}
+
 void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, const std::string p_filename) {
 	pugi::xml_document doc;
 	auto n_comments = doc.append_child(pugi::node_comment);

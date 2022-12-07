@@ -49,6 +49,16 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_c
 				if (l_bitmask[j][i])
 					m_levels.at(l_level_no).add_item(l_item_no, std::make_pair(static_cast<int>(i), static_cast<int>(j)));
 	}
+
+	for (std::size_t i{ 0 }; i < p_config.get_meta_tile_count(); ++i) {
+		std::size_t l_level_no{ p_config.get_meta_tile_level_no(i) };
+		std::size_t l_rom_offset{ p_config.get_meta_tile_rom_offset(i) };
+
+		position l_pos{ l_rom_offset == 0 ?
+			p_config.get_meta_tile_position(i) :
+			skc::Level::get_position_from_byte(lr_rom_data.at(p_config.get_meta_tile_rom_offset(i))) };
+		m_meta_tiles[l_level_no].push_back(std::make_pair(i, l_pos));
+	}
 }
 
 void skc::SKC_Main_window::move(int p_delta_ms,
@@ -218,6 +228,16 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 				draw_tile(p_rnd, m_gfx.get_meta_tile(l_tile_no, l_tileset_no), i, j);
 		}
 
+	// draw meta-items
+	auto iter = m_meta_tiles.find(m_current_level);
+	if (iter != end(m_meta_tiles))
+		for (const auto& l_mtile : iter->second) {
+			std::size_t l_index{ l_mtile.first };
+			auto l_pos{ l_mtile.second };
+			draw_tile(p_rnd, m_gfx.get_absolute_tile(p_config.get_meta_tile_tile_no(l_index), l_tileset_no),
+				l_pos.first, l_pos.second, p_config.get_meta_tile_transparent(l_index));
+		}
+
 	// draw door
 	auto l_door_pos = l_level.get_door_pos();
 	if (l_door_pos.second >= 0)
@@ -372,6 +392,8 @@ void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
 	ImGui::Begin(l_level_str.c_str());
 
 	if (ImGui::Button("Save xml")) {
+		save_metadata_xml("./xml", "level-metadata.xml", m_meta_tiles, p_config);
+
 		for (std::size_t i{ 0 }; i < m_levels.size(); ++i)
 			save_level_xml(m_levels.at(i), "./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
 	}
@@ -509,6 +531,16 @@ void skc::SKC_Main_window::save_nes_file(const std::string& p_file_path, const S
 
 		klib::util::append_or_overwrite_vector(l_output, l_bitmask_bytes, l_offset);
 	}
+
+	// patch meta-tiles
+	for (const auto& kv : m_meta_tiles)
+		for (const auto& l_md_tile : kv.second) {
+			std::size_t l_md_index{ l_md_tile.first };
+			if (p_config.get_meta_tile_movable(l_md_index)) {
+				std::size_t l_offset{ p_config.get_meta_tile_rom_offset(l_md_index) };
+				l_output.at(l_offset) = skc::Level::get_byte_from_position(l_md_tile.second);
+			}
+		}
 
 	klib::file::write_bytes_to_file(l_output, p_file_path);
 }

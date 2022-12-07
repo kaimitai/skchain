@@ -10,6 +10,7 @@
 #include "./../SKC_Gfx.h"
 
 using byte = unsigned char;
+using position = std::pair<int, int>;
 
 namespace skc {
 
@@ -23,6 +24,7 @@ namespace skc {
 		byte m_selected;			 // sub-selection
 		// selected board item - one entry per level, with one entry per type
 		std::vector<std::vector<int>> m_board_selection;
+		std::map<std::size_t, std::vector<std::pair<std::size_t, position>>> m_meta_tiles;
 
 		bool is_selected_index_valid(void) const;
 		int get_selected_index(void) const;

@@ -51,6 +51,19 @@ void skc::SKC_Config::load_config_xml(void) {
 		m_item_bitmasks.insert(std::make_pair(l_level_no, std::make_pair(l_item_no, l_offset)));
 	}
 
+	auto n_lvl_meta_items = n_rom_meta.child(c::XML_TAG_LEVEL_META_ITEMS);
+	for (auto n_lvl_meta = n_lvl_meta_items.child(c::XML_TAG_LEVEL_META_ITEM); n_lvl_meta;
+		n_lvl_meta = n_lvl_meta.next_sibling(c::XML_TAG_LEVEL_META_ITEM)) {
+		std::size_t l_level_no{ klib::util::string_to_numeric<std::size_t>(n_lvl_meta.attribute(c::XML_ATTR_LEVEL_NO).as_string()) };
+		std::size_t l_animation{ klib::util::string_to_numeric<std::size_t>(n_lvl_meta.attribute(c::XML_ATTR_ANIMATION).as_string()) };
+		std::size_t l_offset{ klib::util::string_to_numeric<std::size_t>(n_lvl_meta.attribute(c::XML_ATTR_OFFSET).as_string()) };
+		bool l_transparent{ n_lvl_meta.attribute(c::XML_ATTR_TRANSPARENT).as_bool() };
+		auto l_pos_vec{ klib::util::string_split<int>(n_lvl_meta.attribute(c::XML_ATTR_POSITION).as_string(), ',') };
+		std::pair<int, int> l_position{ l_offset == 0 ? std::make_pair(l_pos_vec.at(0), l_pos_vec.at(1)) : std::make_pair(0,0) };
+
+		m_meta_items.push_back(Metadata_item(l_level_no, l_animation, l_transparent, l_offset, l_position));
+	}
+
 	auto n_metadatas = n_meta.child(c::XML_TAG_MD_DEFINITIONS);
 	for (auto n_md = n_metadatas.child(c::XML_TAG_METADATA);
 		n_md; n_md = n_md.next_sibling(c::XML_TAG_METADATA)) {
@@ -167,4 +180,39 @@ const std::vector<std::pair<std::string, std::vector<byte>>>& skc::SKC_Config::g
 
 const std::map<std::size_t, std::pair<byte, std::size_t>>& skc::SKC_Config::get_item_bitmasks(void) const {
 	return m_item_bitmasks;
+}
+
+// metadata items
+skc::Metadata_item::Metadata_item(std::size_t p_level_no, std::size_t p_tile_no, bool p_transparent,
+	std::size_t p_rom_offset, const std::pair<int, int>& p_position) :
+	m_level_no{ p_level_no }, m_tile_no{ p_tile_no }, m_transparent{ p_transparent },
+	m_rom_offset{ p_rom_offset }, m_position{ p_position }
+{ }
+
+std::size_t skc::SKC_Config::get_meta_tile_count(void) const {
+	return m_meta_items.size();
+}
+
+std::size_t skc::SKC_Config::get_meta_tile_level_no(std::size_t p_index) const {
+	return m_meta_items.at(p_index).m_level_no;
+}
+
+std::size_t skc::SKC_Config::get_meta_tile_rom_offset(std::size_t p_index) const {
+	return m_meta_items.at(p_index).m_rom_offset;
+}
+
+std::size_t skc::SKC_Config::get_meta_tile_tile_no(std::size_t p_index) const {
+	return m_meta_items.at(p_index).m_tile_no;
+}
+
+bool skc::SKC_Config::get_meta_tile_transparent(std::size_t p_index) const {
+	return m_meta_items.at(p_index).m_transparent;
+}
+
+std::pair<int, int> skc::SKC_Config::get_meta_tile_position(std::size_t p_index) const {
+	return m_meta_items.at(p_index).m_position;
+}
+
+bool skc::SKC_Config::get_meta_tile_movable(std::size_t p_index) const {
+	return get_meta_tile_rom_offset(p_index) != 0;
 }
