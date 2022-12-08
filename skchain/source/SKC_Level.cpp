@@ -49,8 +49,6 @@ void skc::Level_element::set_position(const position& p_pos) {
 skc::Level::Level(void) :
 	m_key_status{ c::DEFAULT_KEY_STATUS },
 	m_spawn_rate{ c::DEFAULT_SPAWN_RATE },
-	m_spawn01{ std::make_pair(0,0) },
-	m_spawn02{ std::make_pair(0,0) },
 	m_tileset_no{ 0 }
 { }
 
@@ -85,15 +83,17 @@ void skc::Level::load_enemy_data(const std::vector<byte>& p_bytes, std::size_t p
 }
 
 void skc::Level::load_item_data(const std::vector<byte>& p_bytes, std::size_t p_offset) {
-	m_item_header = std::vector<byte>(begin(p_bytes) + p_offset,
-		begin(p_bytes) + p_offset + c::ITEM_OFFSET_KEY_STATUS);
-
 	m_key_status = p_bytes.at(p_offset + c::ITEM_OFFSET_KEY_STATUS);
 	m_fixed_door_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_DOOR_POS));
 	m_fixed_key_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_KEY_POS));
 	m_fixed_start_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_START_POS));
-	m_spawn01 = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN01));
-	m_spawn02 = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN02));
+
+	m_demon_mirrors.push_back(skc::Demon_mirror(get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN01)),
+		p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN01_SCHEDULE),
+		p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN01_ENEMIES)));
+	m_demon_mirrors.push_back(skc::Demon_mirror(get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN02)),
+		p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN02_SCHEDULE),
+		p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN02_ENEMIES)));
 
 	for (std::size_t i{ p_offset + c::ITEM_OFFSET_ITEM_DATA }; ; i += 2) {
 		byte l_next_elm{ p_bytes.at(i) };
@@ -166,14 +166,6 @@ byte skc::Level::get_spawn_rate(void) const {
 	return m_spawn_rate;
 }
 
-position skc::Level::get_spawn01(void) const {
-	return m_spawn01;
-}
-
-position skc::Level::get_spawn02(void) const {
-	return m_spawn02;
-}
-
 byte skc::Level::get_tileset_no(void) const {
 	return m_tileset_no;
 }
@@ -188,10 +180,6 @@ const std::vector<skc::Level_element>& skc::Level::get_items(void) const {
 
 const std::vector<skc::Level_element>& skc::Level::get_enemies(void) const {
 	return m_enemies;
-}
-
-const std::vector<byte>& skc::Level::get_item_header(void) const {
-	return m_item_header;
 }
 
 // setters
@@ -318,7 +306,12 @@ std::vector<byte> skc::Level::get_block_bytes(void) const {
 }
 
 std::vector<byte> skc::Level::get_item_bytes(const std::vector<byte>& p_ignore_item_elements) const {
-	std::vector<byte> result(m_item_header);
+	std::vector<byte> result;
+	result.push_back(m_demon_mirrors.at(0).m_schedule_no);
+	result.push_back(m_demon_mirrors.at(1).m_schedule_no);
+	result.push_back(m_demon_mirrors.at(0).m_monster_set_no);
+	result.push_back(m_demon_mirrors.at(1).m_monster_set_no);
+
 	std::set<std::size_t> l_handled_offsets;
 
 	// if we ignore any elements, set them as handled before starting
@@ -334,8 +327,8 @@ std::vector<byte> skc::Level::get_item_bytes(const std::vector<byte>& p_ignore_i
 	result.push_back(get_byte_from_position(m_fixed_start_pos));
 
 	// enemy spawn point values (spawn rate set in the enemy data)
-	result.push_back(get_byte_from_position(m_spawn01));
-	result.push_back(get_byte_from_position(m_spawn02));
+	result.push_back(get_byte_from_position(m_demon_mirrors.at(0).m_position));
+	result.push_back(get_byte_from_position(m_demon_mirrors.at(1).m_position));
 
 	// add all item data, and apply "0xC"-compression whenever more than one item of the same type exists
 	for (std::size_t i{ 0 }; i < m_items.size(); ++i)

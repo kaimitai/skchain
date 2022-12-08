@@ -32,14 +32,19 @@ namespace skc {
 		void set_position(const position& p_pos);
 	};
 
+	struct Demon_mirror {
+		byte m_schedule_no, m_monster_set_no;
+		position m_position;
+		Demon_mirror(const position& p_position, byte p_schedule_no, byte p_monster_set_no);
+	};
+
 	class Level {
 		std::vector<std::vector<skc::Wall>> m_tiles;
 		std::vector<Level_element> m_items, m_enemies;
-		std::vector<byte> m_item_header;
 		std::optional<Level_element> m_constellation;
+		std::vector<Demon_mirror> m_demon_mirrors;
 
 		byte m_key_status, m_spawn_rate, m_tileset_no;
-		position m_spawn01, m_spawn02;
 		std::pair<int, int> m_fixed_start_pos, m_fixed_key_pos, m_fixed_door_pos;
 
 		std::vector<std::size_t> get_item_indexes(byte p_item_no, std::set<std::size_t>& p_ignored_indexes) const;
@@ -65,12 +70,8 @@ namespace skc {
 		byte get_constellation_no(void) const;
 		position get_constellation_pos(void) const;
 		byte get_spawn_rate(void) const;
-		position get_spawn01(void) const;
-		position get_spawn02(void) const;
 		byte get_tileset_no(void) const;
 		byte get_item_delimiter(void) const;
-
-		const std::vector<byte>& get_item_header(void) const;
 
 		const std::vector<skc::Level_element>& get_enemies(void) const;
 		const std::vector<skc::Level_element>& get_items(void) const;
@@ -85,6 +86,14 @@ namespace skc {
 		void delete_item(int p_index);
 		void add_enemy(byte p_enemy_no, const position& p_pos);
 		void delete_enemy(int p_index);
+
+		position get_spawn_position(std::size_t p_index) const;
+		byte get_spawn_schedule(std::size_t p_index) const;
+		byte get_spawn_enemies(std::size_t p_index) const;
+
+		void set_spawn_position(std::size_t p_index, const position& p_pos);
+		void set_spawn_schedule(std::size_t p_index, byte p_value);
+		void set_spawn_enemies(std::size_t p_index, byte p_value);
 
 		void set_item_hidden(int p_index, bool p_value);
 		void set_item_in_block(int p_index, bool p_value);

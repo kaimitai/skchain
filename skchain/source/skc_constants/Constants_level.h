@@ -11,7 +11,11 @@ namespace skc {
 		constexpr byte DEFAULT_SPAWN_RATE{ 0x02 };
 		constexpr byte DEFAULT_SPAWN_VALUE{ 0x27 };
 
-		constexpr byte ITEM_OFFSET_KEY_STATUS{ 4 };
+		constexpr byte ITEM_OFFSET_SPAWN01_SCHEDULE{ 0 };
+		constexpr byte ITEM_OFFSET_SPAWN02_SCHEDULE{ ITEM_OFFSET_SPAWN01_SCHEDULE + 1 };
+		constexpr byte ITEM_OFFSET_SPAWN01_ENEMIES{ ITEM_OFFSET_SPAWN02_SCHEDULE + 1 };
+		constexpr byte ITEM_OFFSET_SPAWN02_ENEMIES{ ITEM_OFFSET_SPAWN01_ENEMIES + 1 };
+		constexpr byte ITEM_OFFSET_KEY_STATUS{ ITEM_OFFSET_SPAWN02_ENEMIES + 1 };
 		constexpr byte ITEM_OFFSET_DOOR_POS{ ITEM_OFFSET_KEY_STATUS + 1 };
 		constexpr byte ITEM_OFFSET_KEY_POS{ ITEM_OFFSET_DOOR_POS + 1 };
 		constexpr byte ITEM_OFFSET_START_POS{ ITEM_OFFSET_KEY_POS + 1 };
@@ -39,6 +43,7 @@ namespace skc {
 		constexpr byte ITEM_COMPRESS_MAX_COUNT{ ITEM_DELIMITER_MIN - ITEM_COPY_INDICATOR_MIN };
 
 		constexpr unsigned int LEVEL_W{ 16 }, LEVEL_H{ 12 };
+		constexpr unsigned int LEVEL_BLOCK_COUNT{ LEVEL_W * LEVEL_H };
 		constexpr unsigned int TILE_BITMASK_BYTE_SIZE{ (LEVEL_W * LEVEL_H) / 8 };
 		constexpr unsigned int TILE_WIDTH{ 16 };
 		constexpr unsigned int TILE_SCALE{ 2 };
@@ -58,7 +63,8 @@ namespace skc {
 		constexpr byte MD_BYTE_NO_BLOCK_BW{ 0x08 };
 		constexpr byte MD_BYTE_NO_PLAYER_START_LEFT{ 0x09 };
 		constexpr byte MD_BYTE_NO_SOLOMONS_KEY{ 0x10 };
-		constexpr byte MD_BYTE_NO_META_TILE_MIN{ MD_BYTE_NO_SOLOMONS_KEY + 1 };
+		constexpr byte MD_BYTE_NO_CONSTELLATION{ 0x11 };
+		constexpr byte MD_BYTE_NO_META_TILE_MIN{ MD_BYTE_NO_CONSTELLATION + 1 };
 
 		// item types
 		constexpr std::size_t ELM_TYPE_METADATA{ 0 };

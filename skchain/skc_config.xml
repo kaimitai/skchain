@@ -3,12 +3,16 @@
 <skchain app_version="0.1">
 
   <rom_metadata>
-    <offset_gfx offset="0x8010" />
-	<offset_block_data offset="0x603c" />
+    <offset_mirror_rate_table offset="0x5c10" />
+	<offset_mirror_enemy_table offset="0x5c30" />
     <offset_enemy_table offset="0x5cfc" />
+	<offset_block_data offset="0x603c" />
 	<offset_item_table offset="0x6a2c" />
+	<offset_gfx offset="0x8010" />
 	<rom_ram_diff value="0x7ff0" />
 	<level_count value="53" />
+	<mirror_rate_count value="16" />
+	<mirror_enemy_count value="17" />
 	<nes_tile_count value="2048" />
 	<!-- bitmasks which indicate a certain item overlay on a certain level; in the original game this is the bat symbols in level 20 and blue opals in level 30 -->
     <!-- this configuration will be used both when loading and saving data, to perform the necessary conversions -->

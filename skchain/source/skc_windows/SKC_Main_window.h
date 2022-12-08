@@ -25,6 +25,8 @@ namespace skc {
 		// selected board item - one entry per level, with one entry per type
 		std::vector<std::vector<int>> m_board_selection;
 		std::map<std::size_t, std::vector<std::pair<std::size_t, position>>> m_meta_tiles;
+		std::vector<std::vector<bool>> m_drop_schedules;
+		std::vector<std::vector<byte>> m_drop_enemies;
 
 		bool is_selected_index_valid(void) const;
 		int get_selected_index(void) const;
@@ -39,6 +41,7 @@ namespace skc {
 		void draw_ui_level_window(const SKC_Config& p_config);
 		void draw_ui_selected_tile_window(const SKC_Config& p_config);
 		void draw_tile_picker(const SKC_Config& p_config, std::size_t p_element_types);
+		void draw_ui_selected_mirror(std::size_t p_mirror_no, const SKC_Config& p_config);
 
 		bool is_valid_constellation(byte p_constellation) const;
 
@@ -55,6 +58,7 @@ namespace skc {
 
 		void left_click_item(const std::pair<int, int>& tile_pos);
 		void left_click_enemy(const std::pair<int, int>& tile_pos);
+		void left_click_metadata(const std::pair<int, int>& tile_pos);
 
 		void set_meta_tile_position(std::size_t p_index, const position& p_pos);
 

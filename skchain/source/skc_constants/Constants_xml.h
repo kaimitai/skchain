@@ -34,8 +34,12 @@ namespace skc {
 		constexpr char XML_TAG_OFFSET_BLOCKS[]{ "offset_block_data" };
 		constexpr char XML_TAG_OFFSET_ENEMIES[]{ "offset_enemy_table" };
 		constexpr char XML_TAG_OFFSET_ITEMS[]{ "offset_item_table" };
+		constexpr char XML_TAG_OFFSET_MIRROR_RATE_TABLE[]{ "offset_mirror_rate_table" };
+		constexpr char XML_TAG_OFFSET_MIRROR_ENEMY_TABLE[]{ "offset_mirror_enemy_table" };
 		constexpr char XML_TAG_ROM_RAM_DIFF[]{ "rom_ram_diff" };
 		constexpr char XML_TAG_LEVEL_COUNT[]{ "level_count" };
+		constexpr char XML_TAG_MIRROR_RATE_COUNT[]{ "mirror_rate_count" };
+		constexpr char XML_TAG_MIRROR_ENEMY_COUNT[]{ "mirror_enemy_count" };
 		constexpr char XML_TAG_NES_TILE_COUNT[]{ "nes_tile_count" };
 		constexpr char XML_TAG_LEVEL_PALETTES[]{ "level_palettes" };
 
@@ -62,6 +66,10 @@ namespace skc {
 		constexpr char XML_TAG_ITEM[]{ "item" };
 		constexpr char XML_TAG_ENEMIES[]{ "enemies" };
 
+		constexpr char XML_ATTR_SPAWN01_SCHEDULE[]{ "spawn01_schedule" };
+		constexpr char XML_ATTR_SPAWN02_SCHEDULE[]{ "spawn02_schedule" };
+		constexpr char XML_ATTR_SPAWN01_ENEMIES[]{ "spawn01_enemies" };
+		constexpr char XML_ATTR_SPAWN02_ENEMIES[]{ "spawn02_enemies" };
 		constexpr char XML_ATTR_KEY_STATUS[]{ "key_status" };
 		constexpr char XML_ATTR_KEY_POSITION[]{ "key_position" };
 		constexpr char XML_ATTR_DOOR_POSITION[]{ "door_position" };
@@ -71,7 +79,6 @@ namespace skc {
 		constexpr char XML_ATTR_SPAWN02[]{ "spawn02" };
 		constexpr char XML_ATTR_CONSTELLATION_NO[]{ "constellation_no" };
 		constexpr char XML_ATTR_CONSTELLATION_POSITION[]{ "constellation_position" };
-		constexpr char XML_ATTR_ITEM_HEADER[]{ "item_header" };
 		constexpr char XML_ATTR_TILESET[]{ "tileset" };
 
 		constexpr char XML_ATTR_ELEMENT_NO[]{ "element_no" };

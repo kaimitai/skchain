@@ -19,8 +19,9 @@ namespace skc {
 	};
 
 	class SKC_Config {
-		std::size_t m_offset_gfx, m_offset_blocks, m_offset_enemy_table, m_offset_item_table;
-		unsigned int m_level_count, m_gfx_tile_count;
+		std::size_t m_offset_gfx, m_offset_blocks, m_offset_enemy_table, m_offset_item_table,
+			m_offset_mirror_rate_table, m_offset_mirror_enemy_table;
+		unsigned int m_level_count, m_mirror_rate_count, m_mirror_enemy_count, m_gfx_tile_count;
 		int m_rom_ram_diff;
 		void load_config_xml(void);
 		std::vector<byte> m_rom_data;
@@ -42,8 +43,12 @@ namespace skc {
 		std::size_t get_offset_item_table_hi(void) const;
 		std::size_t get_offset_enemy_data(void) const;
 		std::size_t get_offset_item_data(void) const;
+		std::size_t get_offset_mirror_rate_data(std::size_t p_index) const;
+		std::size_t get_offset_mirror_enemy_data(std::size_t p_index) const;
 		unsigned int get_level_count(void) const;
 		unsigned int get_nes_tile_count(void) const;
+		unsigned int get_mirror_rate_count(void) const;
+		unsigned int get_mirror_enemy_count(void) const;
 		std::size_t get_rom_address_from_ram(std::size_t p_ram_address) const;
 		std::size_t get_ram_address_from_rom(std::size_t p_rom_address) const;
 		std::size_t get_level_tileset(std::size_t p_level_no, byte p_tileset_no) const;

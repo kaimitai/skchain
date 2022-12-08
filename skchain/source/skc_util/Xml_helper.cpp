@@ -58,9 +58,9 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 	n_level.append_attribute(c::XML_ATTR_SPAWN_RATE);
 	n_level.attribute(c::XML_ATTR_SPAWN_RATE).set_value(p_level.get_spawn_rate());
 	n_level.append_attribute(c::XML_ATTR_SPAWN01);
-	n_level.attribute(c::XML_ATTR_SPAWN01).set_value(get_position_string(p_level.get_spawn01()).c_str());
+	n_level.attribute(c::XML_ATTR_SPAWN01).set_value(get_position_string(p_level.get_spawn_position(0)).c_str());
 	n_level.append_attribute(c::XML_ATTR_SPAWN02);
-	n_level.attribute(c::XML_ATTR_SPAWN02).set_value(get_position_string(p_level.get_spawn02()).c_str());
+	n_level.attribute(c::XML_ATTR_SPAWN02).set_value(get_position_string(p_level.get_spawn_position(1)).c_str());
 
 	if (p_level.has_constellation()) {
 		n_level.append_attribute(c::XML_ATTR_CONSTELLATION_NO);
@@ -72,8 +72,14 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 	n_level.append_attribute(c::XML_ATTR_TILESET);
 	n_level.attribute(c::XML_ATTR_TILESET).set_value(p_level.get_tileset_no());
 
-	n_level.append_attribute(c::XML_ATTR_ITEM_HEADER);
-	n_level.attribute(c::XML_ATTR_ITEM_HEADER).set_value(klib::util::string_join<byte>(p_level.get_item_header(), ',').c_str());
+	n_level.append_attribute(c::XML_ATTR_SPAWN01_SCHEDULE);
+	n_level.attribute(c::XML_ATTR_SPAWN01_SCHEDULE).set_value(p_level.get_spawn_schedule(0));
+	n_level.append_attribute(c::XML_ATTR_SPAWN02_SCHEDULE);
+	n_level.attribute(c::XML_ATTR_SPAWN02_SCHEDULE).set_value(p_level.get_spawn_schedule(1));
+	n_level.append_attribute(c::XML_ATTR_SPAWN01_ENEMIES);
+	n_level.attribute(c::XML_ATTR_SPAWN01_ENEMIES).set_value(p_level.get_spawn_enemies(0));
+	n_level.append_attribute(c::XML_ATTR_SPAWN02_ENEMIES);
+	n_level.attribute(c::XML_ATTR_SPAWN02_ENEMIES).set_value(p_level.get_spawn_enemies(1));
 
 	auto n_blocks = n_level.append_child(c::XML_TAG_BLOCKS);
 	for (int j{ 0 }; j < 12; ++j) {

@@ -3,6 +3,7 @@
 #include "./../common/klib/klib_file.h"
 #include "./../common/klib/klib_util.h"
 #include "./../skc_util/Xml_helper.h"
+#include "./../skc_util/Imgui_helper.h"
 #include "./../skc_constants/Constants_level.h"
 #include "./../common/imgui/imgui.h"
 #include "./../common/imgui/imgui_impl_sdl.h"
@@ -59,6 +60,24 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_c
 			skc::Level::get_position_from_byte(lr_rom_data.at(p_config.get_meta_tile_rom_offset(i))) };
 		m_meta_tiles[l_level_no].push_back(std::make_pair(i, l_pos));
 	}
+
+	// extract drop rate metadata
+	for (std::size_t i{ 0 }; i < p_config.get_mirror_rate_count(); ++i) {
+		std::size_t mem_offset{ p_config.get_offset_mirror_rate_data(i) };
+		std::vector<byte> l_drop_rate;
+		for (std::size_t i{ 0 }; i < 8; ++i)
+			l_drop_rate.push_back(lr_rom_data.at(mem_offset + i));
+		m_drop_schedules.push_back(klib::util::bytes_to_bitmask(l_drop_rate, 64, 1).at(0));
+	}
+
+	// extract drop enemies metadata
+	for (std::size_t i{ 0 }; i < p_config.get_mirror_enemy_count(); ++i) {
+		std::vector<byte> l_drop_enemy;
+		std::size_t emem_offset{ p_config.get_offset_mirror_enemy_data(i) };
+		for (std::size_t i{ 0 }; lr_rom_data.at(emem_offset + i) != 144; ++i)
+			l_drop_enemy.push_back(lr_rom_data.at(emem_offset + i));
+		m_drop_enemies.push_back(l_drop_enemy);
+	}
 }
 
 void skc::SKC_Main_window::move(int p_delta_ms,
@@ -104,6 +123,25 @@ void skc::SKC_Main_window::left_click(const std::pair<int, int>& p_tile_pos, con
 		left_click_enemy(p_tile_pos);
 	else if (m_selected_type == c::ELM_TYPE_ITEM)
 		left_click_item(p_tile_pos);
+	else
+		left_click_metadata(p_tile_pos);
+}
+
+void skc::SKC_Main_window::left_click_metadata(const std::pair<int, int>& tile_pos) {
+	auto& l_level{ get_level() };
+
+	if (tile_pos == l_level.get_player_start_pos())
+		set_selected_index(c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_PLAYER_START);
+	else if (tile_pos == l_level.get_door_pos())
+		set_selected_index(c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_DOOR);
+	else if (tile_pos == l_level.get_key_pos())
+		set_selected_index(c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_KEY);
+	else if (tile_pos == l_level.get_spawn_position(0))
+		set_selected_index(c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_SPAWN01);
+	else if (tile_pos == l_level.get_spawn_position(1))
+		set_selected_index(c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_SPAWN02);
+	else
+		set_selected_index(tile_pos.first + tile_pos.second * c::LEVEL_W);
 }
 
 void skc::SKC_Main_window::left_click_enemy(const std::pair<int, int>& tile_pos) {
@@ -241,8 +279,8 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 		}
 
 	// draw mirrors
-	auto l_m1_pos{ l_level.get_spawn01() };
-	auto l_m2_pos{ l_level.get_spawn02() };
+	auto l_m1_pos{ l_level.get_spawn_position(0) };
+	auto l_m2_pos{ l_level.get_spawn_position(1) };
 	draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN01, l_tileset_no), l_m1_pos.first, l_m1_pos.second);
 	draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN02, l_tileset_no), l_m2_pos.first, l_m2_pos.second);
 
@@ -304,10 +342,32 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 
 	if (is_selected_index_valid()) {
 		std::pair<int, int> l_pos{ 0,0 };
+		int l_board_index{ get_selected_index() };
 		if (m_selected_type == c::ELM_TYPE_ITEM)
-			l_pos = l_level.get_items().at(get_selected_index()).get_position();
+			l_pos = l_level.get_items().at(l_board_index).get_position();
 		else if (m_selected_type == c::ELM_TYPE_ENEMY)
-			l_pos = l_level.get_enemies().at(get_selected_index()).get_position();
+			l_pos = l_level.get_enemies().at(l_board_index).get_position();
+		else {
+			if (l_board_index < c::LEVEL_BLOCK_COUNT)
+				l_pos = std::make_pair(l_board_index % c::LEVEL_W, l_board_index / c::LEVEL_W);
+			else if (l_board_index == c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_DOOR)
+				l_pos = l_level.get_door_pos();
+			else if (l_board_index == c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_KEY)
+				l_pos = l_level.get_key_pos();
+			else if (l_board_index == c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_PLAYER_START)
+				l_pos = l_level.get_player_start_pos();
+			else if (l_board_index == c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_SPAWN01)
+				l_pos = l_level.get_spawn_position(0);
+			else if (l_board_index == c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_CONSTELLATION)
+				l_pos = l_level.get_constellation_pos();
+			else if (l_board_index == c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_SPAWN02)
+				l_pos = l_level.get_spawn_position(1);
+			else if (l_board_index > c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_META_TILE_MIN) {
+				l_pos = m_meta_tiles.at(m_current_level).at(l_board_index - (c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_META_TILE_MIN)).second;
+			}
+			else
+				l_pos = m_meta_tiles.at(m_current_level).at(l_board_index - c::MD_BYTE_NO_META_TILE_MIN).second;
+		}
 
 		klib::gfx::draw_rect(p_rnd,
 			l_pos.first * c::TILE_GFX_SIZE, l_pos.second * c::TILE_GFX_SIZE,
@@ -339,6 +399,7 @@ void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_conf
 
 	if (is_selected_index_valid()) {
 		auto& l_level{ get_level() };
+		byte l_tileset{ l_level.get_tileset_no() };
 
 		if (m_selected_type == c::ELM_TYPE_ITEM) {
 			const auto& l_items{ get_level().get_items() };
@@ -346,7 +407,7 @@ void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_conf
 			auto l_item_no{ l_items.at(get_selected_index()).get_item_no() };
 
 			ImGui::Image(m_gfx.get_tile(c::ELM_TYPE_ITEM, l_items.at(l_index).get_item_no(),
-				p_config.get_level_tileset(m_current_level, l_level.get_tileset_no())),
+				p_config.get_level_tileset(m_current_level, l_tileset)),
 				{ 2 * c::TILE_GFX_SIZE, 2 * c::TILE_GFX_SIZE });
 
 			std::string l_desc{ "Item #" + std::to_string(l_item_no) + ": "
@@ -380,11 +441,91 @@ void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_conf
 			}
 
 		}
+		else if (m_selected_type == c::ELM_TYPE_METADATA) {
+			if (l_index == c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_SPAWN01)
+				draw_ui_selected_mirror(0, p_config);
+			else if (l_index == c::LEVEL_BLOCK_COUNT + c::MD_BYTE_NO_SPAWN02)
+				draw_ui_selected_mirror(1, p_config);
+		}
 	}
 	else {
 		ImGui::Text("No element selected");
 	}
 	ImGui::End();
+}
+
+void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, const SKC_Config& p_config) {
+	auto& l_level{ get_level() };
+	auto l_tileset = l_level.get_tileset_no();
+
+	byte l_spawn_index = l_level.get_spawn_schedule(p_mirror_no);
+	byte l_spawn_nmi_index = l_level.get_spawn_enemies(p_mirror_no);
+
+	ImGui::Image(m_gfx.get_tile(c::ELM_TYPE_METADATA, p_mirror_no == 0 ? c::MD_BYTE_NO_SPAWN01 : c::MD_BYTE_NO_SPAWN02,
+		p_config.get_level_tileset(m_current_level, l_level.get_tileset_no())),
+		{ 2 * c::TILE_GFX_SIZE, 2 * c::TILE_GFX_SIZE });
+
+	ImGui::Text(p_config.get_description(c::ELM_TYPE_METADATA,
+		p_mirror_no == 0 ? c::MD_BYTE_NO_SPAWN01 : c::MD_BYTE_NO_SPAWN02).c_str());
+
+	auto l_schedule_no = skc::imgui::slider("Schedule",
+		l_spawn_index, 0, p_config.get_mirror_rate_count() - 1);
+	if (l_schedule_no.has_value())
+		l_level.set_spawn_schedule(p_mirror_no, l_schedule_no.value());
+	auto l_nmi_set_no = skc::imgui::slider("Enemies",
+		l_spawn_nmi_index, 0, p_config.get_mirror_enemy_count() - 1);
+	if (l_nmi_set_no.has_value())
+		l_level.set_spawn_enemies(p_mirror_no, l_nmi_set_no.value());
+	auto l_spawn_x = skc::imgui::slider("x-pos",
+		l_level.get_spawn_position(p_mirror_no).first, 0, c::LEVEL_W - 1);
+	if (l_spawn_x.has_value())
+		l_level.set_spawn_position(p_mirror_no,
+			std::make_pair(l_spawn_x.value(),
+				l_level.get_spawn_position(p_mirror_no).second));
+	auto l_spawn_y = skc::imgui::slider("y-pos",
+		l_level.get_spawn_position(p_mirror_no).second, 0, c::LEVEL_H - 1);
+	if (l_spawn_y.has_value())
+		l_level.set_spawn_position(p_mirror_no,
+			std::make_pair(l_level.get_spawn_position(p_mirror_no).first, l_spawn_y.value()));
+
+	ImGui::Separator();
+
+	ImGui::BeginDisabled();
+
+	ImGui::Text("Spawn Schedule (initial)");
+
+	for (std::size_t i{ 0 }; i < 32; ++i) {
+		std::string l_id{ "###s01" + std::to_string(i) };
+		bool l_sched_bit{ m_drop_schedules.at(l_spawn_index)[i] };
+		ImGui::Checkbox(l_id.c_str(), &l_sched_bit);
+		if (i % 8 != 7)
+			ImGui::SameLine();
+	}
+
+	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::Text("Spawn Schedule (looping)");
+
+	for (std::size_t i{ 32 }; i < 64; ++i) {
+		bool l_sched_bit{ m_drop_schedules.at(l_spawn_index)[i] };
+		std::string l_id{ "###s01" + std::to_string(i) };
+		ImGui::Checkbox(l_id.c_str(), &l_sched_bit);
+		if (i % 8 != 7)
+			ImGui::SameLine();
+	}
+
+	for (byte l_enemy_no : m_drop_enemies.at(l_spawn_nmi_index)) {
+
+		ImGui::Image(m_gfx.get_tile(c::ELM_TYPE_ENEMY, l_enemy_no, l_tileset),
+			{ c::TILE_GFX_SIZE, c::TILE_GFX_SIZE });
+
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+			ImGui::SetTooltip(p_config.get_description(c::ELM_TYPE_ENEMY, l_enemy_no).c_str());
+
+		ImGui::SameLine();
+	}
+
+	ImGui::EndDisabled();
 }
 
 void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
@@ -645,5 +786,6 @@ bool skc::SKC_Main_window::is_selected_index_valid(void) const {
 	return (m_selected_type == c::ELM_TYPE_ITEM &&
 		l_index < static_cast<int>(l_level.get_items().size())) ||
 		(m_selected_type == c::ELM_TYPE_ENEMY &&
-			l_index < static_cast<int>(l_level.get_enemies().size()));
+			l_index < static_cast<int>(l_level.get_enemies().size())) ||
+		m_selected_type == c::ELM_TYPE_METADATA;
 }
