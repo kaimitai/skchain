@@ -46,10 +46,10 @@ namespace skc {
 		skc::Level& get_level(void);
 
 		std::pair<int, int> pixel_to_tile_pos(int p_screen_h, int p_x, int p_y) const;
-		void right_click(const std::pair<int, int>& tile_pos);
-		void left_click(const std::pair<int, int>& tile_pos);
+		void right_click(const std::pair<int, int>& tile_pos, const skc::SKC_Config& p_config);
+		void left_click(const std::pair<int, int>& tile_pos, const skc::SKC_Config& p_config);
 
-		void right_click_md(const std::pair<int, int>& tile_pos);
+		void right_click_md(const std::pair<int, int>& tile_pos, const skc::SKC_Config& p_config);
 		void right_click_item(const std::pair<int, int>& tile_pos);
 		void right_click_enemy(const std::pair<int, int>& tile_pos);
 

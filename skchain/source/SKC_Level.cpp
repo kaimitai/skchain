@@ -5,6 +5,7 @@
 #include <stdexcept>
 
 using byte = unsigned char;
+using position = std::pair<int, int>;
 
 skc::Level_element::Level_element(skc::Element_type p_type, position p_position, byte p_element_no) :
 	m_type{ p_type }, m_position{ p_position }, m_element_no{ p_element_no }
@@ -48,8 +49,8 @@ void skc::Level_element::set_position(const position& p_pos) {
 skc::Level::Level(void) :
 	m_key_status{ c::DEFAULT_KEY_STATUS },
 	m_spawn_rate{ c::DEFAULT_SPAWN_RATE },
-	m_spawn01{ c::DEFAULT_SPAWN_VALUE },
-	m_spawn02{ c::DEFAULT_SPAWN_VALUE },
+	m_spawn01{ std::make_pair(0,0) },
+	m_spawn02{ std::make_pair(0,0) },
 	m_tileset_no{ 0 }
 { }
 
@@ -91,8 +92,8 @@ void skc::Level::load_item_data(const std::vector<byte>& p_bytes, std::size_t p_
 	m_fixed_door_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_DOOR_POS));
 	m_fixed_key_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_KEY_POS));
 	m_fixed_start_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_START_POS));
-	m_spawn01 = p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN01);
-	m_spawn02 = p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN02);
+	m_spawn01 = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN01));
+	m_spawn02 = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN02));
 
 	for (std::size_t i{ p_offset + c::ITEM_OFFSET_ITEM_DATA }; ; i += 2) {
 		byte l_next_elm{ p_bytes.at(i) };
@@ -165,11 +166,11 @@ byte skc::Level::get_spawn_rate(void) const {
 	return m_spawn_rate;
 }
 
-byte skc::Level::get_spawn01(void) const {
+position skc::Level::get_spawn01(void) const {
 	return m_spawn01;
 }
 
-byte skc::Level::get_spawn02(void) const {
+position skc::Level::get_spawn02(void) const {
 	return m_spawn02;
 }
 
@@ -333,8 +334,8 @@ std::vector<byte> skc::Level::get_item_bytes(const std::vector<byte>& p_ignore_i
 	result.push_back(get_byte_from_position(m_fixed_start_pos));
 
 	// enemy spawn point values (spawn rate set in the enemy data)
-	result.push_back(m_spawn01);
-	result.push_back(m_spawn02);
+	result.push_back(get_byte_from_position(m_spawn01));
+	result.push_back(get_byte_from_position(m_spawn02));
 
 	// add all item data, and apply "0xC"-compression whenever more than one item of the same type exists
 	for (std::size_t i{ 0 }; i < m_items.size(); ++i)

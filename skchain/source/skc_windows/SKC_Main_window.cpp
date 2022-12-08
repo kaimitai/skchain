@@ -72,12 +72,12 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 	else if (p_input.mouse_held(false)) {
 		auto l_tile_pos = pixel_to_tile_pos(p_screen_h, p_input.mx(), p_input.my());
 		if (l_tile_pos.first < c::LEVEL_W && l_tile_pos.second < c::LEVEL_H)
-			right_click(l_tile_pos);
+			right_click(l_tile_pos, p_config);
 	}
 	else if (p_input.mouse_held()) {
 		auto l_tile_pos = pixel_to_tile_pos(p_screen_h, p_input.mx(), p_input.my());
 		if (l_tile_pos.first < c::LEVEL_W && l_tile_pos.second < c::LEVEL_H)
-			left_click(l_tile_pos);
+			left_click(l_tile_pos, p_config);
 	}
 
 	if (p_input.is_ctrl_pressed() && p_input.is_pressed(SDL_SCANCODE_S))
@@ -90,16 +90,16 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 	}
 }
 
-void skc::SKC_Main_window::right_click(const std::pair<int, int>& p_tile_pos) {
+void skc::SKC_Main_window::right_click(const std::pair<int, int>& p_tile_pos, const skc::SKC_Config& p_config) {
 	if (m_selected_type == c::ELM_TYPE_METADATA)
-		right_click_md(p_tile_pos);
+		right_click_md(p_tile_pos, p_config);
 	else if (m_selected_type == c::ELM_TYPE_ITEM)
 		right_click_item(p_tile_pos);
 	else
 		right_click_enemy(p_tile_pos);
 }
 
-void skc::SKC_Main_window::left_click(const std::pair<int, int>& p_tile_pos) {
+void skc::SKC_Main_window::left_click(const std::pair<int, int>& p_tile_pos, const skc::SKC_Config& p_config) {
 	if (m_selected_type == c::ELM_TYPE_ENEMY)
 		left_click_enemy(p_tile_pos);
 	else if (m_selected_type == c::ELM_TYPE_ITEM)
@@ -157,7 +157,7 @@ void skc::SKC_Main_window::right_click_item(const std::pair<int, int>& tile_pos)
 	}
 }
 
-void skc::SKC_Main_window::right_click_md(const std::pair<int, int>& tile_pos) {
+void skc::SKC_Main_window::right_click_md(const std::pair<int, int>& tile_pos, const skc::SKC_Config& p_config) {
 	auto& l_level{ get_level() };
 
 	if (m_selected == c::MD_BYTE_NO_BLOCK_BROWN)
@@ -180,7 +180,8 @@ void skc::SKC_Main_window::right_click_md(const std::pair<int, int>& tile_pos) {
 	else {
 		std::size_t l_selected_meta_index = m_selected - c::MD_BYTE_NO_META_TILE_MIN;
 		auto iter = m_meta_tiles.find(m_current_level);
-		if (iter != end(m_meta_tiles) && l_selected_meta_index < iter->second.size()) {
+		if (iter != end(m_meta_tiles) && l_selected_meta_index < iter->second.size() &&
+			p_config.get_meta_tile_movable(iter->second.at(l_selected_meta_index).first)) {
 			set_meta_tile_position(l_selected_meta_index, tile_pos);
 		}
 	}
@@ -238,6 +239,12 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 			if (l_tile_no != 0)
 				draw_tile(p_rnd, m_gfx.get_meta_tile(l_tile_no, l_tileset_no), i, j);
 		}
+
+	// draw mirrors
+	auto l_m1_pos{ l_level.get_spawn01() };
+	auto l_m2_pos{ l_level.get_spawn02() };
+	draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN01, l_tileset_no), l_m1_pos.first, l_m1_pos.second);
+	draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN02, l_tileset_no), l_m2_pos.first, l_m2_pos.second);
 
 	// draw meta-items
 	auto iter = m_meta_tiles.find(m_current_level);
@@ -393,7 +400,7 @@ void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
 
 	ImGui::Separator();
 
-	byte l_tmp_selected_type = m_selected_type;
+	std::size_t l_tmp_selected_type = m_selected_type;
 
 	if (l_tmp_selected_type == c::ELM_TYPE_METADATA) {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });

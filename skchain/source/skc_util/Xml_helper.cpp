@@ -58,9 +58,9 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 	n_level.append_attribute(c::XML_ATTR_SPAWN_RATE);
 	n_level.attribute(c::XML_ATTR_SPAWN_RATE).set_value(p_level.get_spawn_rate());
 	n_level.append_attribute(c::XML_ATTR_SPAWN01);
-	n_level.attribute(c::XML_ATTR_SPAWN01).set_value(p_level.get_spawn01());
+	n_level.attribute(c::XML_ATTR_SPAWN01).set_value(get_position_string(p_level.get_spawn01()).c_str());
 	n_level.append_attribute(c::XML_ATTR_SPAWN02);
-	n_level.attribute(c::XML_ATTR_SPAWN02).set_value(p_level.get_spawn02());
+	n_level.attribute(c::XML_ATTR_SPAWN02).set_value(get_position_string(p_level.get_spawn02()).c_str());
 
 	if (p_level.has_constellation()) {
 		n_level.append_attribute(c::XML_ATTR_CONSTELLATION_NO);

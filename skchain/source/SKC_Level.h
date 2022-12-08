@@ -38,7 +38,8 @@ namespace skc {
 		std::vector<byte> m_item_header;
 		std::optional<Level_element> m_constellation;
 
-		byte m_key_status, m_spawn_rate, m_spawn01, m_spawn02, m_tileset_no;
+		byte m_key_status, m_spawn_rate, m_tileset_no;
+		position m_spawn01, m_spawn02;
 		std::pair<int, int> m_fixed_start_pos, m_fixed_key_pos, m_fixed_door_pos;
 
 		std::vector<std::size_t> get_item_indexes(byte p_item_no, std::set<std::size_t>& p_ignored_indexes) const;
@@ -64,8 +65,8 @@ namespace skc {
 		byte get_constellation_no(void) const;
 		position get_constellation_pos(void) const;
 		byte get_spawn_rate(void) const;
-		byte get_spawn01(void) const;
-		byte get_spawn02(void) const;
+		position get_spawn01(void) const;
+		position get_spawn02(void) const;
 		byte get_tileset_no(void) const;
 		byte get_item_delimiter(void) const;
 
