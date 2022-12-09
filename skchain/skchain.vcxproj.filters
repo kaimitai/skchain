@@ -147,6 +147,9 @@
     <ClInclude Include="source\skc_util\Imgui_helper.h">
       <Filter>Header Files\skc_util</Filter>
     </ClInclude>
+    <ClInclude Include="source\common\klib\IPS_Patch.h">
+      <Filter>Header Files\common\klib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\klib\klib_file.cpp">
@@ -220,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="source\SKC_Level_elements.cpp">
       <Filter>Source Files\levels</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common\klib\IPS_Patch.cpp">
+      <Filter>Source Files\common\klib</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

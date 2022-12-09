@@ -2,6 +2,7 @@
 #include "./../common/klib/klib_gfx.h"
 #include "./../common/klib/klib_file.h"
 #include "./../common/klib/klib_util.h"
+#include "./../common/klib/IPS_Patch.h"
 #include "./../skc_util/Xml_helper.h"
 #include "./../skc_util/Imgui_helper.h"
 #include "./../skc_constants/Constants_level.h"
@@ -77,6 +78,17 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_c
 		for (std::size_t i{ 0 }; lr_rom_data.at(emem_offset + i) != 144; ++i)
 			l_drop_enemy.push_back(lr_rom_data.at(emem_offset + i));
 		m_drop_enemies.push_back(l_drop_enemy);
+	}
+
+	const auto lr_ips_data = klib::file::read_file_as_bytes("SoKeUn.ips");
+
+	auto l_patched_file = klib::ips::apply_patch(lr_rom_data, lr_ips_data);
+	auto l_gen_patch = klib::ips::generate_patch(lr_rom_data, l_patched_file);
+	auto l_repatch = klib::ips::apply_patch(lr_rom_data, l_gen_patch);
+
+	for (std::size_t i{ 0 }; i < l_repatch.size(); ++i) {
+		if (l_repatch[i] != l_patched_file[i])
+			throw std::runtime_error("mismatch at " + std::to_string(i));
 	}
 }
 

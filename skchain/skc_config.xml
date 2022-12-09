@@ -196,7 +196,9 @@
     <enemy no="0x4f" description="Ghost (left, very fast, noslow)" animation="62" />
     
 	<!-- 0x50-0x67 are spawned enemies, need to be investigated with different values for spawn frequency -->
-    
+    <enemy no="0x50" description="Demonhead (right)" animation="71" />
+	<enemy no="0x51" description="Demonhead (left)" animation="71" />
+	
     <enemy no="0x68" description="Dragon (right)" animation="64" />
     <enemy no="0x69" description="Dragon (left)" animation="41" />
 	<enemy no="0x6a" description="Dragon (right)" animation="64" />
@@ -452,6 +454,9 @@
 	  
 	  <!-- dana (facing left) -->
       <tile no="70" palette_no="4" nes_tiles="0,2,1,3" transparent="true" />
+	  
+	  <!-- demon head -->
+	  <tile no="71" palette_no="7" nes_tiles="44,44:v,45,45:v" transparent="true" />
 
     </tile_definitions>
 	
