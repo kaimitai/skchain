@@ -33,14 +33,14 @@ std::vector<byte> klib::ips::generate_patch(const std::vector<byte>& p_source,
 		else
 			++i;
 	}
-	/*
+	
 	std::size_t l_append_byte_count{ p_target.size() - p_source.size() };
 	if (l_append_byte_count != 0) {
 		write_number(result, p_source.size(), 3);
 		write_number(result, l_append_byte_count, 2);
 		result.insert(end(result), begin(p_target) + p_source.size(), end(p_target));
 	}
-	*/
+	
 	for (std::size_t i{ 0 }; i < 3; ++i)
 		result.push_back(PATCH_EOF[i]);
 
@@ -95,7 +95,7 @@ std::vector<byte> klib::ips::apply_patch(const std::vector<byte>& p_source,
 			}
 			// Not RLE - push bytes
 			else {
-				copy_bytes(result, l_target_offset, p_source, l_source_index, l_length);
+				copy_bytes(result, l_target_offset, p_patch_bytes, l_source_index, l_length);
 				l_source_index += l_length;
 			}
 		}
