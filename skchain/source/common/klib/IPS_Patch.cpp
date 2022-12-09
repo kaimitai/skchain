@@ -25,22 +25,19 @@ std::vector<byte> klib::ips::generate_patch(const std::vector<byte>& p_source,
 		while (i < p_source.size() && p_source[i] != p_target[i]) {
 			l_patch_bytes.push_back(p_target[i++]);
 		}
-		if (l_patch_bytes.size() > 0) {
-			write_number(result, l_offset, 3);
-			write_number(result, l_patch_bytes.size(), 2);
-			result.insert(end(result), begin(l_patch_bytes), end(l_patch_bytes));
-		}
+		if (l_patch_bytes.size() > 0)
+			generate_hunk(result, l_offset, l_patch_bytes);
 		else
 			++i;
 	}
-	
+
 	std::size_t l_append_byte_count{ p_target.size() - p_source.size() };
 	if (l_append_byte_count != 0) {
 		write_number(result, p_source.size(), 3);
 		write_number(result, l_append_byte_count, 2);
 		result.insert(end(result), begin(p_target) + p_source.size(), end(p_target));
 	}
-	
+
 	for (std::size_t i{ 0 }; i < 3; ++i)
 		result.push_back(PATCH_EOF[i]);
 
@@ -55,6 +52,28 @@ void klib::ips::copy_bytes(std::vector<byte>& pr_result, std::size_t p_patch_off
 
 	for (std::size_t i{ 0 }; i < p_length; ++i)
 		pr_result.at(p_patch_offset + i) = p_source_bytes.at(p_source_offset + i);
+}
+
+void klib::ips::generate_hunk(std::vector<byte>& pr_result, std::size_t p_offset, const std::vector<byte>& p_patch_bytes) {
+	bool l_all_equal{ true };
+	byte l_cmp_byte{ p_patch_bytes.at(0) };
+	for (std::size_t i{ 1 }; i < p_patch_bytes.size(); ++i)
+		if (p_patch_bytes[i] != l_cmp_byte) {
+			l_all_equal = false;
+			break;
+		}
+
+	if (p_patch_bytes.size() > 3 && l_all_equal) {
+		write_number(pr_result, p_offset, 3);
+		write_number(pr_result, 0, 2);
+		write_number(pr_result, p_patch_bytes.size(), 2);
+		pr_result.push_back(l_cmp_byte);
+	}
+	else {
+		write_number(pr_result, p_offset, 3);
+		write_number(pr_result, p_patch_bytes.size(), 2);
+		pr_result.insert(end(pr_result), begin(p_patch_bytes), end(p_patch_bytes));
+	}
 }
 
 void klib::ips::copy_run_length(std::vector<byte>& pr_result,

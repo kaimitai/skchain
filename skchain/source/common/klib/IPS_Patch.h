@@ -13,6 +13,7 @@ namespace klib {
 			std::size_t p_offset, std::size_t p_length, byte p_byte);
 		void copy_bytes(std::vector<byte>& p_result, std::size_t p_patch_offset,
 			const std::vector<byte>& p_source_bytes, std::size_t p_source_offset, std::size_t p_length);
+		void generate_hunk(std::vector<byte>& pr_result, std::size_t p_offset, const std::vector<byte>& p_patch_bytes);
 
 		std::vector<byte> generate_patch(const std::vector<byte>& p_source,
 			const std::vector<byte>& p_target);

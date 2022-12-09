@@ -199,6 +199,16 @@
     <enemy no="0x50" description="Demonhead (right)" animation="71" />
 	<enemy no="0x51" description="Demonhead (left)" animation="71" />
 	
+	<enemy no="0x54" description="Demonhead (right)" animation="71" />
+	<enemy no="0x55" description="Demonhead (left)" animation="71" />
+	
+	<enemy no="0x58" description="Demonhead (right, fast)" animation="71" />
+	<enemy no="0x59" description="Demonhead (left, fast)" animation="71" />
+	
+	<enemy no="0x5c" description="Saramandor (right, fast)" animation="73" />
+	
+	<enemy no="0x60" description="Saramandor (right)" animation="73" />
+	
     <enemy no="0x68" description="Dragon (right)" animation="64" />
     <enemy no="0x69" description="Dragon (left)" animation="41" />
 	<enemy no="0x6a" description="Dragon (right)" animation="64" />
@@ -457,6 +467,9 @@
 	  
 	  <!-- demon head -->
 	  <tile no="71" palette_no="7" nes_tiles="44,44:v,45,45:v" transparent="true" />
+	  <!-- saramandor left, right -->
+	  <tile no="72" palette_no="5" nes_tiles="52,54,53,55" transparent="true" />
+	  <tile no="73" palette_no="5" nes_tiles="54:v,52:v,55:v,53:v" transparent="true" />
 
     </tile_definitions>
 	
