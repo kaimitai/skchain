@@ -88,12 +88,12 @@ void skc::Level::load_item_data(const std::vector<byte>& p_bytes, std::size_t p_
 	m_fixed_key_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_KEY_POS));
 	m_fixed_start_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_START_POS));
 
-	m_demon_mirrors.push_back(skc::Demon_mirror(get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN01)),
-		p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN01_SCHEDULE),
-		p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN01_ENEMIES)));
 	m_demon_mirrors.push_back(skc::Demon_mirror(get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN02)),
 		p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN02_SCHEDULE),
 		p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN02_ENEMIES)));
+	m_demon_mirrors.push_back(skc::Demon_mirror(get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN01)),
+		p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN01_SCHEDULE),
+		p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN01_ENEMIES)));
 
 	for (std::size_t i{ p_offset + c::ITEM_OFFSET_ITEM_DATA }; ; i += 2) {
 		byte l_next_elm{ p_bytes.at(i) };
@@ -307,10 +307,10 @@ std::vector<byte> skc::Level::get_block_bytes(void) const {
 
 std::vector<byte> skc::Level::get_item_bytes(const std::vector<byte>& p_ignore_item_elements) const {
 	std::vector<byte> result;
-	result.push_back(m_demon_mirrors.at(0).m_schedule_no);
 	result.push_back(m_demon_mirrors.at(1).m_schedule_no);
-	result.push_back(m_demon_mirrors.at(0).m_monster_set_no);
+	result.push_back(m_demon_mirrors.at(0).m_schedule_no);
 	result.push_back(m_demon_mirrors.at(1).m_monster_set_no);
+	result.push_back(m_demon_mirrors.at(0).m_monster_set_no);
 
 	std::set<std::size_t> l_handled_offsets;
 

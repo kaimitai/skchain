@@ -54,6 +54,21 @@ void klib::ips::copy_bytes(std::vector<byte>& pr_result, std::size_t p_patch_off
 		pr_result.at(p_patch_offset + i) = p_source_bytes.at(p_source_offset + i);
 }
 
+std::size_t klib::ips::get_run_length(const std::vector<byte>& p_patch_bytes,
+	const std::size_t p_offset) {
+	std::size_t result{ 1 };
+
+	byte l_cmp_byte{ p_patch_bytes.at(p_offset) };
+	for (std::size_t i{ p_offset + 1 }; i < p_patch_bytes.size(); ++i) {
+		if (p_patch_bytes.at(i) == l_cmp_byte)
+			++result;
+		else
+			break;
+	}
+
+	return result;
+}
+
 void klib::ips::generate_hunk(std::vector<byte>& pr_result, std::size_t p_offset, const std::vector<byte>& p_patch_bytes) {
 	bool l_all_equal{ true };
 	byte l_cmp_byte{ p_patch_bytes.at(0) };

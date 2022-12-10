@@ -227,5 +227,8 @@
     <ClCompile Include="source\common\klib\IPS_Patch.cpp">
       <Filter>Source Files\common\klib</Filter>
     </ClCompile>
+    <ClCompile Include="source\skc_windows\SKC_Main_window_ui.cpp">
+      <Filter>Source Files\skc_windows</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

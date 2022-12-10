@@ -14,6 +14,7 @@ namespace klib {
 		void copy_bytes(std::vector<byte>& p_result, std::size_t p_patch_offset,
 			const std::vector<byte>& p_source_bytes, std::size_t p_source_offset, std::size_t p_length);
 		void generate_hunk(std::vector<byte>& pr_result, std::size_t p_offset, const std::vector<byte>& p_patch_bytes);
+		std::size_t get_run_length(const std::vector<byte>& p_patch_bytes, const std::size_t p_offset);
 
 		std::vector<byte> generate_patch(const std::vector<byte>& p_source,
 			const std::vector<byte>& p_target);

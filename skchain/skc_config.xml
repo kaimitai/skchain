@@ -209,6 +209,8 @@
 	
 	<enemy no="0x60" description="Saramandor (right)" animation="73" />
 	
+	<enemy no="0x64" description="Saramandor (right, very fast)" animation="73" />
+	
     <enemy no="0x68" description="Dragon (right)" animation="64" />
     <enemy no="0x69" description="Dragon (left)" animation="41" />
 	<enemy no="0x6a" description="Dragon (right)" animation="64" />
