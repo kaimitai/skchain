@@ -92,6 +92,17 @@ void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config)
 	ImGui::Text(l_desc.c_str());
 	ImGui::Separator();
 
+	if (l_index == c::MD_BYTE_NO_KEY) {
+		auto l_khidden{ imgui::checkbox("Hidden", l_level.is_key_hidden()) };
+		ImGui::SameLine();
+		auto l_kcovered{ imgui::checkbox("In Block", l_level.is_key_in_block()) };
+		if (l_khidden)
+			l_level.set_key_hidden(l_khidden.value());
+		if (l_kcovered)
+			l_level.set_key_in_block(l_kcovered.value());
+		ImGui::Separator();
+	}
+
 	auto l_cpos{ get_metadata_tile_position(l_index) };
 	auto l_pos_x = skc::imgui::slider("x-pos", l_cpos.first,
 		0, c::LEVEL_W - 1);

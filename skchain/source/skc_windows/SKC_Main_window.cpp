@@ -112,6 +112,8 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 	}
 
 	if (!ImGui::GetIO().WantCaptureKeyboard) {
+		bool l_shift = p_input.is_shift_pressed();
+
 		if (p_input.is_ctrl_pressed() && p_input.is_pressed(SDL_SCANCODE_S))
 			save_nes_file("sk_test.nes", p_config);
 		else if (p_input.is_pressed(SDL_SCANCODE_DELETE) && is_selected_index_valid())
@@ -119,6 +121,12 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 		else if (p_input.is_pressed(SDL_SCANCODE_KP_PLUS)) {
 			byte l_tileset_no = get_level().get_tileset_no() + 1;
 			get_level().set_tileset_no(l_tileset_no > 2 ? 0 : l_tileset_no);
+		}
+		else if (p_input.is_pressed(SDL_SCANCODE_TAB)) {
+			if (l_shift)
+				decrease_selected_index();
+			else
+				increase_selected_index();
 		}
 	}
 }
@@ -144,6 +152,14 @@ void skc::SKC_Main_window::left_click(const std::pair<int, int>& p_tile_pos, con
 void skc::SKC_Main_window::shift_click(const std::pair<int, int>& tile_pos, const skc::SKC_Config& p_config) {
 	if (m_selected_type == c::ELM_TYPE_METADATA)
 		shift_click_metadata(tile_pos, p_config);
+	else if (is_selected_index_valid()) {
+		auto& l_level{ get_level() };
+		auto l_index{ get_selected_index() };
+		if (m_selected_type == c::ELM_TYPE_ENEMY)
+			l_level.set_enemy_position(l_index, tile_pos);
+		else
+			l_level.set_item_position(l_index, tile_pos);
+	}
 }
 
 void skc::SKC_Main_window::shift_click_metadata(const std::pair<int, int>& tile_pos, const SKC_Config& p_config) {
@@ -196,16 +212,24 @@ void skc::SKC_Main_window::left_click_item(const std::pair<int, int>& tile_pos) 
 
 void skc::SKC_Main_window::delete_selected_index(void) {
 	if (is_selected_index_valid()) {
-		auto& l_level{ get_level() };
 		auto l_index = get_selected_index();
+		auto& l_level{ get_level() };
 
-		if (m_selected_type == c::ELM_TYPE_ITEM)
-			l_level.delete_item(l_index);
-		else if (m_selected_type == c::ELM_TYPE_ENEMY)
-			l_level.delete_enemy(l_index);
+		if (m_selected_type == c::ELM_TYPE_METADATA) {
+			if (l_index == c::MD_BYTE_NO_DOOR)
+				l_level.set_door_removed();
+			else if (l_index == c::MD_BYTE_NO_KEY)
+				l_level.set_key_removed();
+		}
+		else {
+			if (m_selected_type == c::ELM_TYPE_ITEM)
+				l_level.delete_item(l_index);
+			else if (m_selected_type == c::ELM_TYPE_ENEMY)
+				l_level.delete_enemy(l_index);
 
-		if (l_index > 0)
-			--m_board_selection[m_current_level][m_selected_type];
+			if (l_index > 0)
+				--m_board_selection[m_current_level][m_selected_type];
+		}
 	}
 }
 
@@ -697,6 +721,58 @@ bool skc::SKC_Main_window::is_selected_index_valid(void) const {
 		(m_selected_type == c::ELM_TYPE_ENEMY &&
 			l_index < static_cast<int>(l_level.get_enemies().size())) ||
 		m_selected_type == c::ELM_TYPE_METADATA;
+}
+
+void skc::SKC_Main_window::increase_selected_index(void) {
+	int l_index{ get_selected_index() };
+
+	if (m_selected_type == c::ELM_TYPE_METADATA
+		&& l_index == c::MD_BYTE_NO_SPAWN02) {
+		int l_count = get_selected_index_count();
+		if (l_count == c::MD_BYTE_NO_SPAWN02 + 1)
+			set_selected_index(0);
+		else
+			set_selected_index(c::MD_BYTE_NO_META_TILE_MIN);
+		return;
+	}
+
+	set_selected_index(l_index + 1);
+	if (l_index + 1 >= get_selected_index_count())
+		set_selected_index(0);
+}
+
+void skc::SKC_Main_window::decrease_selected_index(void) {
+	int l_index{ get_selected_index() };
+
+	if (m_selected_type == c::ELM_TYPE_METADATA &&
+		l_index == c::MD_BYTE_NO_META_TILE_MIN) {
+		set_selected_index(c::MD_BYTE_NO_SPAWN02);
+		return;
+	}
+
+	set_selected_index(l_index - 1);
+	if (l_index == 0)
+		set_selected_index(get_selected_index_count() - 1);
+}
+
+int skc::SKC_Main_window::get_selected_index_count(void) const {
+	int l_index{ get_selected_index() };
+	const auto& l_level{ get_level() };
+
+	if (m_selected_type == c::ELM_TYPE_ITEM)
+		return l_level.get_item_count();
+	else if (m_selected_type == c::ELM_TYPE_ENEMY)
+		return l_level.get_enemy_count();
+	else {
+		int l_mt_count{ 0 };
+		auto iter = m_meta_tiles.find(m_current_level);
+		if (iter != end(m_meta_tiles)) {
+			l_mt_count = static_cast<int>(iter->second.size());
+			return c::MD_BYTE_NO_META_TILE_MIN + l_mt_count;
+		}
+		else
+			return c::MD_BYTE_NO_SPAWN02 + 1;
+	}
 }
 
 byte skc::SKC_Main_window::get_tile_selection(void) const {

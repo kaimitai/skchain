@@ -11,3 +11,11 @@ std::optional<int> skc::imgui::slider(const std::string& p_label,
 	else
 		return std::nullopt;
 }
+
+std::optional<bool> skc::imgui::checkbox(const std::string& p_label, bool p_value) {
+	bool l_value{ p_value };
+	if (ImGui::Checkbox(p_label.c_str(), &l_value))
+		return l_value;
+	else
+		return std::nullopt;
+}

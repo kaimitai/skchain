@@ -29,6 +29,9 @@ namespace skc {
 		std::vector<std::vector<byte>> m_drop_enemies;
 
 		bool is_selected_index_valid(void) const;
+		int get_selected_index_count(void) const;
+		void increase_selected_index(void);
+		void decrease_selected_index(void);
 		int get_selected_index(void) const;
 		void set_selected_index(int p_index);
 		void delete_selected_index(void);

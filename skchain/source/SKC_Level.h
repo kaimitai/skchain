@@ -99,11 +99,16 @@ namespace skc {
 		void set_item_in_block(int p_index, bool p_value);
 		void set_item_position(int p_index, const position& l_pos);
 
+		void set_enemy_position(int p_index, const position& l_pos);
+
 		static bool is_item_constellation(byte p_item_no);
 		static bool is_item_in_block(byte p_item_no);
 		static bool is_item_hidden(byte p_item_no);
 
 		// logical getters
+		int get_item_count(void) const;
+		int get_enemy_count(void) const;
+
 		int get_item_index(const position& p_pos) const;
 		int get_enemy_index(const position& p_pos) const;
 
@@ -119,7 +124,12 @@ namespace skc {
 		bool is_key_removed(void) const;
 		bool is_key_in_block(void) const;
 
+		void set_key_hidden(bool p_value);
+		void set_key_in_block(bool p_value);
+		void set_key_removed(void);
+
 		bool is_door_removed(void) const;
+		void set_door_removed(void);
 	};
 
 }

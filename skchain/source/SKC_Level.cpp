@@ -240,6 +240,10 @@ void skc::Level::set_item_position(int p_index, const position& l_pos) {
 	m_items.at(p_index).set_position(l_pos);
 }
 
+void skc::Level::set_enemy_position(int p_index, const position& l_pos) {
+	m_enemies.at(p_index).set_position(l_pos);
+}
+
 // static functions
 bool skc::Level::is_item_constellation(byte p_item_no) {
 	return p_item_no >= c::ITEM_CONSTELLATION_MIN &&
@@ -399,19 +403,50 @@ bool skc::Level::is_item_delimiter(byte p_value) {
 }
 
 bool skc::Level::is_key_hidden(void) const {
-	return is_item_hidden(m_key_status);
+	return m_key_status >= 0x80;
 }
 
 bool skc::Level::is_key_in_block(void) const {
-	return is_item_in_block(m_key_status);
+	return m_key_status >= 0x40 && m_key_status < 0x80;
 }
 
 bool skc::Level::is_key_removed(void) const {
 	return m_fixed_key_pos.second < 0;
 }
 
+void skc::Level::set_key_hidden(bool p_value) {
+	if (p_value)
+		m_key_status = 0x80;
+	else
+		m_key_status = 0x00;
+}
+
+void skc::Level::set_key_in_block(bool p_value) {
+	if (p_value)
+		m_key_status = 0x40;
+	else
+		m_key_status = 0x00;
+}
+
+void skc::Level::set_key_removed(void) {
+	m_fixed_key_pos = std::make_pair(-1, 0);
+}
+
 bool skc::Level::is_door_removed(void) const {
 	return m_fixed_door_pos.second < 0;
+}
+
+void skc::Level::set_door_removed(void) {
+	m_fixed_key_pos = std::make_pair(-1, 0);
+	set_key_hidden(true);
+}
+
+int skc::Level::get_item_count(void) const {
+	return static_cast<int>(m_items.size());
+}
+
+int skc::Level::get_enemy_count(void) const {
+	return static_cast<int>(m_enemies.size());
 }
 
 int skc::Level::get_item_index(const position& p_pos) const {
