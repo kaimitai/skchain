@@ -75,7 +75,7 @@ std::vector<std::vector<bool>> klib::util::bytes_to_bitmask(const std::vector<by
 
 std::vector<bool> klib::util::bytes_to_bitmask_1d(const std::vector<byte>& p_bytes, int p_w, std::size_t p_start_pos) {
 	auto l_tmp_2d{ bytes_to_bitmask(p_bytes,
-		static_cast<std::size_t>(p_w == 0 ? 8 * p_bytes.size() : p_w),
+		p_w == 0 ? static_cast<int>(8 * (p_bytes.size() - p_start_pos)) : p_w,
 		1, p_start_pos) };
 	return l_tmp_2d.at(0);
 }
