@@ -42,6 +42,8 @@ namespace skc {
 		constexpr byte ITEM_CONSTELLATION_MAX{ ITEM_CONSTELLATION_SAGITTARIUS };
 		constexpr byte ITEM_COMPRESS_MAX_COUNT{ ITEM_DELIMITER_MIN - ITEM_COPY_INDICATOR_MIN };
 
+		constexpr byte MIRROR_ENEMY_SET_DELIMITER{ 0x90 };
+
 		constexpr unsigned int LEVEL_W{ 16 }, LEVEL_H{ 12 };
 		constexpr unsigned int LEVEL_BLOCK_COUNT{ LEVEL_W * LEVEL_H };
 		constexpr unsigned int TILE_BITMASK_BYTE_SIZE{ (LEVEL_W * LEVEL_H) / 8 };

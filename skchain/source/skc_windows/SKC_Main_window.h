@@ -77,12 +77,14 @@ namespace skc {
 		position get_metadata_tile_position(byte p_board_index_no) const;
 		void set_metadata_tile_position(byte p_board_index_no, const position& p_pos, const SKC_Config& p_config);
 
+		// file
+		std::vector<byte> generate_patch_bytes(const SKC_Config& p_config) const;
+		void save_nes_file(const std::string& p_file_path, const SKC_Config& p_config) const;
+
 	public:
 		SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_config);
 		void move(int p_delta_ms, const klib::User_input& p_input, skc::SKC_Config& p_config, int p_screen_h);
 		void draw(SDL_Renderer* p_rnd, const SKC_Config& p_config, int p_w, int p_h);
-
-		void save_nes_file(const std::string& p_file_path, const SKC_Config& p_config) const;
 	};
 
 }

@@ -36,21 +36,26 @@ namespace skc {
 		const std::vector<byte>& get_rom_data(void) const;
 
 		std::size_t get_offset_gfx(void) const;
-		std::size_t get_offset_block_data(void) const;
+		std::size_t get_offset_block_data(std::size_t p_level_no = 0) const;
 		std::size_t get_offset_enemy_table_lo(void) const;
 		std::size_t get_offset_enemy_table_hi(void) const;
 		std::size_t get_offset_item_table_lo(void) const;
 		std::size_t get_offset_item_table_hi(void) const;
 		std::size_t get_offset_enemy_data(void) const;
 		std::size_t get_offset_item_data(void) const;
+		std::size_t get_offset_enemy_data(std::size_t p_level_no) const;
+		std::size_t get_offset_item_data(std::size_t p_level_no) const;
 		std::size_t get_offset_mirror_rate_data(std::size_t p_index) const;
 		std::size_t get_offset_mirror_enemy_data(std::size_t p_index) const;
+		std::size_t get_offset_mirror_enemy_table_lo(void) const;
+		std::size_t get_offset_mirror_enemy_table_hi(void) const;
 		unsigned int get_level_count(void) const;
 		unsigned int get_nes_tile_count(void) const;
 		unsigned int get_mirror_rate_count(void) const;
 		unsigned int get_mirror_enemy_count(void) const;
 		std::size_t get_rom_address_from_ram(std::size_t p_ram_address) const;
 		std::size_t get_ram_address_from_rom(std::size_t p_rom_address) const;
+		std::pair<byte, byte> get_ram_address_bytes_from_rom(const std::size_t p_rom_address) const;
 		std::size_t get_level_tileset(std::size_t p_level_no, byte p_tileset_no) const;
 
 		const std::vector<std::pair<std::string, std::vector<byte>>>& get_tile_picker(std::size_t p_element_type) const;

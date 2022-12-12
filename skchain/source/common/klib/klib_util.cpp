@@ -50,6 +50,13 @@ std::vector<byte> klib::util::bitmask_to_bytes(const std::vector<std::vector<boo
 	return result;
 }
 
+std::vector<byte> klib::util::bitmask_to_bytes(const std::vector<bool>& p_bitmask) {
+	std::vector<std::vector<bool>> l_tmp_2d;
+	l_tmp_2d.push_back(p_bitmask);
+
+	return bitmask_to_bytes(l_tmp_2d);
+}
+
 std::vector<std::vector<bool>> klib::util::bytes_to_bitmask(const std::vector<byte>& p_bytes, int p_w, int p_h, std::size_t p_start_pos) {
 	std::vector<std::vector<bool>> result;
 
@@ -64,4 +71,11 @@ std::vector<std::vector<bool>> klib::util::bytes_to_bitmask(const std::vector<by
 	}
 
 	return result;
+}
+
+std::vector<bool> klib::util::bytes_to_bitmask_1d(const std::vector<byte>& p_bytes, int p_w, std::size_t p_start_pos) {
+	auto l_tmp_2d{ bytes_to_bitmask(p_bytes,
+		static_cast<std::size_t>(p_w == 0 ? 8 * p_bytes.size() : p_w),
+		1, p_start_pos) };
+	return l_tmp_2d.at(0);
 }

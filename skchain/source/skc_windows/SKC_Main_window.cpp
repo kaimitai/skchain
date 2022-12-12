@@ -22,22 +22,12 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_c
 
 	for (byte i{ 0 }; i < 3; ++i)
 		m_selected_picker_tile.push_back(p_config.get_tile_picker(i).at(0).second.front());
-
 	m_levels = std::vector<skc::Level>(p_config.get_level_count(), skc::Level());
-	std::vector<size_t> l_item_offsets, l_enemy_offsets;
-	for (std::size_t i{ 0 }; i < p_config.get_level_count(); ++i) {
-		std::size_t l_item_offset = lr_rom_data.at(p_config.get_offset_item_table_hi() + i) * 256 +
-			lr_rom_data.at(p_config.get_offset_item_table_lo() + i);
-		std::size_t l_enemy_offset = lr_rom_data.at(p_config.get_offset_enemy_table_hi() + i) * 256 +
-			lr_rom_data.at(p_config.get_offset_enemy_table_lo() + i);
-		l_item_offsets.push_back(p_config.get_rom_address_from_ram(l_item_offset));
-		l_enemy_offsets.push_back(p_config.get_rom_address_from_ram(l_enemy_offset));
-	}
 
 	for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
-		m_levels.at(i).load_block_data(lr_rom_data, p_config.get_offset_block_data() + i * c::SIZE_LEVEL_WALLS);
-		m_levels.at(i).load_item_data(lr_rom_data, l_item_offsets.at(i));
-		m_levels.at(i).load_enemy_data(lr_rom_data, l_enemy_offsets.at(i));
+		m_levels.at(i).load_block_data(lr_rom_data, p_config.get_offset_block_data(i));
+		m_levels.at(i).load_item_data(lr_rom_data, p_config.get_offset_item_data(i));
+		m_levels.at(i).load_enemy_data(lr_rom_data, p_config.get_offset_enemy_data(i));
 	}
 
 	m_board_selection = std::vector<std::vector<int>>(
@@ -66,19 +56,18 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_c
 	}
 
 	// extract drop rate metadata
-	for (std::size_t i{ 0 }; i < p_config.get_mirror_rate_count(); ++i) {
-		std::size_t mem_offset{ p_config.get_offset_mirror_rate_data(i) };
-		std::vector<byte> l_drop_rate;
-		for (std::size_t i{ 0 }; i < 8; ++i)
-			l_drop_rate.push_back(lr_rom_data.at(mem_offset + i));
-		m_drop_schedules.push_back(klib::util::bytes_to_bitmask(l_drop_rate, 64, 1).at(0));
-	}
+	for (std::size_t i{ 0 }; i < p_config.get_mirror_rate_count(); ++i)
+		m_drop_schedules.push_back(
+			klib::util::bytes_to_bitmask_1d(lr_rom_data,
+				64,
+				p_config.get_offset_mirror_rate_data(i))
+		);
 
 	// extract drop enemies metadata
 	for (std::size_t i{ 0 }; i < p_config.get_mirror_enemy_count(); ++i) {
 		std::vector<byte> l_drop_enemy;
 		std::size_t emem_offset{ p_config.get_offset_mirror_enemy_data(i) };
-		for (std::size_t i{ 0 }; lr_rom_data.at(emem_offset + i) != 144; ++i)
+		for (std::size_t i{ 0 }; lr_rom_data.at(emem_offset + i) != c::MIRROR_ENEMY_SET_DELIMITER; ++i)
 			l_drop_enemy.push_back(lr_rom_data.at(emem_offset + i));
 		m_drop_enemies.push_back(l_drop_enemy);
 	}
@@ -470,6 +459,11 @@ void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
 		for (std::size_t i{ 0 }; i < m_levels.size(); ++i)
 			save_level_xml(m_levels.at(i), "./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
 	}
+	ImGui::SameLine();
+	if (ImGui::Button("Save IPS")) {
+		klib::file::write_bytes_to_file(klib::ips::generate_patch(p_config.get_rom_data(), generate_patch_bytes(p_config)),
+			"sk-output.ips");
+	}
 
 	ImGui::Separator();
 
@@ -604,9 +598,9 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, const SKC_Config& p_config,
 	this->draw_ui(p_config);
 }
 
-void skc::SKC_Main_window::save_nes_file(const std::string& p_file_path, const SKC_Config& p_config) const {
+std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(const SKC_Config& p_config) const {
 	std::vector<byte> l_output{ p_config.get_rom_data() };
-	std::vector<std::size_t> l_item_offsets, l_enemy_offsets;
+	std::vector<std::size_t> l_item_offsets, l_enemy_offsets, l_enemy_sets_offsets;
 	std::size_t l_item_offset{ 0 }, lenemy_offset{ 0 };
 	const auto& l_item_bitmasks{ p_config.get_item_bitmasks() };
 
@@ -637,26 +631,20 @@ void skc::SKC_Main_window::save_nes_file(const std::string& p_file_path, const S
 
 	// patch item table
 	for (std::size_t i{ 0 }; i < l_item_offsets.size(); ++i) {
-		std::size_t l_ram_address = p_config.get_ram_address_from_rom(
+		auto l_ram_address = p_config.get_ram_address_bytes_from_rom(
 			p_config.get_offset_item_data() + l_item_offsets[i]);
 
-		byte l_hi = static_cast<byte>(l_ram_address / 256);
-		byte l_lo = static_cast<byte>(l_ram_address % 256);
-
-		l_output.at(p_config.get_offset_item_table_hi() + i) = l_hi;
-		l_output.at(p_config.get_offset_item_table_lo() + i) = l_lo;
+		l_output.at(p_config.get_offset_item_table_hi() + i) = l_ram_address.first;
+		l_output.at(p_config.get_offset_item_table_lo() + i) = l_ram_address.second;
 	}
 
 	// patch enemy table
 	for (std::size_t i{ 0 }; i < l_enemy_offsets.size(); ++i) {
-		std::size_t l_ram_address = p_config.get_ram_address_from_rom(
+		auto l_ram_address = p_config.get_ram_address_bytes_from_rom(
 			p_config.get_offset_enemy_data() + l_enemy_offsets[i]);
 
-		byte l_hi = static_cast<byte>(l_ram_address / 256);
-		byte l_lo = static_cast<byte>(l_ram_address % 256);
-
-		l_output.at(p_config.get_offset_enemy_table_hi() + i) = l_hi;
-		l_output.at(p_config.get_offset_enemy_table_lo() + i) = l_lo;
+		l_output.at(p_config.get_offset_enemy_table_hi() + i) = l_ram_address.first;
+		l_output.at(p_config.get_offset_enemy_table_lo() + i) = l_ram_address.second;
 	}
 
 	// patch item data
@@ -685,7 +673,36 @@ void skc::SKC_Main_window::save_nes_file(const std::string& p_file_path, const S
 			}
 		}
 
-	klib::file::write_bytes_to_file(l_output, p_file_path);
+	// patch drop schedules
+	for (std::size_t i{ 0 }; i < p_config.get_mirror_rate_count(); ++i)
+		klib::util::append_or_overwrite_vector(l_output,
+			klib::util::bitmask_to_bytes(m_drop_schedules.at(i)),
+			p_config.get_offset_mirror_rate_data(i));
+
+	// patch drop enemy sets table and drop enemy sets
+	std::vector<byte> l_enemy_sets_data;
+	for (std::size_t i{ 0 }; i < p_config.get_mirror_enemy_count(); ++i) {
+		l_enemy_sets_offsets.push_back(l_enemy_sets_data.size());
+		l_enemy_sets_data.insert(end(l_enemy_sets_data), begin(m_drop_enemies.at(i)), end(m_drop_enemies.at(i)));
+		l_enemy_sets_data.push_back(c::MIRROR_ENEMY_SET_DELIMITER);
+	}
+
+	for (std::size_t i{ 0 }; i < l_enemy_sets_offsets.size(); ++i) {
+		auto l_ram_address{ p_config.get_ram_address_bytes_from_rom(
+			p_config.get_offset_mirror_enemy_data(0) + l_enemy_sets_offsets[i]) };
+
+		l_output.at(p_config.get_offset_mirror_enemy_table_hi() + i) = l_ram_address.first;
+		l_output.at(p_config.get_offset_mirror_enemy_table_lo() + i) = l_ram_address.second;
+	}
+
+	klib::util::append_or_overwrite_vector(l_output, l_enemy_sets_data,
+		p_config.get_offset_mirror_enemy_data(0));
+
+	return l_output;
+}
+
+void skc::SKC_Main_window::save_nes_file(const std::string& p_file_path, const SKC_Config& p_config) const {
+	klib::file::write_bytes_to_file(generate_patch_bytes(p_config), p_file_path);
 }
 
 bool skc::SKC_Main_window::is_valid_constellation(byte p_constellation) const {
