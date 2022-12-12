@@ -6,6 +6,7 @@
 #include "./../skc_util/Xml_helper.h"
 #include "./../skc_util/Imgui_helper.h"
 #include "./../skc_constants/Constants_level.h"
+#include "./../skc_constants/Constants_application.h"
 #include "./../common/imgui/imgui.h"
 #include "./../common/imgui/imgui_impl_sdl.h"
 #include "./../common/imgui/imgui_impl_sdlrenderer.h"
@@ -15,10 +16,24 @@
 #include <vector>
 
 void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_config) {
-	ImGui::Begin("Selected Element");
 	int l_index{ get_selected_index() };
+	bool l_index_valid{ is_selected_index_valid() };
 
-	if (is_selected_index_valid()) {
+	std::string l_stw_desc{ " Selected Element" };
+	if (l_index_valid) {
+		if (m_selected_type == c::ELM_TYPE_ITEM)
+			l_stw_desc += " (Item #" + std::to_string(l_index + 1) + "/" + std::to_string(get_selected_index_count()) + ")";
+		else if (m_selected_type == c::ELM_TYPE_ENEMY)
+			l_stw_desc += " (Enemy #" + std::to_string(l_index + 1) + "/" + std::to_string(get_selected_index_count()) + ")";
+		else
+			l_stw_desc += " (Metadata)";
+	}
+
+	l_stw_desc += "###stw";
+
+	ImGui::Begin(l_stw_desc.c_str());
+
+	if (l_index_valid) {
 		auto& l_level{ get_level() };
 		byte l_tileset{ l_level.get_tileset_no() };
 
@@ -54,14 +69,16 @@ void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_conf
 			int l_x{ l_pos.first };
 			int l_y{ l_pos.second };
 
-			if (ImGui::SliderInt("x-pos", &l_x, 0, c::LEVEL_W - 1)) {
+			if (ImGui::SliderInt(c::TXT_X_POS, &l_x, 0, c::LEVEL_W - 1)) {
 				l_level.set_item_position(l_index, std::make_pair(l_x, l_y));
 			}
-			if (ImGui::SliderInt("y-pos", &l_y, 0, c::LEVEL_H - 1)) {
+			if (ImGui::SliderInt(c::TXT_Y_POS, &l_y, 0, c::LEVEL_H - 1)) {
 				l_level.set_item_position(l_index, std::make_pair(l_x, l_y));
 			}
 
 		}
+		else if (m_selected_type == c::ELM_TYPE_ENEMY)
+			draw_ui_selected_enemy(p_config);
 		else if (m_selected_type == c::ELM_TYPE_METADATA)
 			draw_ui_selected_metadata(p_config);
 	}
@@ -69,6 +86,32 @@ void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_conf
 		ImGui::Text("No element selected");
 	}
 	ImGui::End();
+}
+
+void skc::SKC_Main_window::draw_ui_selected_enemy(const SKC_Config& p_config) {
+	int l_index{ get_selected_index() };
+	auto& l_level{ get_level() };
+	const auto& l_enemies{ l_level.get_enemies() };
+	byte l_enemy_no{ l_enemies.at(l_index).get_element_no() };
+	std::size_t l_tileset{ p_config.get_level_tileset(m_current_level, l_level.get_tileset_no()) };
+
+	ImGui::Image(m_gfx.get_tile(c::ELM_TYPE_ENEMY, l_enemy_no,
+		l_tileset),
+		{ 2 * c::TILE_GFX_SIZE, 2 * c::TILE_GFX_SIZE });
+
+	std::string l_desc{ "Enemy #" + std::to_string(l_enemy_no) + ": "
+			+ p_config.get_description(c::ELM_TYPE_ENEMY, l_enemy_no) };
+	ImGui::Text(l_desc.c_str());
+
+	ImGui::Separator();
+	auto l_pos{ l_enemies.at(l_index).get_position() };
+	auto l_x{ imgui::slider(c::TXT_X_POS, l_pos.first, 0, c::LEVEL_W - 1) };
+	auto l_y{ imgui::slider(c::TXT_Y_POS, l_pos.second, 0, c::LEVEL_H - 1) };
+
+	if (l_x)
+		l_level.set_enemy_position(l_index, std::make_pair(l_x.value(), l_pos.second));
+	if (l_y)
+		l_level.set_enemy_position(l_index, std::make_pair(l_pos.first, l_y.value()));
 }
 
 void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config) {
@@ -104,9 +147,9 @@ void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config)
 	}
 
 	auto l_cpos{ get_metadata_tile_position(l_index) };
-	auto l_pos_x = skc::imgui::slider("x-pos", l_cpos.first,
+	auto l_pos_x = skc::imgui::slider(c::TXT_X_POS, l_cpos.first,
 		0, c::LEVEL_W - 1);
-	auto l_pos_y = skc::imgui::slider("y-pos", l_cpos.second,
+	auto l_pos_y = skc::imgui::slider(c::TXT_Y_POS, l_cpos.second,
 		0, c::LEVEL_H - 1);
 
 	if (l_pos_x)

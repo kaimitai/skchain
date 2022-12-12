@@ -7,6 +7,8 @@
 
 void skc::save_metadata_xml(const std::string p_folder, const std::string p_filename,
 	const std::map<std::size_t, std::vector<std::pair<std::size_t, position>>>& p_meta_tiles,
+	const std::vector<std::vector<bool>>& p_spawn_schedules,
+	const std::vector<std::vector<byte>>& p_enemy_sets,
 	const skc::SKC_Config& p_config) {
 
 	pugi::xml_document doc;
@@ -29,6 +31,24 @@ void skc::save_metadata_xml(const std::string p_folder, const std::string p_file
 				n_lvl_meta_item.attribute(c::XML_ATTR_POSITION).set_value(get_position_string(l_md_tile.second).c_str());
 			}
 		}
+
+	auto n_schedules{ n_metadata.append_child(c::XML_TAG_SCHEDULES) };
+	for (std::size_t i{ 0 }; i < p_spawn_schedules.size(); ++i) {
+		auto n_schedule = n_schedules.append_child(c::XML_ATTR_SCHEDULE);
+		n_schedule.append_attribute(c::XML_ATTR_NO);
+		n_schedule.attribute(c::XML_ATTR_NO).set_value(i);
+		n_schedule.append_attribute(c::XML_ATTR_SCHEDULE);
+		n_schedule.attribute(c::XML_ATTR_SCHEDULE).set_value(klib::util::string_join(p_spawn_schedules[i], ',').c_str());
+	}
+
+	auto n_enemy_sets{ n_metadata.append_child(c::XML_TAG_ENEMY_SETS) };
+	for (std::size_t i{ 0 }; i < p_enemy_sets.size(); ++i) {
+		auto n_enemy_set = n_enemy_sets.append_child(c::XML_ATTR_ENEMY_SET);
+		n_enemy_set.append_attribute(c::XML_ATTR_NO);
+		n_enemy_set.attribute(c::XML_ATTR_NO).set_value(i);
+		n_enemy_set.append_attribute(c::XML_ATTR_ENEMY_SET);
+		n_enemy_set.attribute(c::XML_ATTR_ENEMY_SET).set_value(klib::util::string_join(p_enemy_sets[i], ',').c_str());
+	}
 
 	std::filesystem::create_directory(p_folder);
 	std::string l_file_path = p_folder + '/' + p_filename;
@@ -57,10 +77,6 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 
 	n_level.append_attribute(c::XML_ATTR_SPAWN_RATE);
 	n_level.attribute(c::XML_ATTR_SPAWN_RATE).set_value(p_level.get_spawn_rate());
-	n_level.append_attribute(c::XML_ATTR_SPAWN01);
-	n_level.attribute(c::XML_ATTR_SPAWN01).set_value(get_position_string(p_level.get_spawn_position(0)).c_str());
-	n_level.append_attribute(c::XML_ATTR_SPAWN02);
-	n_level.attribute(c::XML_ATTR_SPAWN02).set_value(get_position_string(p_level.get_spawn_position(1)).c_str());
 
 	if (p_level.has_constellation()) {
 		n_level.append_attribute(c::XML_ATTR_CONSTELLATION_NO);
@@ -71,15 +87,6 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 
 	n_level.append_attribute(c::XML_ATTR_TILESET);
 	n_level.attribute(c::XML_ATTR_TILESET).set_value(p_level.get_tileset_no());
-
-	n_level.append_attribute(c::XML_ATTR_SPAWN01_SCHEDULE);
-	n_level.attribute(c::XML_ATTR_SPAWN01_SCHEDULE).set_value(p_level.get_spawn_schedule(0));
-	n_level.append_attribute(c::XML_ATTR_SPAWN02_SCHEDULE);
-	n_level.attribute(c::XML_ATTR_SPAWN02_SCHEDULE).set_value(p_level.get_spawn_schedule(1));
-	n_level.append_attribute(c::XML_ATTR_SPAWN01_ENEMIES);
-	n_level.attribute(c::XML_ATTR_SPAWN01_ENEMIES).set_value(p_level.get_spawn_enemies(0));
-	n_level.append_attribute(c::XML_ATTR_SPAWN02_ENEMIES);
-	n_level.attribute(c::XML_ATTR_SPAWN02_ENEMIES).set_value(p_level.get_spawn_enemies(1));
 
 	auto n_blocks = n_level.append_child(c::XML_TAG_BLOCKS);
 	for (int j{ 0 }; j < 12; ++j) {
@@ -121,6 +128,19 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 			n_enemy.append_attribute(c::XML_ATTR_POSITION);
 			n_enemy.attribute(c::XML_ATTR_POSITION).set_value(get_position_string(element.get_position()).c_str());
 		}
+	}
+
+	auto n_mirrors = n_level.append_child(c::XML_TAG_MIRRORS);
+	for (std::size_t i{ 0 }; i < 2; ++i) {
+		auto n_mirror = n_mirrors.append_child(c::XML_TAG_MIRROR);
+		n_mirror.append_attribute(c::XML_ATTR_NO);
+		n_mirror.attribute(c::XML_ATTR_NO).set_value(i);
+		n_mirror.append_attribute(c::XML_ATTR_POSITION);
+		n_mirror.attribute(c::XML_ATTR_POSITION).set_value(get_position_string(p_level.get_spawn_position(i)).c_str());
+		n_mirror.append_attribute(c::XML_ATTR_SCHEDULE);
+		n_mirror.attribute(c::XML_ATTR_SCHEDULE).set_value(p_level.get_spawn_schedule(i));
+		n_mirror.append_attribute(c::XML_ATTR_ENEMY_SET);
+		n_mirror.attribute(c::XML_ATTR_ENEMY_SET).set_value(p_level.get_spawn_enemies(i));
 	}
 
 	std::filesystem::create_directory(p_folder);

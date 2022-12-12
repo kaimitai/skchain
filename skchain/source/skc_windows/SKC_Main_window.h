@@ -45,6 +45,7 @@ namespace skc {
 		void draw_ui_level_window(const SKC_Config& p_config);
 		void draw_ui_selected_tile_window(const SKC_Config& p_config);
 		void draw_tile_picker(const SKC_Config& p_config, std::size_t p_element_types);
+		void draw_ui_selected_enemy(const SKC_Config& p_config);
 		void draw_ui_selected_mirror(std::size_t p_mirror_no, const SKC_Config& p_config);
 		void draw_ui_selected_metadata(const SKC_Config& p_config);
 

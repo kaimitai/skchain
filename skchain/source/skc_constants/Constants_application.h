@@ -9,10 +9,12 @@ namespace skc {
 		constexpr int APP_W{ 1024 + 300 }, APP_H{ 768 };
 
 		constexpr char FILENAME_CONFIG_XML[]{ "skc_config.xml" };
-		constexpr char FILENAME_ERROR_LOG[]{"skc_errors.log"};
+		constexpr char FILENAME_ERROR_LOG[]{ "skc_errors.log" };
 		constexpr char FILENAME_IMGUI_INI[]{ "skc_windows.ini" };
 
 		constexpr char TXT_UNKNOWN[]{ "Unknown" };
+		constexpr char TXT_X_POS[]{ "x-pos" };
+		constexpr char TXT_Y_POS[]{ "y-pos" };
 	}
 }
 

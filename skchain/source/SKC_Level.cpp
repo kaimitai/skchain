@@ -430,6 +430,7 @@ void skc::Level::set_key_in_block(bool p_value) {
 
 void skc::Level::set_key_removed(void) {
 	m_fixed_key_pos = std::make_pair(-1, 0);
+	set_key_hidden(true);
 }
 
 bool skc::Level::is_door_removed(void) const {
@@ -437,8 +438,7 @@ bool skc::Level::is_door_removed(void) const {
 }
 
 void skc::Level::set_door_removed(void) {
-	m_fixed_key_pos = std::make_pair(-1, 0);
-	set_key_hidden(true);
+	m_fixed_door_pos = std::make_pair(-1, 0);
 }
 
 int skc::Level::get_item_count(void) const {

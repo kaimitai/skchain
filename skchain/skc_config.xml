@@ -156,6 +156,7 @@
     <enemy no="0x29" description="Fireball (left, cw, fast)" animation="44" />
     <enemy no="0x2a" description="Fireball (up, cw, fast)" animation="44" />
     <enemy no="0x2b" description="Fireball (down, ccw, fast)" animation="44" />
+	
     <enemy no="0x2c" description="Fireball (right, ccw, very fast)" animation="44" />
     <enemy no="0x2d" description="Fireball (left, cw, very fast)" animation="44" />
     <enemy no="0x2e" description="Fireball (up, cw, very fast)" animation="44" />
@@ -194,22 +195,32 @@
     <enemy no="0x4d" description="Ghost (right, very fast, noslow)" animation="63" />
     <enemy no="0x4e" description="Ghost (left, very fast, noslow)" animation="62" />
     <enemy no="0x4f" description="Ghost (left, very fast, noslow)" animation="62" />
-    
-	<!-- 0x50-0x67 are spawned enemies, need to be investigated with different values for spawn frequency -->
+	
     <enemy no="0x50" description="Demonhead (right)" animation="71" />
 	<enemy no="0x51" description="Demonhead (left)" animation="71" />
-	
-	<enemy no="0x54" description="Demonhead (right)" animation="71" />
-	<enemy no="0x55" description="Demonhead (left)" animation="71" />
-	
+	<enemy no="0x52" description="Demonhead (right, fast)" animation="71" />
+	<enemy no="0x53" description="Demonhead (left, fast)" animation="71" />
+	<enemy no="0x54" description="Demonhead (right, fast)" animation="71" />
+	<enemy no="0x55" description="Demonhead (left, fast)" animation="71" />
+	<enemy no="0x56" description="Demonhead (right, fast)" animation="71" />
+	<enemy no="0x57" description="Demonhead (left, fast)" animation="71" />	
 	<enemy no="0x58" description="Demonhead (right, fast)" animation="71" />
 	<enemy no="0x59" description="Demonhead (left, fast)" animation="71" />
+	<enemy no="0x5a" description="Demonhead (right, very fast)" animation="71" />
+	<enemy no="0x5b" description="Demonhead (left, very fast)" animation="71" />
 	
 	<enemy no="0x5c" description="Saramandor (right, fast)" animation="73" />
-	
+	<enemy no="0x5d" description="Saramandor (left, fast)" animation="72" />
+	<enemy no="0x5e" description="Saramandor (right, fast)" animation="73" />
+	<enemy no="0x5f" description="Saramandor (left, fast)" animation="72" />
 	<enemy no="0x60" description="Saramandor (right)" animation="73" />
-	
+	<enemy no="0x61" description="Saramandor (left)" animation="72" />
+	<enemy no="0x62" description="Saramandor (right)" animation="73" />
+	<enemy no="0x63" description="Saramandor (left)" animation="72" />
 	<enemy no="0x64" description="Saramandor (right, very fast)" animation="73" />
+	<enemy no="0x65" description="Saramandor (left, very fast)" animation="72" />
+	<enemy no="0x66" description="Saramandor (right, very fast)" animation="73" />
+	<enemy no="0x67" description="Saramandor (left, very fast)" animation="72" />
 	
     <enemy no="0x68" description="Dragon (right)" animation="64" />
     <enemy no="0x69" description="Dragon (left)" animation="41" />
@@ -219,7 +230,7 @@
     <enemy no="0x6d" description="Dragon (left,fast)" animation="41" />
 	<enemy no="0x6e" description="Dragon (right,fast)" animation="64" />
 	<enemy no="0x6f" description="Dragon (left,fast)" animation="41" />
-
+	
     <enemy no="0x70" description="Golem (right)" animation="65" />
     <enemy no="0x71" description="Golem (left)" animation="40" />
     <enemy no="0x72" description="Golem (right)" animation="65" />
@@ -244,7 +255,6 @@
     <enemy no="0x83" description="White Flame" animation="47" />
 	
 	<!-- 0x84 and up are glitchy tiles, probably all undefined enemies -->
-	
   </enemy_definitions>
 
   <tile_pickers>

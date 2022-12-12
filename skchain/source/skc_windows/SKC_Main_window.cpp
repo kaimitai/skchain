@@ -450,11 +450,19 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 }
 
 void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
+	auto& l_level{ get_level() };
 	std::string l_level_str{ "Level " + std::to_string(m_current_level + 1) + "###lvl" };
 	ImGui::Begin(l_level_str.c_str());
 
+	auto l_tileset{ imgui::slider("Tileset", l_level.get_tileset_no(), 0, 2) };
+	if (l_tileset)
+		l_level.set_tileset_no(l_tileset.value());
+
 	if (ImGui::Button("Save xml")) {
-		save_metadata_xml("./xml", "level-metadata.xml", m_meta_tiles, p_config);
+		save_metadata_xml("./xml", "level-metadata.xml", m_meta_tiles,
+			m_drop_schedules,
+			m_drop_enemies,
+			p_config);
 
 		for (std::size_t i{ 0 }; i < m_levels.size(); ++i)
 			save_level_xml(m_levels.at(i), "./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
@@ -731,6 +739,7 @@ void skc::SKC_Main_window::set_selected_index(int p_index) {
 
 bool skc::SKC_Main_window::is_selected_index_valid(void) const {
 	int l_index{ get_selected_index() };
+
 	const auto& l_level{ get_level() };
 
 	return (m_selected_type == c::ELM_TYPE_ITEM &&
@@ -741,7 +750,11 @@ bool skc::SKC_Main_window::is_selected_index_valid(void) const {
 }
 
 void skc::SKC_Main_window::increase_selected_index(void) {
+	int l_index_count{ get_selected_index_count() };
 	int l_index{ get_selected_index() };
+
+	if (l_index_count == 0)
+		return;
 
 	if (m_selected_type == c::ELM_TYPE_METADATA
 		&& l_index == c::MD_BYTE_NO_SPAWN02) {
@@ -759,7 +772,11 @@ void skc::SKC_Main_window::increase_selected_index(void) {
 }
 
 void skc::SKC_Main_window::decrease_selected_index(void) {
+	int l_index_count{ get_selected_index_count() };
 	int l_index{ get_selected_index() };
+
+	if (l_index_count == 0)
+		return;
 
 	if (m_selected_type == c::ELM_TYPE_METADATA &&
 		l_index == c::MD_BYTE_NO_META_TILE_MIN) {
@@ -769,7 +786,7 @@ void skc::SKC_Main_window::decrease_selected_index(void) {
 
 	set_selected_index(l_index - 1);
 	if (l_index == 0)
-		set_selected_index(get_selected_index_count() - 1);
+		set_selected_index(l_index_count - 1);
 }
 
 int skc::SKC_Main_window::get_selected_index_count(void) const {

@@ -13,7 +13,9 @@
 namespace skc {
 
 	void save_metadata_xml(const std::string p_folder, const std::string p_filename,
-		const std::map<std::size_t, std::vector<std::pair<std::size_t, position>>>&,
+		const std::map<std::size_t, std::vector<std::pair<std::size_t, position>>>& p_meta_tiles,
+		const std::vector<std::vector<bool>>& p_spawn_schedules,
+		const std::vector<std::vector<byte>>& p_enemy_sets,
 		const skc::SKC_Config& p_config);
 	void save_level_xml(const skc::Level& p_level, const std::string p_folder, const std::string p_filename);
 

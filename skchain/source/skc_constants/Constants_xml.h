@@ -65,18 +65,18 @@ namespace skc {
 		constexpr char XML_TAG_ITEMS[]{ "items" };
 		constexpr char XML_TAG_ITEM[]{ "item" };
 		constexpr char XML_TAG_ENEMIES[]{ "enemies" };
+		constexpr char XML_TAG_MIRRORS[]{ "mirrors" };
+		constexpr char XML_TAG_MIRROR[]{ "mirror" };
+		constexpr char XML_TAG_ENEMY_SETS[]{ "enemy_sets" };
+		constexpr char XML_TAG_SCHEDULES[]{ "schedules" };
 
-		constexpr char XML_ATTR_SPAWN01_SCHEDULE[]{ "spawn01_schedule" };
-		constexpr char XML_ATTR_SPAWN02_SCHEDULE[]{ "spawn02_schedule" };
-		constexpr char XML_ATTR_SPAWN01_ENEMIES[]{ "spawn01_enemies" };
-		constexpr char XML_ATTR_SPAWN02_ENEMIES[]{ "spawn02_enemies" };
+		constexpr char XML_ATTR_SCHEDULE[]{ "schedule" };
+		constexpr char XML_ATTR_ENEMY_SET[]{ "enemy_set" };
 		constexpr char XML_ATTR_KEY_STATUS[]{ "key_status" };
 		constexpr char XML_ATTR_KEY_POSITION[]{ "key_position" };
 		constexpr char XML_ATTR_DOOR_POSITION[]{ "door_position" };
 		constexpr char XML_ATTR_START_POSITION[]{ "start_position" };
 		constexpr char XML_ATTR_SPAWN_RATE[]{ "spawn_rate" };
-		constexpr char XML_ATTR_SPAWN01[]{ "spawn01" };
-		constexpr char XML_ATTR_SPAWN02[]{ "spawn02" };
 		constexpr char XML_ATTR_CONSTELLATION_NO[]{ "constellation_no" };
 		constexpr char XML_ATTR_CONSTELLATION_POSITION[]{ "constellation_position" };
 		constexpr char XML_ATTR_TILESET[]{ "tileset" };
