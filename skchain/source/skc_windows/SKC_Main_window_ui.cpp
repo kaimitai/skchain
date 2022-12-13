@@ -65,17 +65,9 @@ void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_conf
 
 			ImGui::Separator();
 
-			auto l_pos{ l_items.at(l_index).get_position() };
-			int l_x{ l_pos.first };
-			int l_y{ l_pos.second };
-
-			if (ImGui::SliderInt(c::TXT_X_POS, &l_x, 0, c::LEVEL_W - 1)) {
-				l_level.set_item_position(l_index, std::make_pair(l_x, l_y));
-			}
-			if (ImGui::SliderInt(c::TXT_Y_POS, &l_y, 0, c::LEVEL_H - 1)) {
-				l_level.set_item_position(l_index, std::make_pair(l_x, l_y));
-			}
-
+			auto l_newpos{ imgui::position_sliders(l_items.at(l_index).get_position()) };
+			if (l_newpos)
+				l_level.set_item_position(l_index, l_newpos.value());
 		}
 		else if (m_selected_type == c::ELM_TYPE_ENEMY)
 			draw_ui_selected_enemy(p_config);
@@ -104,14 +96,9 @@ void skc::SKC_Main_window::draw_ui_selected_enemy(const SKC_Config& p_config) {
 	ImGui::Text(l_desc.c_str());
 
 	ImGui::Separator();
-	auto l_pos{ l_enemies.at(l_index).get_position() };
-	auto l_x{ imgui::slider(c::TXT_X_POS, l_pos.first, 0, c::LEVEL_W - 1) };
-	auto l_y{ imgui::slider(c::TXT_Y_POS, l_pos.second, 0, c::LEVEL_H - 1) };
-
-	if (l_x)
-		l_level.set_enemy_position(l_index, std::make_pair(l_x.value(), l_pos.second));
-	if (l_y)
-		l_level.set_enemy_position(l_index, std::make_pair(l_pos.first, l_y.value()));
+	auto l_newpos{ imgui::position_sliders(l_enemies.at(l_index).get_position()) };
+	if (l_newpos)
+		l_level.set_enemy_position(l_index, l_newpos.value());
 }
 
 void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config) {
@@ -146,16 +133,9 @@ void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config)
 		ImGui::Separator();
 	}
 
-	auto l_cpos{ get_metadata_tile_position(l_index) };
-	auto l_pos_x = skc::imgui::slider(c::TXT_X_POS, l_cpos.first,
-		0, c::LEVEL_W - 1);
-	auto l_pos_y = skc::imgui::slider(c::TXT_Y_POS, l_cpos.second,
-		0, c::LEVEL_H - 1);
-
-	if (l_pos_x)
-		set_metadata_tile_position(l_index, std::make_pair(l_pos_x.value(), l_cpos.second), p_config);
-	else if (l_pos_y)
-		set_metadata_tile_position(l_index, std::make_pair(l_cpos.first, l_pos_y.value()), p_config);
+	auto l_newpos{ imgui::position_sliders(get_metadata_tile_position(l_index)) };
+	if (l_newpos)
+		set_metadata_tile_position(l_index, l_newpos.value(), p_config);
 
 	if (l_index == c::MD_BYTE_NO_SPAWN01)
 		draw_ui_selected_mirror(0, p_config);
