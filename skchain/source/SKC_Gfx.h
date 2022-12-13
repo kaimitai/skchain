@@ -31,6 +31,7 @@ namespace skc {
 
 		std::map<byte, std::size_t> m_sprite_gfx_map, m_item_gfx_map, m_meta_gfx_map;
 
+		SDL_Surface* generate_tile_surface(const SKC_Tile_definition& p_tile_def) const;
 		void load_metadata(const std::vector<byte> p_rom_data);
 		void generate_tile_textures(SDL_Renderer* p_rnd);
 		void generate_hex_textures(SDL_Renderer* p_rnd);
@@ -47,6 +48,7 @@ namespace skc {
 		SDL_Texture* get_item_tile(byte p_item_no, std::size_t p_tilset_no = 0, int p_frame_no = 0) const;
 		SDL_Texture* get_tile(std::size_t p_element_type, byte p_item_no, std::size_t p_tileset_no, int p_frame_no = 0) const;
 		SDL_Texture* get_absolute_tile(std::size_t p_tile_no, std::size_t p_tileset_no) const;
+		void set_application_icon(SDL_Window* p_window) const;
 	};
 }
 

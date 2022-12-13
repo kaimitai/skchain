@@ -275,30 +275,41 @@ void skc::SKC_Gfx::generate_hex_textures(SDL_Renderer* p_rnd) {
 	}
 }
 
-void skc::SKC_Gfx::generate_tile_textures(SDL_Renderer* p_rnd) {
+SDL_Surface* skc::SKC_Gfx::generate_tile_surface(const SKC_Tile_definition& p_tile_def) const {
+	auto l_srf = create_nes_sdl_surface(klib::c::NES_TILE_W * p_tile_def.get_w(),
+		klib::c::NES_TILE_W * p_tile_def.get_h());
 
-	for (const auto& l_meta : m_tile_definitions) {
-		auto l_srf = create_nes_sdl_surface(klib::c::NES_TILE_W * l_meta.get_w(),
-			klib::c::NES_TILE_W * l_meta.get_h());
-
-		for (int j{ 0 }; j < l_meta.get_h(); ++j)
-			for (int i{ 0 }; i < l_meta.get_w(); ++i) {
-				draw_tile_on_surface(l_srf,
-					l_meta.get_nes_tile_no(i, j),
-					l_meta.get_palette_no(i, j),
-					klib::c::NES_TILE_W * i,
-					klib::c::NES_TILE_W * j,
-					l_meta.is_flip_v(i, j),
-					l_meta.is_flip_h(i, j),
-					false, l_meta.is_transparent());
-			}
-
-		if (l_meta.is_transparent()) {
-			SDL_Color l_trans_rgb = nes_color_to_sdl(klib::NES_Palette::get_transparent_color());
-			SDL_SetColorKey(l_srf, true, SDL_MapRGB(l_srf->format, l_trans_rgb.r, l_trans_rgb.g, l_trans_rgb.b));
+	for (int j{ 0 }; j < p_tile_def.get_h(); ++j)
+		for (int i{ 0 }; i < p_tile_def.get_w(); ++i) {
+			draw_tile_on_surface(l_srf,
+				p_tile_def.get_nes_tile_no(i, j),
+				p_tile_def.get_palette_no(i, j),
+				klib::c::NES_TILE_W * i,
+				klib::c::NES_TILE_W * j,
+				p_tile_def.is_flip_v(i, j),
+				p_tile_def.is_flip_h(i, j),
+				false, p_tile_def.is_transparent());
 		}
 
-		m_tile_gfx.push_back(klib::gfx::surface_to_texture(p_rnd, l_srf));
+	if (p_tile_def.is_transparent()) {
+		SDL_Color l_trans_rgb = nes_color_to_sdl(klib::NES_Palette::get_transparent_color());
+		SDL_SetColorKey(l_srf, true, SDL_MapRGB(l_srf->format, l_trans_rgb.r, l_trans_rgb.g, l_trans_rgb.b));
 	}
 
+	return l_srf;
+}
+
+void skc::SKC_Gfx::generate_tile_textures(SDL_Renderer* p_rnd) {
+	for (const auto& l_meta : m_tile_definitions)
+		m_tile_gfx.push_back(klib::gfx::surface_to_texture(p_rnd, generate_tile_surface(l_meta)));
+}
+
+void skc::SKC_Gfx::set_application_icon(SDL_Window* p_window) const {
+	auto l_iter{ m_sprite_gfx_map.find(0x1d) };
+
+	if (l_iter != end(m_sprite_gfx_map)) {
+		SDL_Surface* l_icon_srf{ generate_tile_surface(m_tile_definitions.at(l_iter->second)) };
+		SDL_SetWindowIcon(p_window, l_icon_srf);
+		SDL_FreeSurface(l_icon_srf);
+	}
 }

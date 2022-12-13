@@ -84,6 +84,7 @@ namespace skc {
 
 	public:
 		SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_config);
+		void set_application_icon(SDL_Window* p_window) const;
 		void move(int p_delta_ms, const klib::User_input& p_input, skc::SKC_Config& p_config, int p_screen_h);
 		void draw(SDL_Renderer* p_rnd, const SKC_Config& p_config, int p_w, int p_h);
 	};
