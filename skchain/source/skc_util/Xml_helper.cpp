@@ -75,8 +75,11 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 	n_level.append_attribute(c::XML_ATTR_KEY_STATUS);
 	n_level.attribute(c::XML_ATTR_KEY_STATUS).set_value(p_level.get_key_status());
 
-	n_level.append_attribute(c::XML_ATTR_SPAWN_RATE);
-	n_level.attribute(c::XML_ATTR_SPAWN_RATE).set_value(p_level.get_spawn_rate());
+	n_level.append_attribute(c::XML_ATTR_SPAWN_ENEMY_LIFETIME);
+	n_level.attribute(c::XML_ATTR_SPAWN_ENEMY_LIFETIME).set_value(p_level.get_spawn_enemy_lifetime());
+
+	n_level.append_attribute(c::XML_ATTR_TIME_DECREASE_RATE);
+	n_level.attribute(c::XML_ATTR_TIME_DECREASE_RATE).set_value(p_level.get_time_decrease_rate());
 
 	if (p_level.has_constellation()) {
 		n_level.append_attribute(c::XML_ATTR_CONSTELLATION_NO);

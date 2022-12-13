@@ -76,7 +76,8 @@ namespace skc {
 		constexpr char XML_ATTR_KEY_POSITION[]{ "key_position" };
 		constexpr char XML_ATTR_DOOR_POSITION[]{ "door_position" };
 		constexpr char XML_ATTR_START_POSITION[]{ "start_position" };
-		constexpr char XML_ATTR_SPAWN_RATE[]{ "spawn_rate" };
+		constexpr char XML_ATTR_SPAWN_ENEMY_LIFETIME[]{ "spawn_enemy_lifetime" };
+		constexpr char XML_ATTR_TIME_DECREASE_RATE[]{ "time_decrease_rate" };
 		constexpr char XML_ATTR_CONSTELLATION_NO[]{ "constellation_no" };
 		constexpr char XML_ATTR_CONSTELLATION_POSITION[]{ "constellation_position" };
 		constexpr char XML_ATTR_TILESET[]{ "tileset" };

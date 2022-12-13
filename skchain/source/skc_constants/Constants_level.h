@@ -7,9 +7,13 @@ namespace skc {
 
 	namespace c {
 
-		constexpr byte DEFAULT_KEY_STATUS{ 0x01 };
-		constexpr byte DEFAULT_SPAWN_RATE{ 0x02 };
-		constexpr byte DEFAULT_SPAWN_VALUE{ 0x27 };
+		constexpr byte DEFAULT_KEY_STATUS{ 0x00 };
+		constexpr byte DEFAULT_SPAWN_ENEMY_LIFETIME{ 0x02 };
+		constexpr byte DEFAULT_TIME_DECREASE_RATE{ 0x01 };
+
+		constexpr byte KEY_STATUS_NORMAL{ 0x00 };
+		constexpr byte KEY_STATUS_IN_BLOCK{ 0x40 };
+		constexpr byte KEY_STATUS_HIDDEN{ 0x80 };
 
 		constexpr byte ITEM_OFFSET_SPAWN02_SCHEDULE{ 0 };
 		constexpr byte ITEM_OFFSET_SPAWN01_SCHEDULE{ ITEM_OFFSET_SPAWN02_SCHEDULE + 1 };

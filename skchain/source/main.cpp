@@ -130,7 +130,7 @@ int main(int argc, char* args[]) try {
 	return 0;
 }
 catch (const std::exception& ex) {
-	klib::file::append_string_to_file("Runtime error. Exception was:\n" + std::string(ex.what()) + "\n", skc::c::FILENAME_ERROR_LOG);
+	klib::file::append_string_to_file("Runtime error. Exception was: " + std::string(ex.what()) + "\n", skc::c::FILENAME_ERROR_LOG);
 	return 1;
 }
 catch (...) {

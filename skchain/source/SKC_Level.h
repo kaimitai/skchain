@@ -44,7 +44,7 @@ namespace skc {
 		std::optional<Level_element> m_constellation;
 		std::vector<Demon_mirror> m_demon_mirrors;
 
-		byte m_key_status, m_spawn_rate, m_tileset_no;
+		byte m_key_status, m_time_decrease_rate, m_spawn_enemy_lifetime, m_tileset_no;
 		std::pair<int, int> m_fixed_start_pos, m_fixed_key_pos, m_fixed_door_pos;
 
 		std::vector<std::size_t> get_item_indexes(byte p_item_no, std::set<std::size_t>& p_ignored_indexes) const;
@@ -69,9 +69,13 @@ namespace skc {
 		bool has_constellation(void) const;
 		byte get_constellation_no(void) const;
 		position get_constellation_pos(void) const;
-		byte get_spawn_rate(void) const;
+		byte get_spawn_enemy_lifetime(void) const;
+		byte get_time_decrease_rate(void) const;
 		byte get_tileset_no(void) const;
 		byte get_item_delimiter(void) const;
+
+		void set_spawn_enemy_lifetime(byte p_value);
+		void set_time_decrease_rate(byte p_value);
 
 		const std::vector<skc::Level_element>& get_enemies(void) const;
 		const std::vector<skc::Level_element>& get_items(void) const;

@@ -457,6 +457,14 @@ void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
 	auto l_tileset{ imgui::slider("Tileset", l_level.get_tileset_no(), 0, 2) };
 	if (l_tileset)
 		l_level.set_tileset_no(l_tileset.value());
+	auto l_time_decrease{ imgui::slider("Time Decrease Rate", l_level.get_time_decrease_rate(), 0, 15) };
+	if (l_time_decrease)
+		l_level.set_time_decrease_rate(l_time_decrease.value());
+	auto l_spawn_life{ imgui::slider("Spawn Lifetime", l_level.get_spawn_enemy_lifetime(), 0, 255)};
+	if (l_spawn_life)
+		l_level.set_spawn_enemy_lifetime(l_spawn_life.value());
+
+	ImGui::Separator();
 
 	if (ImGui::Button("Save xml")) {
 		save_metadata_xml("./xml", "level-metadata.xml", m_meta_tiles,
