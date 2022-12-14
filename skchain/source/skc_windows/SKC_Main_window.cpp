@@ -130,12 +130,21 @@ void skc::SKC_Main_window::right_click(const std::pair<int, int>& p_tile_pos, co
 }
 
 void skc::SKC_Main_window::left_click(const std::pair<int, int>& p_tile_pos, const skc::SKC_Config& p_config) {
-	if (m_selected_type == c::ELM_TYPE_ENEMY)
-		left_click_enemy(p_tile_pos);
-	else if (m_selected_type == c::ELM_TYPE_ITEM)
-		left_click_item(p_tile_pos);
-	else
-		left_click_metadata(p_tile_pos);
+	static std::vector<std::vector<std::size_t>> ls_priorities{
+		{c::ELM_TYPE_METADATA, c::ELM_TYPE_ITEM, c::ELM_TYPE_ENEMY},
+		{c::ELM_TYPE_ITEM, c::ELM_TYPE_ENEMY, c::ELM_TYPE_METADATA},
+		{c::ELM_TYPE_ENEMY, c::ELM_TYPE_ITEM, c::ELM_TYPE_METADATA}
+	};
+	const auto& l_priority{ ls_priorities.at(m_selected_type) };
+
+	for (std::size_t i{ 0 }; i < l_priority.size(); ++i) {
+		std::size_t l_try_type{ l_priority[i] };
+
+		if ((l_try_type == c::ELM_TYPE_ENEMY && left_click_enemy(p_tile_pos)) ||
+			(l_try_type == c::ELM_TYPE_ITEM && left_click_item(p_tile_pos)) ||
+			(l_try_type == c::ELM_TYPE_METADATA && left_click_metadata(p_tile_pos)))
+			break;
+	}
 }
 
 void skc::SKC_Main_window::shift_click(const std::pair<int, int>& tile_pos, const skc::SKC_Config& p_config) {
@@ -155,48 +164,66 @@ void skc::SKC_Main_window::shift_click_metadata(const std::pair<int, int>& tile_
 	set_metadata_tile_position(get_selected_index(), tile_pos, p_config);
 }
 
-void skc::SKC_Main_window::left_click_metadata(const std::pair<int, int>& tile_pos) {
+bool skc::SKC_Main_window::left_click_metadata(const std::pair<int, int>& tile_pos) {
 	auto& l_level{ get_level() };
+	std::optional<byte> l_new_index;
 
 	if (tile_pos == l_level.get_player_start_pos())
-		set_selected_index(c::MD_BYTE_NO_PLAYER_START);
+		l_new_index = c::MD_BYTE_NO_PLAYER_START;
 	else if (tile_pos == l_level.get_door_pos())
-		set_selected_index(c::MD_BYTE_NO_DOOR);
+		l_new_index = c::MD_BYTE_NO_DOOR;
 	else if (tile_pos == l_level.get_key_pos())
-		set_selected_index(c::MD_BYTE_NO_KEY);
+		l_new_index = c::MD_BYTE_NO_KEY;
 	else if (tile_pos == l_level.get_spawn_position(0))
-		set_selected_index(c::MD_BYTE_NO_SPAWN01);
+		l_new_index = c::MD_BYTE_NO_SPAWN01;
 	else if (tile_pos == l_level.get_spawn_position(1))
-		set_selected_index(c::MD_BYTE_NO_SPAWN02);
+		l_new_index = c::MD_BYTE_NO_SPAWN02;
 	else {
 		auto l_iter{ m_meta_tiles.find(m_current_level) };
 		if (l_iter != end(m_meta_tiles)) {
 			for (std::size_t i{ 0 }; i < l_iter->second.size(); ++i)
 				if (l_iter->second[i].second == tile_pos)
-					set_selected_index(static_cast<int>(i) + static_cast<int>(c::MD_BYTE_NO_META_TILE_MIN));
+					l_new_index = static_cast<int>(i) + static_cast<int>(c::MD_BYTE_NO_META_TILE_MIN);
 
 		}
 	}
+
+	if (l_new_index) {
+		m_selected_type = c::ELM_TYPE_METADATA;
+		set_selected_index(l_new_index.value());
+		return true;
+	}
+	else
+		return false;
 }
 
-void skc::SKC_Main_window::left_click_enemy(const std::pair<int, int>& tile_pos) {
+bool skc::SKC_Main_window::left_click_enemy(const std::pair<int, int>& tile_pos) {
 	auto& l_level{ get_level() };
 
 	int l_index = l_level.get_enemy_index(tile_pos);
-	if (l_index >= 0)
+	if (l_index >= 0) {
+		m_selected_type = c::ELM_TYPE_ENEMY;
 		set_selected_index(l_index);
+	}
+
+	return false;
 }
 
 void skc::SKC_Main_window::set_meta_tile_position(std::size_t p_index, const position& p_pos) {
 	m_meta_tiles.at(m_current_level).at(p_index).second = p_pos;
 }
 
-void skc::SKC_Main_window::left_click_item(const std::pair<int, int>& tile_pos) {
+bool skc::SKC_Main_window::left_click_item(const std::pair<int, int>& tile_pos) {
 	auto& l_level{ get_level() };
 
 	int l_index = l_level.get_item_index(tile_pos);
-	if (l_index >= 0)
+	if (l_index >= 0) {
+		m_selected_type = c::ELM_TYPE_ITEM;
 		set_selected_index(l_index);
+		return true;
+	}
+
+	return false;
 }
 
 void skc::SKC_Main_window::delete_selected_index(void) {

@@ -47,6 +47,7 @@ namespace skc {
 		std::size_t get_offset_item_data(std::size_t p_level_no) const;
 		std::size_t get_offset_mirror_rate_data(std::size_t p_index) const;
 		std::size_t get_offset_mirror_enemy_data(std::size_t p_index) const;
+		std::size_t get_offset_generic_data(std::size_t p_table_offset, std::size_t p_table_entry_count, std::size_t p_data_index) const;
 		std::size_t get_offset_mirror_enemy_table_lo(void) const;
 		std::size_t get_offset_mirror_enemy_table_hi(void) const;
 		unsigned int get_level_count(void) const;

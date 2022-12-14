@@ -151,42 +151,37 @@ std::size_t skc::SKC_Config::get_offset_item_table_hi(void) const {
 }
 
 std::size_t skc::SKC_Config::get_offset_enemy_data(void) const {
-	return m_offset_enemy_table + 2 * m_level_count;
+	return m_offset_enemy_table + static_cast<std::size_t>(2) * m_level_count;
 }
 
 std::size_t skc::SKC_Config::get_offset_item_data(void) const {
-	return m_offset_item_table + 2 * m_level_count;
+	return m_offset_item_table + static_cast<std::size_t>(2) * m_level_count;
+}
+
+std::size_t skc::SKC_Config::get_offset_generic_data(std::size_t p_table_offset, std::size_t p_table_entry_count,
+	std::size_t p_data_index) const {
+
+	std::size_t l_offset_hi{ m_rom_data.at(p_table_offset + p_table_entry_count + p_data_index) };
+	std::size_t l_offset_lo{ m_rom_data.at(p_table_offset + p_data_index) };
+	std::size_t l_ram_offset{ 256 * l_offset_hi + l_offset_lo };
+
+	return get_rom_address_from_ram(l_ram_offset);
 }
 
 std::size_t skc::SKC_Config::get_offset_enemy_data(std::size_t p_level_no) const {
-	std::size_t l_offset_hi{ m_rom_data.at(m_offset_enemy_table + m_level_count + p_level_no) };
-	std::size_t l_offset_lo{ m_rom_data.at(m_offset_enemy_table + p_level_no) };
-	std::size_t l_ram_offset{ 256 * l_offset_hi + l_offset_lo };
-
-	return get_rom_address_from_ram(l_ram_offset);
+	return get_offset_generic_data(m_offset_enemy_table, m_level_count, p_level_no);
 }
 
 std::size_t skc::SKC_Config::get_offset_item_data(std::size_t p_level_no) const {
-	std::size_t l_offset_hi{ m_rom_data.at(m_offset_item_table + m_level_count + p_level_no) };
-	std::size_t l_offset_lo{ m_rom_data.at(m_offset_item_table + p_level_no) };
-	std::size_t l_ram_offset{ 256 * l_offset_hi + l_offset_lo };
-
-	return get_rom_address_from_ram(l_ram_offset);
+	return get_offset_generic_data(m_offset_item_table, m_level_count, p_level_no);
 }
 
 std::size_t skc::SKC_Config::get_offset_mirror_rate_data(std::size_t p_index) const {
-	std::size_t l_offset_hi{ m_rom_data.at(m_offset_mirror_rate_table + m_mirror_rate_count + p_index) };
-	std::size_t l_offset_lo{ m_rom_data.at(m_offset_mirror_rate_table + p_index) };
-	std::size_t l_ram_offset{ 256 * l_offset_hi + l_offset_lo };
-
-	return get_rom_address_from_ram(l_ram_offset);
+	return get_offset_generic_data(m_offset_mirror_rate_table, m_mirror_rate_count, p_index);
 }
 
 std::size_t skc::SKC_Config::get_offset_mirror_enemy_data(std::size_t p_index) const {
-	std::size_t l_offset_hi{ m_rom_data.at(m_offset_mirror_enemy_table + m_mirror_enemy_count + p_index) };
-	std::size_t l_offset_lo{ m_rom_data.at(m_offset_mirror_enemy_table + p_index) };
-
-	return get_rom_address_from_ram(256 * l_offset_hi + l_offset_lo);
+	return get_offset_generic_data(m_offset_mirror_enemy_table, m_mirror_enemy_count, p_index);
 }
 
 std::size_t skc::SKC_Config::get_offset_mirror_enemy_table_lo(void) const {

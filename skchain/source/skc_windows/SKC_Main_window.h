@@ -66,9 +66,9 @@ namespace skc {
 		void right_click_item(const std::pair<int, int>& tile_pos);
 		void right_click_enemy(const std::pair<int, int>& tile_pos);
 
-		void left_click_item(const std::pair<int, int>& tile_pos);
-		void left_click_enemy(const std::pair<int, int>& tile_pos);
-		void left_click_metadata(const std::pair<int, int>& tile_pos);
+		bool left_click_item(const std::pair<int, int>& tile_pos);
+		bool left_click_enemy(const std::pair<int, int>& tile_pos);
+		bool left_click_metadata(const std::pair<int, int>& tile_pos);
 
 		void shift_click_metadata(const std::pair<int, int>& tile_pos, const SKC_Config& p_config);
 
