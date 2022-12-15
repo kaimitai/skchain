@@ -5,7 +5,31 @@
 #include "./../skc_constants/Constants_xml.h"
 #include "./../common/klib/klib_util.h"
 
-void skc::save_metadata_xml(const std::string p_folder, const std::string p_filename,
+std::string skc::xml::get_full_file_path(const std::string& p_folder, const std::string& p_filename) {
+	return (p_folder + '/' + p_filename);
+}
+
+void skc::xml::save_xml_file(const pugi::xml_document& p_doc,
+	const std::string p_folder, const std::string p_filename) {
+
+	std::filesystem::create_directory(p_folder);
+	std::string l_file_path = get_full_file_path(p_folder, p_filename);
+	if (!p_doc.save_file(l_file_path.c_str()))
+		throw std::runtime_error("Could not save " + l_file_path);
+}
+
+pugi::xml_document skc::xml::load_xml_file(const std::string p_folder,
+	const std::string p_filename) {
+
+	pugi::xml_document doc;
+	std::string l_filepath{ get_full_file_path(p_folder, p_filename) };
+	if (!doc.load_file(l_filepath.c_str()))
+		throw std::runtime_error("Could not load " + l_filepath);
+
+	return doc;
+}
+
+void skc::xml::save_metadata_xml(const std::string p_folder, const std::string p_filename,
 	const std::map<std::size_t, std::vector<std::pair<std::size_t, position>>>& p_meta_tiles,
 	const std::vector<std::vector<bool>>& p_spawn_schedules,
 	const std::vector<std::vector<byte>>& p_enemy_sets,
@@ -28,7 +52,7 @@ void skc::save_metadata_xml(const std::string p_folder, const std::string p_file
 				n_lvl_meta_item.append_attribute(c::XML_ATTR_NO);
 				n_lvl_meta_item.attribute(c::XML_ATTR_NO).set_value(l_md_index);
 				n_lvl_meta_item.append_attribute(c::XML_ATTR_POSITION);
-				n_lvl_meta_item.attribute(c::XML_ATTR_POSITION).set_value(get_position_string(l_md_tile.second).c_str());
+				n_lvl_meta_item.attribute(c::XML_ATTR_POSITION).set_value(position_to_string(l_md_tile.second).c_str());
 			}
 		}
 
@@ -50,13 +74,10 @@ void skc::save_metadata_xml(const std::string p_folder, const std::string p_file
 		n_enemy_set.attribute(c::XML_ATTR_ENEMY_SET).set_value(klib::util::string_join(p_enemy_sets[i], ',').c_str());
 	}
 
-	std::filesystem::create_directory(p_folder);
-	std::string l_file_path = p_folder + '/' + p_filename;
-	if (!doc.save_file(l_file_path.c_str()))
-		throw std::runtime_error("Could not save " + l_file_path);
+	save_xml_file(doc, p_folder, p_filename);
 }
 
-void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, const std::string p_filename) {
+void skc::xml::save_level_xml(const skc::Level& p_level, const std::string p_folder, const std::string p_filename) {
 	pugi::xml_document doc;
 	auto n_comments = doc.append_child(pugi::node_comment);
 	n_comments.set_value(c::XML_LEVEL_COMMENTS);
@@ -67,11 +88,11 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 
 	auto n_level = n_metadata.append_child(c::XML_TAG_LEVEL);
 	n_level.append_attribute(c::XML_ATTR_START_POSITION);
-	n_level.attribute(c::XML_ATTR_START_POSITION).set_value(get_position_string(p_level.get_player_start_pos()).c_str());
+	n_level.attribute(c::XML_ATTR_START_POSITION).set_value(position_to_string(p_level.get_player_start_pos()).c_str());
 	n_level.append_attribute(c::XML_ATTR_DOOR_POSITION);
-	n_level.attribute(c::XML_ATTR_DOOR_POSITION).set_value(get_position_string(p_level.get_door_pos()).c_str());
+	n_level.attribute(c::XML_ATTR_DOOR_POSITION).set_value(position_to_string(p_level.get_door_pos()).c_str());
 	n_level.append_attribute(c::XML_ATTR_KEY_POSITION);
-	n_level.attribute(c::XML_ATTR_KEY_POSITION).set_value(get_position_string(p_level.get_key_pos()).c_str());
+	n_level.attribute(c::XML_ATTR_KEY_POSITION).set_value(position_to_string(p_level.get_key_pos()).c_str());
 	n_level.append_attribute(c::XML_ATTR_KEY_STATUS);
 	n_level.attribute(c::XML_ATTR_KEY_STATUS).set_value(p_level.get_key_status());
 
@@ -85,7 +106,7 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 		n_level.append_attribute(c::XML_ATTR_CONSTELLATION_NO);
 		n_level.attribute(c::XML_ATTR_CONSTELLATION_NO).set_value(p_level.get_constellation_no());
 		n_level.append_attribute(c::XML_ATTR_CONSTELLATION_POSITION);
-		n_level.attribute(c::XML_ATTR_CONSTELLATION_POSITION).set_value(get_position_string(p_level.get_constellation_pos()).c_str());
+		n_level.attribute(c::XML_ATTR_CONSTELLATION_POSITION).set_value(position_to_string(p_level.get_constellation_pos()).c_str());
 	}
 
 	n_level.append_attribute(c::XML_ATTR_TILESET);
@@ -114,7 +135,7 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 		n_item.append_attribute(c::XML_ATTR_ELEMENT_NO);
 		n_item.attribute(c::XML_ATTR_ELEMENT_NO).set_value(element.get_element_no());
 		n_item.append_attribute(c::XML_ATTR_POSITION);
-		n_item.attribute(c::XML_ATTR_POSITION).set_value(get_position_string(element.get_position()).c_str());
+		n_item.attribute(c::XML_ATTR_POSITION).set_value(position_to_string(element.get_position()).c_str());
 	}
 
 	const auto& l_enemies{ p_level.get_enemies() };
@@ -129,7 +150,7 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 			n_enemy.append_attribute(c::XML_ATTR_ELEMENT_NO);
 			n_enemy.attribute(c::XML_ATTR_ELEMENT_NO).set_value(element.get_element_no());
 			n_enemy.append_attribute(c::XML_ATTR_POSITION);
-			n_enemy.attribute(c::XML_ATTR_POSITION).set_value(get_position_string(element.get_position()).c_str());
+			n_enemy.attribute(c::XML_ATTR_POSITION).set_value(position_to_string(element.get_position()).c_str());
 		}
 	}
 
@@ -139,27 +160,24 @@ void skc::save_level_xml(const skc::Level& p_level, const std::string p_folder, 
 		n_mirror.append_attribute(c::XML_ATTR_NO);
 		n_mirror.attribute(c::XML_ATTR_NO).set_value(i);
 		n_mirror.append_attribute(c::XML_ATTR_POSITION);
-		n_mirror.attribute(c::XML_ATTR_POSITION).set_value(get_position_string(p_level.get_spawn_position(i)).c_str());
+		n_mirror.attribute(c::XML_ATTR_POSITION).set_value(position_to_string(p_level.get_spawn_position(i)).c_str());
 		n_mirror.append_attribute(c::XML_ATTR_SCHEDULE);
 		n_mirror.attribute(c::XML_ATTR_SCHEDULE).set_value(p_level.get_spawn_schedule(i));
 		n_mirror.append_attribute(c::XML_ATTR_ENEMY_SET);
 		n_mirror.attribute(c::XML_ATTR_ENEMY_SET).set_value(p_level.get_spawn_enemies(i));
 	}
 
-	std::filesystem::create_directory(p_folder);
-	std::string l_file_path = p_folder + '/' + p_filename;
-	if (!doc.save_file(l_file_path.c_str()))
-		throw std::runtime_error("Could not save " + l_file_path);
+	save_xml_file(doc, p_folder, p_filename);
 }
 
-std::string skc::get_position_string(const std::pair<int, int>& p_position) {
+std::string skc::xml::position_to_string(const std::pair<int, int>& p_position) {
 	std::string result{ std::to_string(p_position.first) };
 	result.push_back(',');
 	result += std::to_string(p_position.second);
 	return result;
 }
 
-int skc::wall_type_to_int(skc::Wall p_wall_type) {
+int skc::xml::wall_type_to_int(skc::Wall p_wall_type) {
 	if (p_wall_type == skc::Wall::None)
 		return 0;
 	else if (p_wall_type == skc::Wall::Brown)
@@ -168,4 +186,82 @@ int skc::wall_type_to_int(skc::Wall p_wall_type) {
 		return 2;
 	else
 		return 3;
+}
+
+skc::Level skc::xml::load_level_xml(const std::string p_folder, const std::string p_filename) {
+	pugi::xml_document doc = load_xml_file(p_folder, p_filename);
+	skc::Level result;
+
+	auto n_meta = doc.child(c::XML_TAG_META);
+	auto n_level = n_meta.child(c::XML_TAG_LEVEL);
+
+	result.set_player_start_pos(string_to_position(
+		n_level.attribute(c::XML_ATTR_START_POSITION).as_string()));
+	result.set_door_pos(string_to_position(
+		n_level.attribute(c::XML_ATTR_DOOR_POSITION).as_string()));
+	result.set_key_pos(string_to_position(
+		n_level.attribute(c::XML_ATTR_KEY_POSITION).as_string()));
+	result.set_key_status(n_level.attribute(c::XML_ATTR_KEY_STATUS).as_uint());
+	result.set_spawn_enemy_lifetime(n_level.attribute(c::XML_ATTR_SPAWN_ENEMY_LIFETIME).as_uint());
+	result.set_time_decrease_rate(n_level.attribute(c::XML_ATTR_TIME_DECREASE_RATE).as_uint());
+	result.set_tileset_no(n_level.attribute(c::XML_ATTR_TILESET).as_uint());
+	if (!n_level.attribute(c::XML_ATTR_CONSTELLATION_NO).empty())
+		result.set_constellation(n_level.attribute(c::XML_ATTR_CONSTELLATION_NO).as_uint(),
+			string_to_position(
+				n_level.attribute(c::XML_ATTR_CONSTELLATION_POSITION).as_string()));
+
+	auto n_blocks = n_level.child(c::XML_TAG_BLOCKS);
+	std::vector<std::vector<skc::Wall>> l_lvl_blocks;
+	for (auto n_block_row = n_blocks.child(c::XML_TAG_BLOCK_ROW); n_block_row;
+		n_block_row = n_block_row.next_sibling(c::XML_TAG_BLOCK_ROW)) {
+		std::vector<skc::Wall> l_block_row;
+		auto l_block_str{ klib::util::string_split<int>(n_block_row.attribute(c::XML_ATTR_VALUE).as_string(), ',') };
+		for (int l_block : l_block_str)
+			l_block_row.push_back(int_to_wall_type(l_block));
+		l_lvl_blocks.push_back(l_block_row);
+	}
+	result.set_blocks(l_lvl_blocks);
+
+	auto n_items = n_level.child(c::XML_TAG_ITEMS);
+	for (auto n_item = n_items.child(c::XML_TAG_ITEM); n_item;
+		n_item = n_item.next_sibling(c::XML_TAG_ITEM)) {
+		result.add_item(n_item.attribute(c::XML_ATTR_ELEMENT_NO).as_uint(),
+			string_to_position(n_item.attribute(c::XML_ATTR_POSITION).as_string())
+		);
+	}
+
+	auto n_enemies = n_level.child(c::XML_TAG_ENEMIES);
+	for (auto n_enemy = n_enemies.child(c::XML_TAG_ENEMY); n_enemy;
+		n_enemy = n_enemy.next_sibling(c::XML_TAG_ENEMY)) {
+		result.add_enemy(n_enemy.attribute(c::XML_ATTR_ELEMENT_NO).as_uint(),
+			string_to_position(n_enemy.attribute(c::XML_ATTR_POSITION).as_string())
+		);
+	}
+
+	auto n_mirrors = n_level.child(c::XML_TAG_MIRRORS);
+	for (auto n_mirror = n_mirrors.child(c::XML_TAG_MIRROR); n_mirror;
+		n_mirror = n_mirror.next_sibling(c::XML_TAG_MIRROR)) {
+		std::size_t l_mirror_no = n_mirror.attribute(c::XML_ATTR_NO).as_uint();
+		result.set_spawn_position(l_mirror_no, string_to_position(n_mirror.attribute(c::XML_ATTR_POSITION).as_string()));
+		result.set_spawn_schedule(l_mirror_no, n_mirror.attribute(c::XML_ATTR_SCHEDULE).as_uint());
+		result.set_spawn_enemies(l_mirror_no, n_mirror.attribute(c::XML_ATTR_ENEMY_SET).as_uint());
+	}
+
+	return result;
+}
+
+position skc::xml::string_to_position(const std::string& p_position_str) {
+	auto l_coords{ klib::util::string_split<int>(p_position_str, ',') };
+	return position(l_coords.at(0), l_coords.at(1));
+}
+
+skc::Wall skc::xml::int_to_wall_type(int p_wall_type_no) {
+	if (p_wall_type_no == 0)
+		return skc::Wall::None;
+	else if (p_wall_type_no == 1)
+		return skc::Wall::Brown;
+	else if (p_wall_type_no == 2)
+		return skc::Wall::White;
+	else
+		return skc::Wall::Brown_white;
 }

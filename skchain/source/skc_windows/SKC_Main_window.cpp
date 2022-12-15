@@ -269,6 +269,10 @@ void skc::SKC_Main_window::right_click_md(const std::pair<int, int>& tile_pos, c
 	set_metadata_tile_position(get_tile_selection(), tile_pos, p_config);
 }
 
+void skc::SKC_Main_window::reset_selections(std::size_t p_level_no) {
+	m_board_selection.at(p_level_no) = std::vector<int>(3, 0);
+}
+
 std::pair<int, int> skc::SKC_Main_window::pixel_to_tile_pos(int p_screen_h, int p_x, int p_y) const {
 	int l_tile_w = get_tile_w(p_screen_h);
 	return std::make_pair(p_x / l_tile_w, p_y / l_tile_w);
@@ -493,19 +497,38 @@ void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
 
 	ImGui::Separator();
 
+	if (l_level.has_constellation()) {
+		if (imgui::button("Remove constellation"))
+			l_level.delete_constellation();
+		ImGui::Separator();
+	}
+
 	if (ImGui::Button("Save xml")) {
-		save_metadata_xml("./xml", "level-metadata.xml", m_meta_tiles,
+		skc::xml::save_metadata_xml("./xml", "level-metadata.xml", m_meta_tiles,
 			m_drop_schedules,
 			m_drop_enemies,
 			p_config);
 
 		for (std::size_t i{ 0 }; i < m_levels.size(); ++i)
-			save_level_xml(m_levels.at(i), "./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
+			skc::xml::save_level_xml(m_levels.at(i), "./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Save IPS")) {
 		klib::file::write_bytes_to_file(klib::ips::generate_patch(p_config.get_rom_data(), generate_patch_bytes(p_config)),
 			"sk-output.ips");
+	}
+
+	if (imgui::button("Load xml", "Hold ctrl to use this button")) {
+		for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
+			try {
+				auto l_level = skc::xml::load_level_xml("./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
+				m_levels.at(i) = l_level;
+				reset_selections(i);
+			}
+			catch (const std::exception& ex) {
+
+			}
+		}
 	}
 
 	ImGui::Separator();

@@ -11,16 +11,28 @@
 #include "./../common/pugixml/pugiconfig.hpp"
 
 namespace skc {
+	namespace xml {
 
-	void save_metadata_xml(const std::string p_folder, const std::string p_filename,
-		const std::map<std::size_t, std::vector<std::pair<std::size_t, position>>>& p_meta_tiles,
-		const std::vector<std::vector<bool>>& p_spawn_schedules,
-		const std::vector<std::vector<byte>>& p_enemy_sets,
-		const skc::SKC_Config& p_config);
-	void save_level_xml(const skc::Level& p_level, const std::string p_folder, const std::string p_filename);
+		void save_xml_file(const pugi::xml_document& p_doc, const std::string p_folder, const std::string p_filename);
+		pugi::xml_document load_xml_file(const std::string p_folder, const std::string p_filename);
 
-	std::string get_position_string(const std::pair<int, int>& p_position);
-	int wall_type_to_int(skc::Wall p_wall_type);
+		void save_metadata_xml(const std::string p_folder, const std::string p_filename,
+			const std::map<std::size_t, std::vector<std::pair<std::size_t, position>>>& p_meta_tiles,
+			const std::vector<std::vector<bool>>& p_spawn_schedules,
+			const std::vector<std::vector<byte>>& p_enemy_sets,
+			const skc::SKC_Config& p_config);
+		void save_level_xml(const skc::Level& p_level, const std::string p_folder, const std::string p_filename);
+
+		skc::Level load_level_xml(const std::string p_folder, const std::string p_filename);
+
+		std::string position_to_string(const std::pair<int, int>& p_position);
+		position string_to_position(const std::string& p_position_str);
+		int wall_type_to_int(skc::Wall p_wall_type);
+		skc::Wall int_to_wall_type(int p_wall_type_no);
+
+		std::string get_full_file_path(const std::string& p_folder, const std::string& p_filename);
+
+	}
 }
 
 #endif

@@ -85,11 +85,13 @@ namespace skc {
 		void set_door_pos(const std::pair<int, int>& p_pos);
 		void set_constellation(byte p_constellation_no, const std::pair<int, int>& p_pos);
 		void set_block(skc::Wall p_wall_type, const std::pair<int, int>& p_pos);
+		void set_blocks(const std::vector<std::vector<skc::Wall>>& p_blocks);
 		void set_tileset_no(byte p_tileset_no);
 		void add_item(byte p_item_no, const position& p_pos);
 		void delete_item(int p_index);
 		void add_enemy(byte p_enemy_no, const position& p_pos);
 		void delete_enemy(int p_index);
+		void delete_constellation(void);
 
 		position get_spawn_position(std::size_t p_index) const;
 		byte get_spawn_schedule(std::size_t p_index) const;
@@ -131,6 +133,7 @@ namespace skc {
 		void set_key_hidden(bool p_value);
 		void set_key_in_block(bool p_value);
 		void set_key_removed(void);
+		void set_key_status(byte p_value);
 
 		bool is_door_removed(void) const;
 		void set_door_removed(void);

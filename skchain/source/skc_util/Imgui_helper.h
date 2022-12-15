@@ -14,7 +14,7 @@ namespace skc {
 			int p_value, int p_min, int p_max);
 		std::optional<bool> checkbox(const std::string& p_label, bool p_value);
 		std::optional<position> position_sliders(const position& p_value);
-
+		bool button(const std::string& p_label, const std::string& p_tooltip = std::string());
 	}
 }
 

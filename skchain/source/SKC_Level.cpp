@@ -50,12 +50,15 @@ skc::Level::Level(void) :
 	m_key_status{ c::DEFAULT_KEY_STATUS },
 	m_spawn_enemy_lifetime{ c::DEFAULT_SPAWN_ENEMY_LIFETIME },
 	m_tileset_no{ 0 },
-	m_time_decrease_rate{ c::DEFAULT_TIME_DECREASE_RATE }
+	m_time_decrease_rate{ c::DEFAULT_TIME_DECREASE_RATE },
+	m_tiles(c::LEVEL_H, std::vector<Wall>(c::LEVEL_W, Wall::None)),
+	m_demon_mirrors(2, Demon_mirror(std::make_pair(0, 0), 0, 0))
 { }
 
 void skc::Level::load_block_data(const std::vector<byte>& p_bytes, std::size_t p_offset) {
 	auto l_bblocks = klib::util::bytes_to_bitmask(p_bytes, c::LEVEL_W, c::LEVEL_H, p_offset);
 	auto l_wblocks = klib::util::bytes_to_bitmask(p_bytes, c::LEVEL_W, c::LEVEL_H, p_offset + c::TILE_BITMASK_BYTE_SIZE);
+	m_tiles.clear();
 
 	for (int j{ 0 }; j < c::LEVEL_H; ++j) {
 		std::vector<Wall> l_row;
@@ -100,6 +103,7 @@ void skc::Level::load_item_data(const std::vector<byte>& p_bytes, std::size_t p_
 	m_fixed_key_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_KEY_POS));
 	m_fixed_start_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_START_POS));
 
+	m_demon_mirrors.clear();
 	m_demon_mirrors.push_back(skc::Demon_mirror(get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN02)),
 		p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN02_SCHEDULE),
 		p_bytes.at(p_offset + c::ITEM_OFFSET_SPAWN02_ENEMIES)));
@@ -227,6 +231,10 @@ void skc::Level::set_block(skc::Wall p_wall_type, const std::pair<int, int>& p_p
 	m_tiles.at(p_pos.second).at(p_pos.first) = p_wall_type;
 }
 
+void skc::Level::set_blocks(const std::vector<std::vector<skc::Wall>>& p_blocks) {
+	m_tiles = p_blocks;
+}
+
 void skc::Level::set_tileset_no(byte p_tileset_no) {
 	if (has_constellation()) {
 		byte four{ 4 };
@@ -250,6 +258,10 @@ void skc::Level::delete_item(int p_index) {
 
 void skc::Level::delete_enemy(int p_index) {
 	m_enemies.erase(begin(m_enemies) + p_index);
+}
+
+void skc::Level::delete_constellation(void) {
+	m_constellation = std::nullopt;
 }
 
 void skc::Level::set_item_hidden(int p_index, bool p_value) {
@@ -440,6 +452,10 @@ bool skc::Level::is_key_in_block(void) const {
 
 bool skc::Level::is_key_removed(void) const {
 	return m_fixed_key_pos.second < 0;
+}
+
+void skc::Level::set_key_status(byte p_value) {
+	m_key_status = p_value;
 }
 
 void skc::Level::set_key_hidden(bool p_value) {

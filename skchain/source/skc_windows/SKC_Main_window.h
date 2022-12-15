@@ -35,6 +35,7 @@ namespace skc {
 		int get_selected_index(void) const;
 		void set_selected_index(int p_index);
 		void delete_selected_index(void);
+		void reset_selections(std::size_t p_level_no);
 
 		int get_tile_w(int p_screen_h) const;
 		void draw_tile(SDL_Renderer* p_rnd, SDL_Texture* p_texture, int p_x, int p_y, bool p_transp = false) const;

@@ -34,3 +34,12 @@ std::optional<position> skc::imgui::position_sliders(const position& p_value) {
 	else
 		return std::nullopt;
 }
+
+bool skc::imgui::button(const std::string& p_label, const std::string& p_tooltip_text) {
+	bool result{ ImGui::Button(p_label.c_str()) };
+
+	if (!p_tooltip_text.empty() && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+		ImGui::SetTooltip(p_tooltip_text.c_str());
+
+	return result;
+}
