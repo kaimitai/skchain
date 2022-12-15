@@ -43,6 +43,7 @@ namespace skc {
 
 		// ui stuff
 		void draw_ui(SKC_Config& p_config);
+		void draw_ui_main_window(SKC_Config& p_config);
 		void draw_ui_level_window(SKC_Config& p_config);
 		void draw_ui_selected_tile_window(const SKC_Config& p_config);
 		void draw_tile_picker(const SKC_Config& p_config, std::size_t p_element_types);
@@ -80,11 +81,11 @@ namespace skc {
 		void set_metadata_tile_position(byte p_board_index_no, const position& p_pos, const SKC_Config& p_config);
 
 		// file
-		std::vector<byte> generate_patch_bytes(const SKC_Config& p_config) const;
-		void save_nes_file(const std::string& p_file_path, const SKC_Config& p_config) const;
+		std::vector<byte> generate_patch_bytes(SKC_Config& p_config) const;
+		void save_nes_file(const std::string& p_file_path, SKC_Config& p_config) const;
 
 	public:
-		SKC_Main_window(SDL_Renderer* p_rnd, const SKC_Config& p_config);
+		SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config);
 		void set_application_icon(SDL_Window* p_window) const;
 		void move(int p_delta_ms, const klib::User_input& p_input, skc::SKC_Config& p_config, int p_screen_h);
 		void draw(SDL_Renderer* p_rnd, SKC_Config& p_config, int p_w, int p_h);

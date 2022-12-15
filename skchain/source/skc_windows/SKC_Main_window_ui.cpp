@@ -15,6 +15,284 @@
 #include <utility>
 #include <vector>
 
+void skc::SKC_Main_window::draw_ui(SKC_Config& p_config) {
+	ImGui_ImplSDLRenderer_NewFrame();
+	ImGui_ImplSDL2_NewFrame();
+	ImGui::NewFrame();
+
+	this->draw_ui_main_window(p_config);
+	this->draw_ui_level_window(p_config);
+	this->draw_ui_selected_tile_window(p_config);
+
+	ImGui::Render();
+	ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
+}
+
+void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
+	ImGui::Begin("Main");
+
+	if (ImGui::Button("Save xml")) {
+		skc::xml::save_metadata_xml("./xml", "level-metadata.xml", m_meta_tiles,
+			m_drop_schedules,
+			m_drop_enemies,
+			p_config);
+
+		for (std::size_t i{ 0 }; i < m_levels.size(); ++i)
+			skc::xml::save_level_xml(m_levels.at(i), "./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Save IPS")) {
+		klib::file::write_bytes_to_file(klib::ips::generate_patch(p_config.get_rom_data(), generate_patch_bytes(p_config)),
+			"sk-output.ips");
+	}
+
+	if (imgui::button("Load xml", "Hold ctrl to use this button")) {
+		try {
+			auto l_meta_xml = skc::xml::load_metadata_xml("./xml", "level-metadata.xml");
+			m_drop_enemies = l_meta_xml.m_drop_enemies;
+			m_drop_schedules = l_meta_xml.m_drop_schedules;
+
+			for (const auto& kv : l_meta_xml.m_meta_tiles) {
+				if (p_config.get_meta_tile_movable(kv.first)) {
+
+					// find the matching tile instance
+					for (auto& mkv : m_meta_tiles)
+						for (auto& mkvt : mkv.second)
+							if (mkvt.first == kv.first)
+								mkvt.second = kv.second;
+				}
+			}
+		}
+		catch (const std::exception& ex) {
+			p_config.add_message(ex.what());
+		}
+
+		for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
+			try {
+				auto l_level = skc::xml::load_level_xml("./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
+				m_levels.at(i) = l_level;
+				reset_selections(i);
+			}
+			catch (const std::exception& ex) {
+
+			}
+		}
+	}
+
+	ImGui::Separator();
+	auto l_lvl_no = imgui::slider("Level " + std::to_string(m_current_level + 1) +
+		"/" + std::to_string(m_levels.size()) + "###lvl", static_cast<int>(m_current_level) + 1,
+		1, static_cast<int>(m_levels.size()));
+	if (l_lvl_no)
+		m_current_level = static_cast<std::size_t>(l_lvl_no.value() - 1);
+
+	ImGui::Separator();
+
+	const auto& lr_msgs{ p_config.get_messages() };
+	for (const auto& l_msg : lr_msgs)
+		ImGui::Text(l_msg.c_str());
+
+	ImGui::End();
+}
+
+void skc::SKC_Main_window::draw_ui_level_window(SKC_Config& p_config) {
+	auto& l_level{ get_level() };
+	std::string l_level_str{ "Level " + std::to_string(m_current_level + 1) + "###lvl" };
+	ImGui::Begin(l_level_str.c_str());
+
+	auto l_tileset{ imgui::slider("Tileset", l_level.get_tileset_no(), 0, 2) };
+	if (l_tileset)
+		l_level.set_tileset_no(l_tileset.value());
+	auto l_time_decrease{ imgui::slider("Time Decrease Rate", l_level.get_time_decrease_rate(), 0, 15) };
+	if (l_time_decrease)
+		l_level.set_time_decrease_rate(l_time_decrease.value());
+	auto l_spawn_life{ imgui::slider("Spawn Lifetime", l_level.get_spawn_enemy_lifetime(), 0, 255) };
+	if (l_spawn_life)
+		l_level.set_spawn_enemy_lifetime(l_spawn_life.value());
+
+	ImGui::Separator();
+
+	if (l_level.has_constellation()) {
+		if (imgui::button("Remove constellation"))
+			l_level.delete_constellation();
+		ImGui::Separator();
+	}
+
+	std::size_t l_tmp_selected_type = m_selected_type;
+
+	if (l_tmp_selected_type == c::ELM_TYPE_METADATA) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.0f, 0.0f, 0.0f, 1.0f });
+	}
+	if (ImGui::Button("Meta"))
+		m_selected_type = c::ELM_TYPE_METADATA;
+	if (l_tmp_selected_type == c::ELM_TYPE_METADATA) {
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
+	}
+
+	if (l_tmp_selected_type == c::ELM_TYPE_ITEM) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.0f, 0.0f, 0.0f, 1.0f });
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Items"))
+		m_selected_type = c::ELM_TYPE_ITEM;
+	if (l_tmp_selected_type == c::ELM_TYPE_ITEM) {
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
+	}
+
+	if (l_tmp_selected_type == c::ELM_TYPE_ENEMY) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.0f, 0.0f, 0.0f, 1.0f });
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Enemies"))
+		m_selected_type = c::ELM_TYPE_ENEMY;
+	if (l_tmp_selected_type == c::ELM_TYPE_ENEMY) {
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
+	}
+
+	ImGui::Separator();
+
+	draw_tile_picker(p_config, m_selected_type);
+
+	ImGui::End();
+}
+
+void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, const SKC_Config& p_config) {
+	auto& l_level{ get_level() };
+	auto l_tileset = l_level.get_tileset_no();
+
+	ImGui::Separator();
+
+	byte l_spawn_index = l_level.get_spawn_schedule(p_mirror_no);
+	byte l_spawn_nmi_index = l_level.get_spawn_enemies(p_mirror_no);
+
+	auto l_schedule_no = skc::imgui::slider("Schedule",
+		l_spawn_index, 0, p_config.get_mirror_rate_count() - 1);
+	if (l_schedule_no.has_value())
+		l_level.set_spawn_schedule(p_mirror_no, l_schedule_no.value());
+	auto l_nmi_set_no = skc::imgui::slider("Enemies",
+		l_spawn_nmi_index, 0, p_config.get_mirror_enemy_count() - 1);
+	if (l_nmi_set_no.has_value())
+		l_level.set_spawn_enemies(p_mirror_no, l_nmi_set_no.value());
+
+	ImGui::Separator();
+
+	ImGui::BeginDisabled();
+
+	ImGui::Text("Spawn Schedule (initial)");
+
+	for (std::size_t i{ 0 }; i < 32; ++i) {
+		std::string l_id{ "###s01" + std::to_string(i) };
+		bool l_sched_bit{ m_drop_schedules.at(l_spawn_index)[i] };
+		ImGui::Checkbox(l_id.c_str(), &l_sched_bit);
+		if (i % 8 != 7)
+			ImGui::SameLine();
+	}
+
+	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::Text("Spawn Schedule (looping)");
+
+	for (std::size_t i{ 32 }; i < 64; ++i) {
+		bool l_sched_bit{ m_drop_schedules.at(l_spawn_index)[i] };
+		std::string l_id{ "###s01" + std::to_string(i) };
+		ImGui::Checkbox(l_id.c_str(), &l_sched_bit);
+		if (i % 8 != 7)
+			ImGui::SameLine();
+	}
+
+	ImGui::Separator();
+	ImGui::Text("Enemy set");
+
+	for (byte l_enemy_no : m_drop_enemies.at(l_spawn_nmi_index)) {
+
+		ImGui::Image(m_gfx.get_tile(c::ELM_TYPE_ENEMY, l_enemy_no, l_tileset),
+			{ c::TILE_GFX_SIZE, c::TILE_GFX_SIZE });
+
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+			ImGui::SetTooltip(p_config.get_description(c::ELM_TYPE_ENEMY, l_enemy_no).c_str());
+
+		ImGui::SameLine();
+	}
+
+	ImGui::EndDisabled();
+}
+
+void skc::SKC_Main_window::draw_tile_picker(const SKC_Config& p_config, std::size_t p_element_types) {
+	const auto& l_tile_picker = p_config.get_tile_picker(p_element_types);
+
+	std::size_t l_tileset_no{ p_config.get_level_tileset(m_current_level, get_level().get_tileset_no()) };
+
+	for (const auto& kv : l_tile_picker) {
+		ImGui::Text(kv.first.c_str());
+		for (byte n : kv.second) {
+			bool l_is_selected{ m_selected_type == p_element_types && get_tile_selection() == n };
+			bool l_is_constellation = (p_element_types == c::ELM_TYPE_METADATA &&
+				skc::Level::is_item_constellation(n));
+
+			if (!l_is_constellation || is_valid_constellation(n)) {
+				if (l_is_selected)
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+				ImGui::PushID(n);
+
+				if (ImGui::ImageButton(m_gfx.get_tile(p_element_types, n, l_tileset_no),
+					{ l_is_constellation ? 1.5f * c::TILE_GFX_SIZE : c::TILE_GFX_SIZE,
+					c::TILE_GFX_SIZE })) {
+					set_tile_selection(n);
+				}
+
+				if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+					ImGui::SetTooltip(p_config.get_description(p_element_types, n).c_str());
+
+				ImGui::PopID();
+				if (l_is_selected)
+					ImGui::PopStyleColor();
+
+				ImGui::SameLine();
+			}
+		}
+		ImGui::NewLine();
+	}
+
+	if (p_element_types == c::ELM_TYPE_METADATA) {
+		auto iter = m_meta_tiles.find(m_current_level);
+		if (iter != end(m_meta_tiles)) {
+			ImGui::Text("Meta Tiles");
+			for (std::size_t i{ 0 }; i < iter->second.size(); ++i) {
+				std::size_t l_meta_elm_no{ iter->second[i].first };
+				std::size_t l_tile_gfx_no{ p_config.get_meta_tile_tile_no(l_meta_elm_no) };
+				byte l_id{ static_cast<byte>(c::MD_BYTE_NO_META_TILE_MIN + static_cast<byte>(i)) };
+				bool l_is_selected{ m_selected_type == p_element_types &&
+					get_tile_selection() == l_id };
+
+				if (l_is_selected)
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+				ImGui::PushID(l_id);
+
+				if (ImGui::ImageButton(m_gfx.get_absolute_tile(l_tile_gfx_no, l_tileset_no),
+					{ c::TILE_GFX_SIZE, c::TILE_GFX_SIZE })) {
+					set_tile_selection(l_id);
+				}
+
+				if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+					ImGui::SetTooltip(p_config.get_meta_tile_description(l_meta_elm_no).c_str());
+
+				ImGui::PopID();
+				if (l_is_selected)
+					ImGui::PopStyleColor();
+
+				ImGui::SameLine();
+			}
+		}
+	}
+
+}
+
 void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_config) {
 	int l_index{ get_selected_index() };
 	bool l_index_valid{ is_selected_index_valid() };

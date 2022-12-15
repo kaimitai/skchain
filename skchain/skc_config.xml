@@ -82,14 +82,15 @@
   
     <item no="0x04" description="Bat Symbol" animation="6" />
 	<item no="0x05" description="Demon Mirror" animation="57" />
-    <item no="0x08" description="Diamond (blue)" animation="10" />
-	  <item no="0x09" description="Firejar (blue)" animation="12" />
-	  <item no="0x0a" description="Double Coin (gold)" animation="35" />
-    <item no="0x0b" description="Jewels (orange)" animation="18" />
-    <item no="0x0c" description="Diamond (orange)" animation="11" />
-	  <item no="0x0d" description="Firejar (orange)" animation="13" />
-    <item no="0x0e" description="Scroll" animation="33" />
-	  <item no="0x0f" description="Bell" animation="8" />
+	
+    <item no="0x08" description="Diamond (blue, modifiable)" animation="10" />
+	<item no="0x09" description="Firejar (blue, modifiable)" animation="12" />
+	<item no="0x0a" description="Double Coin (gold, modifiable)" animation="35" />
+    <item no="0x0b" description="Jewels (orange, modifiable)" animation="18" />
+    <item no="0x0c" description="Diamond (orange, modifiable)" animation="11" />
+	<item no="0x0d" description="Firejar (orange, modifiable)" animation="13" />
+    <item no="0x0e" description="Scroll (modifiable)" animation="33" />
+	<item no="0x0f" description="Bell (modifiable)" animation="8" />
 	
 	<!-- 0x10 nothing -->
     <item no="0x11" description="Timebottle (half)" animation="37" />
@@ -120,7 +121,7 @@
     <item no="0x2a" description="Opal (orange)" animation="20" />
     <item no="0x2b" description="Star Coin" animation="9" />
     <item no="0x2c" description="Star Coin (double)" animation="32" />
-    <item no="0x2d" description="Opal (orange)" animation="20" />
+    <item no="0x2d" description="Opal (orange)" animation="74" />
     <item no="0x2e" description="Origami Swan" animation="36" />
     <item no="0x2f" description="Demonhead Coin" animation="31" />
     <item no="0x30" description="Sphinx" animation="38" />
@@ -267,10 +268,12 @@
 	</tile_picker>
 	<!-- item tile picker -->
 	<tile_picker no="1">
-	  <section no="0" description="Weapons" value="0x0e,0x15,0x16,0x08,0x19" />
-	  <section no="1" description="Time" value="0x11,0x12,0x13,0x14" />
-	  <section no="2" description="Special" value="0x22,0x33,0x2e,0x2f,0x30,0x31,0x32" />
-	  <section no="3" description="Misc" value="0x04,0x27" />
+	  <section no="0" description="Modifiable" value="0x09,0x0a,0x0b,0x0d,0x0e,0x0f,0x08,0x0c" />
+	  <section no="1" description="Static" value="0x15,0x29,0x1b,0x16,0x17,0x18,0x33,0x19" />
+	  <section no="2" value="0x25,0x26,0x28,0x27,0x2a,0x2d,0x2b,0x2c" />
+	  <section no="3" description="Time and Shrines" value="0x11,0x12,0x13,0x14,0x1c,0x1d,0x1e,0x1f" />
+	  <section no="4" description="Special" value="0x22,0x2e,0x2f,0x30,0x31,0x32,0x20,0x1a" />
+	  <section no="5" description="Decoration" value="0x04,0x05" />
 	</tile_picker>
 	<!-- enemy tile picker -->
 	<tile_picker no="2">
@@ -379,16 +382,16 @@
       <tile no="19" palette_no="2" nes_tiles="304,305,306,307" />
       <tile no="20" palette_no="1" nes_tiles="304,305,306,307" />
       <!-- coin (silver, gold) -->
-      <tile no="21" palette_no="2" nes_tiles="308,309,310,311" />
+      <tile no="21" palette_no="0" nes_tiles="308,309,310,311" />
       <tile no="22" palette_no="3" nes_tiles="308,309,310,311" />
       <!-- full time bottle, explosion jar -->
       <tile no="23" palette_no="2" nes_tiles="332,333,334,335" />
       <tile no="24" palette_no="3" nes_tiles="332,333,334,335" />
       <!-- shrines -->
-      <tile no="25" palette_no="1" nes_tiles="336,337,338,339" />
-      <tile no="26" palette_no="1" nes_tiles="340,341,342,343" />
-      <tile no="27" palette_no="1" nes_tiles="348,349,350,351" />
-      <tile no="28" palette_no="1" nes_tiles="372,373,374,375" />
+      <tile no="25" palette_no="3" nes_tiles="336,337,338,339" />
+      <tile no="26" palette_no="3" nes_tiles="340,341,342,343" />
+      <tile no="27" palette_no="3" nes_tiles="348,349,350,351" />
+      <tile no="28" palette_no="3" nes_tiles="372,373,374,375" />
       <!-- solomon's seal -->
       <tile no="29" palette_no="2" nes_tiles="360,361,362,363" />
       <!-- egyptian head -->
@@ -400,7 +403,7 @@
       <!-- fire scroll -->
       <tile no="33" palette_no="3" nes_tiles="300,409,410,411" />
       <!-- double coin (silver, gold) -->
-      <tile no="34" palette_no="2" nes_tiles="308,384,310,386" />
+      <tile no="34" palette_no="0" nes_tiles="308,384,310,386" />
       <tile no="35" palette_no="3" nes_tiles="308,384,310,386" />
 
       <!-- origami swan -->
@@ -409,7 +412,7 @@
       <tile no="37" palette_no="0" nes_tiles="356,356:v,334,335" />
 
       <!-- sphinx -->
-      <tile no="38" palette_no="3" nes_tiles="272,275,281,396" />
+      <tile no="38" palette_no="1" nes_tiles="272,275,281,396" />
       <!-- magic lamp -->
       <tile no="39" palette_no="3" nes_tiles="276,285,286,287" />
 
@@ -482,6 +485,8 @@
 	  <!-- saramandor left, right -->
 	  <tile no="72" palette_no="5" nes_tiles="52,54,53,55" transparent="true" />
 	  <tile no="73" palette_no="5" nes_tiles="54:v,52:v,55:v,53:v" transparent="true" />
+
+	  <tile no="74" palette_no="3" nes_tiles="304,305,306,307" />
 
     </tile_definitions>
 	
