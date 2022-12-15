@@ -278,3 +278,13 @@ bool skc::SKC_Config::get_meta_tile_movable(std::size_t p_index) const {
 const std::string& skc::SKC_Config::get_meta_tile_description(std::size_t p_index) const {
 	return m_meta_items.at(p_index).m_description;
 }
+
+void skc::SKC_Config::add_message(const std::string& p_message) {
+	m_messages.push_front(p_message);
+	if (m_messages.size() > c::LOG_MESSAGE_MAX_SIZE)
+		m_messages.pop_back();
+}
+
+const std::deque<std::string>& skc::SKC_Config::get_messages(void) const {
+	return m_messages;
+}

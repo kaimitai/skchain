@@ -161,6 +161,7 @@
     <ClInclude Include="source\skc_constants\Constants_application.h" />
     <ClInclude Include="source\skc_constants\Constants_level.h" />
     <ClInclude Include="source\skc_constants\Constants_xml.h" />
+    <ClInclude Include="source\SKC_Game_metadata.h" />
     <ClInclude Include="source\SKC_Gfx.h" />
     <ClInclude Include="source\SKC_Level.h" />
     <ClInclude Include="source\SKC_Tile_metadata.h" />

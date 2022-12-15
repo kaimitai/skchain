@@ -7,6 +7,7 @@
 #include <vector>
 #include "./../SKC_Level.h"
 #include "./../SKC_Config.h"
+#include "./../SKC_Game_metadata.h"
 #include "./../common/pugixml/pugixml.hpp"
 #include "./../common/pugixml/pugiconfig.hpp"
 
@@ -24,6 +25,7 @@ namespace skc {
 		void save_level_xml(const skc::Level& p_level, const std::string p_folder, const std::string p_filename);
 
 		skc::Level load_level_xml(const std::string p_folder, const std::string p_filename);
+		skc::Game_metadata load_metadata_xml(const std::string p_folder, const std::string p_filename);
 
 		std::string position_to_string(const std::pair<int, int>& p_position);
 		position string_to_position(const std::string& p_position_str);

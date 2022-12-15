@@ -265,3 +265,39 @@ skc::Wall skc::xml::int_to_wall_type(int p_wall_type_no) {
 	else
 		return skc::Wall::Brown_white;
 }
+
+skc::Game_metadata skc::xml::load_metadata_xml(const std::string p_folder, const std::string p_filename) {
+	pugi::xml_document doc = load_xml_file(p_folder, p_filename);
+	skc::Game_metadata result;
+
+	auto n_meta = doc.child(c::XML_TAG_META);
+
+	auto n_meta_tiles = n_meta.child(c::XML_TAG_LEVEL_META_ITEMS);
+	for (auto n_meta_tile = n_meta_tiles.child(c::XML_TAG_LEVEL_META_ITEM);
+		n_meta_tile; n_meta_tile = n_meta_tile.next_sibling(c::XML_TAG_LEVEL_META_ITEM)) {
+		result.m_meta_tiles.insert(std::make_pair(
+			n_meta_tile.attribute(c::XML_ATTR_NO).as_uint(),
+			string_to_position(n_meta_tile.attribute(c::XML_ATTR_POSITION).as_string())
+		));
+	}
+
+	auto n_schedules = n_meta.child(c::XML_TAG_SCHEDULES);
+	for (auto n_schedule = n_schedules.child(c::XML_ATTR_SCHEDULE); n_schedule;
+		n_schedule = n_schedule.next_sibling(c::XML_ATTR_SCHEDULE)) {
+		auto l_int_sched{ klib::util::string_split<int>(n_schedule.attribute(c::XML_ATTR_SCHEDULE).as_string(), ',') };
+		std::vector<bool> l_bool_sched;
+		for (int l_n : l_int_sched)
+			l_bool_sched.push_back(l_n != 0);
+		result.m_drop_schedules.push_back(l_bool_sched);
+	}
+
+	auto n_enemy_sets = n_meta.child(c::XML_TAG_ENEMY_SETS);
+	for (auto n_enemy_set = n_enemy_sets.child(c::XML_ATTR_ENEMY_SET); n_enemy_set;
+		n_enemy_set = n_enemy_set.next_sibling(c::XML_ATTR_ENEMY_SET)) {
+		result.m_drop_enemies.push_back(
+			klib::util::string_split<byte>(n_enemy_set.attribute(c::XML_ATTR_ENEMY_SET).as_string(), ',')
+		);
+	}
+
+	return result;
+}

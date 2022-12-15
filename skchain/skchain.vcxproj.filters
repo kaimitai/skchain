@@ -150,6 +150,9 @@
     <ClInclude Include="source\common\klib\IPS_Patch.h">
       <Filter>Header Files\common\klib</Filter>
     </ClInclude>
+    <ClInclude Include="source\SKC_Game_metadata.h">
+      <Filter>Header Files\levels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\klib\klib_file.cpp">

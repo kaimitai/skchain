@@ -1,4 +1,5 @@
 #include "SKC_Main_window.h"
+#include "./../SKC_Game_metadata.h"
 #include "./../common/klib/klib_gfx.h"
 #include "./../common/klib/klib_file.h"
 #include "./../common/klib/klib_util.h"
@@ -407,7 +408,7 @@ int skc::SKC_Main_window::get_tile_w(int p_screen_h) const {
 	return std::max<int>(1, p_screen_h / c::LEVEL_H);
 }
 
-void skc::SKC_Main_window::draw_ui(const SKC_Config& p_config) {
+void skc::SKC_Main_window::draw_ui(SKC_Config& p_config) {
 	ImGui_ImplSDLRenderer_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
@@ -480,7 +481,7 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 	ImGui::EndDisabled();
 }
 
-void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
+void skc::SKC_Main_window::draw_ui_level_window(SKC_Config& p_config) {
 	auto& l_level{ get_level() };
 	std::string l_level_str{ "Level " + std::to_string(m_current_level + 1) + "###lvl" };
 	ImGui::Begin(l_level_str.c_str());
@@ -519,6 +520,26 @@ void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
 	}
 
 	if (imgui::button("Load xml", "Hold ctrl to use this button")) {
+		try {
+			auto l_meta_xml = skc::xml::load_metadata_xml("./xml", "level-metadata.xml");
+			m_drop_enemies = l_meta_xml.m_drop_enemies;
+			m_drop_schedules = l_meta_xml.m_drop_schedules;
+
+			for (const auto& kv : l_meta_xml.m_meta_tiles) {
+				if (p_config.get_meta_tile_movable(kv.first)) {
+
+					// find the matching tile instance
+					for (auto& mkv : m_meta_tiles)
+						for (auto& mkvt : mkv.second)
+							if (mkvt.first == kv.first)
+								mkvt.second = kv.second;
+				}
+			}
+		}
+		catch (const std::exception& ex) {
+			p_config.add_message(ex.what());
+		}
+
 		for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
 			try {
 				auto l_level = skc::xml::load_level_xml("./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
@@ -526,7 +547,7 @@ void skc::SKC_Main_window::draw_ui_level_window(const SKC_Config& p_config) {
 				reset_selections(i);
 			}
 			catch (const std::exception& ex) {
-
+				
 			}
 		}
 	}
@@ -647,7 +668,7 @@ void skc::SKC_Main_window::draw_tile_picker(const SKC_Config& p_config, std::siz
 
 }
 
-void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, const SKC_Config& p_config, int p_w, int p_h) {
+void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, SKC_Config& p_config, int p_w, int p_h) {
 	this->generate_texture(p_rnd, p_config);
 
 	int l_tile_w{ get_tile_w(p_h) };

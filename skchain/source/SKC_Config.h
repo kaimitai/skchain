@@ -1,6 +1,7 @@
 #ifndef SKC_CONFIG_H
 #define SKC_CONFIG_H
 
+#include <deque>
 #include <map>
 #include <string>
 #include <utility>
@@ -30,6 +31,7 @@ namespace skc {
 		std::vector<std::vector<std::pair<std::string, std::vector<byte>>>> m_tile_pickers;
 		std::map<std::size_t, std::pair<byte, std::size_t>> m_item_bitmasks;
 		std::vector<Metadata_item> m_meta_items;
+		std::deque<std::string> m_messages;
 
 	public:
 		SKC_Config(const std::vector<byte>& p_rom_data);
@@ -74,6 +76,8 @@ namespace skc {
 		bool get_meta_tile_movable(std::size_t p_index) const;
 		const std::string& get_meta_tile_description(std::size_t p_index) const;
 
+		void add_message(const std::string& p_message);
+		const std::deque<std::string>& get_messages(void) const;
 	};
 
 }
