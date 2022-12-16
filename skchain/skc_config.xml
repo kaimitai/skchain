@@ -8,6 +8,10 @@
     <offset_enemy_table offset="0x5cfc" />
 	<offset_block_data offset="0x603c" />
 	<offset_item_table offset="0x6a2c" />
+	<length_mirror_rate_data value="128" />
+	<length_mirror_enemy_data value="42" />
+	<length_enemy_data value="726" />
+	<length_item_data value="1402" />
 	<offset_gfx offset="0x8010" />
 	<rom_ram_diff value="0x7ff0" />
 	<level_count value="53" />
@@ -45,7 +49,7 @@
 	<level_palettes value="0,0,0,0, 1,1,1,1, 2,2,2,2, 3,3,3,3, 2,2,2,2, 0,0,0,0, 2,2,2,2, 0,0,0,0, 3,3,3,3, 2,2,2,2, 0,0,0,0, 2,2,2,2, 4,4,0,4,4" />
   </rom_metadata>
 
-  <!-- virtual metadata tiles mapped from byte value (0-255) to description and tile graphics indexes (do not add new items to this list) -->
+  <!-- virtual metadata tiles mapped from byte value (0-255) to description and tile graphics indexes (do not add new items to this list, but descriptions and graphics can be changed for existing ones) -->
   <metadata_definitions>
     <metadata no="0x00" description="Key" animation="5" />
 	<metadata no="0x01" description="Door" animation="4" />
@@ -74,7 +78,7 @@
 	<metadata no="0xfb" description="Sagittarius" animation="56" />
   </metadata_definitions>
 
-  <!-- each enemy mapped from byte value (0-63) to description and tile graphics indexes  the higher bits determine properties "hidden" and "in block" -->
+  <!-- each item mapped from byte value (0x01-0x39) to description and tile graphics indexes. the higher bits determine properties "hidden" and "in block" -->
   <item_definitions>
     <!-- 0x01-0x03: glitch broken block, glitch door, glitch white block -->
 	<!-- 0x06: glitch key -->
@@ -132,7 +136,7 @@
 	<!-- 0x34-0x39: garbage gfx -->
   </item_definitions>
 
-  <!-- each enemy mapped from byte value (0-255) to description and tile graphics indexes -->
+  <!-- each enemy mapped from byte value (0x01-0x83) to description and tile graphics indexes -->
   <enemy_definitions>
   
     <!-- 0x0c-0x0f and 0x10-0x13 are strange stationary fireballs -->

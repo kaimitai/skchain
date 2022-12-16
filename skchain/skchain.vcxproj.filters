@@ -153,6 +153,9 @@
     <ClInclude Include="source\SKC_Game_metadata.h">
       <Filter>Header Files\levels</Filter>
     </ClInclude>
+    <ClInclude Include="source\skc_constants\Constants_color.h">
+      <Filter>Header Files\skc_constants</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\klib\klib_file.cpp">

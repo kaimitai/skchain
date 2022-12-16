@@ -15,6 +15,11 @@ namespace skc {
 		constexpr char FILENAME_IMGUI_INI[]{ "skc_windows.ini" };
 		constexpr std::size_t LOG_MESSAGE_MAX_SIZE{ 25 };
 
+		constexpr int MSG_CODE_INFO{ 0 };
+		constexpr int MSG_CODE_WARNING{ MSG_CODE_INFO + 1 };
+		constexpr int MSG_CODE_SUCCESS{ MSG_CODE_WARNING + 1 };
+		constexpr int MSG_CODE_ERROR{ MSG_CODE_SUCCESS + 1 };
+
 		constexpr char TXT_UNKNOWN[]{ "Unknown" };
 		constexpr char TXT_X_POS[]{ "x-pos" };
 		constexpr char TXT_Y_POS[]{ "y-pos" };

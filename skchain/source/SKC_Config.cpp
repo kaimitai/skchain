@@ -43,6 +43,16 @@ void skc::SKC_Config::load_config_xml(void) {
 		n_rom_meta.child(c::XML_TAG_MIRROR_RATE_COUNT).attribute(c::XML_ATTR_VALUE).as_string());
 	m_mirror_enemy_count = klib::util::string_to_numeric<unsigned int>(
 		n_rom_meta.child(c::XML_TAG_MIRROR_ENEMY_COUNT).attribute(c::XML_ATTR_VALUE).as_string());
+
+	m_length_mr_data = klib::util::string_to_numeric<unsigned int>(
+		n_rom_meta.child(c::XML_TAG_LENGTH_MIRROR_RATE_DATA).attribute(c::XML_ATTR_VALUE).as_string());
+	m_length_me_data = klib::util::string_to_numeric<unsigned int>(
+		n_rom_meta.child(c::XML_TAG_LENGTH_MIRROR_ENEMY_DATA).attribute(c::XML_ATTR_VALUE).as_string());
+	m_length_item_data = klib::util::string_to_numeric<unsigned int>(
+		n_rom_meta.child(c::XML_TAG_LENGTH_ITEM_DATA).attribute(c::XML_ATTR_VALUE).as_string());
+	m_length_enemy_data = klib::util::string_to_numeric<unsigned int>(
+		n_rom_meta.child(c::XML_TAG_LENGTH_ENEMY_DATA).attribute(c::XML_ATTR_VALUE).as_string());
+
 	m_gfx_tile_count = klib::util::string_to_numeric<unsigned int>(
 		n_rom_meta.child(c::XML_TAG_NES_TILE_COUNT).attribute(c::XML_ATTR_VALUE).as_string());
 
@@ -208,6 +218,22 @@ unsigned int skc::SKC_Config::get_mirror_enemy_count(void) const {
 	return m_mirror_enemy_count;
 }
 
+std::size_t skc::SKC_Config::get_length_mirror_rate_data(void) const {
+	return m_length_mr_data;
+}
+
+std::size_t skc::SKC_Config::get_length_mirror_enemy_data(void) const {
+	return m_length_me_data;
+}
+
+std::size_t skc::SKC_Config::get_length_item_data(void) const {
+	return m_length_item_data;
+}
+
+std::size_t skc::SKC_Config::get_length_enemy_data(void) const {
+	return m_length_enemy_data;
+}
+
 std::size_t skc::SKC_Config::get_rom_address_from_ram(std::size_t p_ram_address) const {
 	return p_ram_address - m_rom_ram_diff;
 }
@@ -279,12 +305,12 @@ const std::string& skc::SKC_Config::get_meta_tile_description(std::size_t p_inde
 	return m_meta_items.at(p_index).m_description;
 }
 
-void skc::SKC_Config::add_message(const std::string& p_message) {
-	m_messages.push_front(p_message);
+void skc::SKC_Config::add_message(const std::string& p_message, int p_msg_type) {
+	m_messages.push_front(std::make_pair(p_message, p_msg_type));
 	if (m_messages.size() > c::LOG_MESSAGE_MAX_SIZE)
 		m_messages.pop_back();
 }
 
-const std::deque<std::string>& skc::SKC_Config::get_messages(void) const {
+const std::deque<std::pair<std::string, int>>& skc::SKC_Config::get_messages(void) const {
 	return m_messages;
 }

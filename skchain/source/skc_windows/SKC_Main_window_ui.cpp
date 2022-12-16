@@ -7,6 +7,7 @@
 #include "./../skc_util/Imgui_helper.h"
 #include "./../skc_constants/Constants_level.h"
 #include "./../skc_constants/Constants_application.h"
+#include "./../skc_constants/Constants_color.h"
 #include "./../common/imgui/imgui.h"
 #include "./../common/imgui/imgui_impl_sdl.h"
 #include "./../common/imgui/imgui_impl_sdlrenderer.h"
@@ -32,18 +33,39 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 	ImGui::Begin("Main");
 
 	if (ImGui::Button("Save xml")) {
-		skc::xml::save_metadata_xml("./xml", "level-metadata.xml", m_meta_tiles,
-			m_drop_schedules,
-			m_drop_enemies,
-			p_config);
+		try {
+			skc::xml::save_metadata_xml("./xml", "level-metadata.xml", m_meta_tiles,
+				m_drop_schedules,
+				m_drop_enemies,
+				p_config);
+			p_config.add_message("Saved metadata xml", c::MSG_CODE_SUCCESS);
+		}
+		catch (const std::exception& ex) {
+			p_config.add_message(ex.what(), c::MSG_CODE_ERROR);
+		}
 
-		for (std::size_t i{ 0 }; i < m_levels.size(); ++i)
-			skc::xml::save_level_xml(m_levels.at(i), "./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
+		int l_xml_out{ 0 };
+		for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
+			try {
+				skc::xml::save_level_xml(m_levels.at(i), "./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
+				++l_xml_out;
+			}
+			catch (const std::exception&) {}
+		}
+
+		p_config.add_message(std::to_string(l_xml_out) + " level xml files saved",
+			l_xml_out == p_config.get_level_count() ? c::MSG_CODE_SUCCESS : c::MSG_CODE_WARNING);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Save IPS")) {
-		klib::file::write_bytes_to_file(klib::ips::generate_patch(p_config.get_rom_data(), generate_patch_bytes(p_config)),
-			"sk-output.ips");
+		try {
+			klib::file::write_bytes_to_file(klib::ips::generate_patch(p_config.get_rom_data(), generate_patch_bytes(p_config)),
+				"sk-output.ips");
+			p_config.add_message("IPS file generated", c::MSG_CODE_SUCCESS);
+		}
+		catch (const std::exception& ex) {
+			p_config.add_message(ex.what(), c::MSG_CODE_ERROR);
+		}
 	}
 
 	if (imgui::button("Load xml", "Hold ctrl to use this button")) {
@@ -62,21 +84,24 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 								mkvt.second = kv.second;
 				}
 			}
+			p_config.add_message("Metadata xml file loaded", c::MSG_CODE_SUCCESS);
 		}
 		catch (const std::exception& ex) {
-			p_config.add_message(ex.what());
+			p_config.add_message(ex.what(), c::MSG_CODE_ERROR);
 		}
 
+		int l_import_count{ 0 };
 		for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
 			try {
 				auto l_level = skc::xml::load_level_xml("./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
 				m_levels.at(i) = l_level;
 				reset_selections(i);
+				++l_import_count;
 			}
-			catch (const std::exception& ex) {
-
-			}
+			catch (const std::exception&) {}
 		}
+		p_config.add_message(std::to_string(l_import_count) + " level xml files loaded",
+			l_import_count == p_config.get_level_count() ? c::MSG_CODE_SUCCESS : c::MSG_CODE_WARNING);
 	}
 
 	ImGui::Separator();
@@ -88,9 +113,19 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 
 	ImGui::Separator();
 
+	static std::vector<ImVec4> ls_color_codes{
+		c::COLI_WHITE,
+		c::COLI_YELLOW,
+		c::COLI_GREEN,
+		c::COLI_RED
+	};
+
 	const auto& lr_msgs{ p_config.get_messages() };
-	for (const auto& l_msg : lr_msgs)
-		ImGui::Text(l_msg.c_str());
+	for (const auto& l_msg : lr_msgs) {
+		ImGui::PushStyleColor(ImGuiCol_Text, ls_color_codes[l_msg.second]);
+		ImGui::Text(l_msg.first.c_str());
+		ImGui::PopStyleColor();
+	}
 
 	ImGui::End();
 }
@@ -121,7 +156,7 @@ void skc::SKC_Main_window::draw_ui_level_window(SKC_Config& p_config) {
 	std::size_t l_tmp_selected_type = m_selected_type;
 
 	if (l_tmp_selected_type == c::ELM_TYPE_METADATA) {
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_Button, c::COLI_YELLOW);
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.0f, 0.0f, 0.0f, 1.0f });
 	}
 	if (ImGui::Button("Meta"))
@@ -132,7 +167,7 @@ void skc::SKC_Main_window::draw_ui_level_window(SKC_Config& p_config) {
 	}
 
 	if (l_tmp_selected_type == c::ELM_TYPE_ITEM) {
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_Button, c::COLI_YELLOW);
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.0f, 0.0f, 0.0f, 1.0f });
 	}
 	ImGui::SameLine();
@@ -144,7 +179,7 @@ void skc::SKC_Main_window::draw_ui_level_window(SKC_Config& p_config) {
 	}
 
 	if (l_tmp_selected_type == c::ELM_TYPE_ENEMY) {
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_Button, c::COLI_YELLOW);
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.0f, 0.0f, 0.0f, 1.0f });
 	}
 	ImGui::SameLine();

@@ -42,6 +42,10 @@ namespace skc {
 		constexpr char XML_TAG_MIRROR_ENEMY_COUNT[]{ "mirror_enemy_count" };
 		constexpr char XML_TAG_NES_TILE_COUNT[]{ "nes_tile_count" };
 		constexpr char XML_TAG_LEVEL_PALETTES[]{ "level_palettes" };
+		constexpr char XML_TAG_LENGTH_MIRROR_RATE_DATA[]{ "length_mirror_rate_data" };
+		constexpr char XML_TAG_LENGTH_MIRROR_ENEMY_DATA[]{ "length_mirror_enemy_data" };
+		constexpr char XML_TAG_LENGTH_ITEM_DATA[]{ "length_item_data" };
+		constexpr char XML_TAG_LENGTH_ENEMY_DATA[]{ "length_enemy_data" };
 
 		constexpr char XML_ATTR_NO[]{ "no" };
 		constexpr char XML_ATTR_DESCRIPTION[]{ "description" };

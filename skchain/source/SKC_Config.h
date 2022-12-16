@@ -6,6 +6,8 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "./skc_constants/Constants_application.h"
+
 using byte = unsigned char;
 
 namespace skc {
@@ -21,7 +23,8 @@ namespace skc {
 
 	class SKC_Config {
 		std::size_t m_offset_gfx, m_offset_blocks, m_offset_enemy_table, m_offset_item_table,
-			m_offset_mirror_rate_table, m_offset_mirror_enemy_table;
+			m_offset_mirror_rate_table, m_offset_mirror_enemy_table,
+			m_length_mr_data, m_length_me_data, m_length_item_data, m_length_enemy_data;
 		unsigned int m_level_count, m_mirror_rate_count, m_mirror_enemy_count, m_gfx_tile_count;
 		int m_rom_ram_diff;
 		void load_config_xml(void);
@@ -31,7 +34,7 @@ namespace skc {
 		std::vector<std::vector<std::pair<std::string, std::vector<byte>>>> m_tile_pickers;
 		std::map<std::size_t, std::pair<byte, std::size_t>> m_item_bitmasks;
 		std::vector<Metadata_item> m_meta_items;
-		std::deque<std::string> m_messages;
+		std::deque<std::pair<std::string, int>> m_messages;
 
 	public:
 		SKC_Config(const std::vector<byte>& p_rom_data);
@@ -56,6 +59,10 @@ namespace skc {
 		unsigned int get_nes_tile_count(void) const;
 		unsigned int get_mirror_rate_count(void) const;
 		unsigned int get_mirror_enemy_count(void) const;
+		std::size_t get_length_mirror_rate_data(void) const;
+		std::size_t get_length_mirror_enemy_data(void) const;
+		std::size_t get_length_item_data(void) const;
+		std::size_t get_length_enemy_data(void) const;
 		std::size_t get_rom_address_from_ram(std::size_t p_ram_address) const;
 		std::size_t get_ram_address_from_rom(std::size_t p_rom_address) const;
 		std::pair<byte, byte> get_ram_address_bytes_from_rom(const std::size_t p_rom_address) const;
@@ -76,8 +83,8 @@ namespace skc {
 		bool get_meta_tile_movable(std::size_t p_index) const;
 		const std::string& get_meta_tile_description(std::size_t p_index) const;
 
-		void add_message(const std::string& p_message);
-		const std::deque<std::string>& get_messages(void) const;
+		void add_message(const std::string& p_message, int p_msg_type = c::MSG_CODE_INFO);
+		const std::deque<std::pair<std::string, int>>& get_messages(void) const;
 	};
 
 }

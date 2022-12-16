@@ -6,7 +6,9 @@
 #include "./../common/klib/IPS_Patch.h"
 #include "./../skc_util/Xml_helper.h"
 #include "./../skc_util/Imgui_helper.h"
+#include "./../skc_constants/Constants_application.h"
 #include "./../skc_constants/Constants_level.h"
+#include "./../skc_constants/Constants_color.h"
 #include "./../common/imgui/imgui.h"
 #include "./../common/imgui/imgui_impl_sdl.h"
 #include "./../common/imgui/imgui_impl_sdlrenderer.h"
@@ -73,13 +75,18 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config)
 		m_drop_enemies.push_back(l_drop_enemy);
 	}
 
+	auto l_base_path{ SDL_GetBasePath() };
+	if (l_base_path != nullptr) {
+		p_config.add_message("Executable folder: " + std::string(l_base_path));
+		SDL_free(l_base_path);
+	}
 	p_config.add_message("Right Click: Insert Tile Picker element");
 	p_config.add_message("Shift + Left Click: Move selected board element");
 	p_config.add_message("Left Click: Select board element");
 	p_config.add_message("Read the documentation for efficient usage tips!");
 	p_config.add_message("Build Date: " + std::string(__DATE__) + " " + std::string(__TIME__));
 	p_config.add_message("Homepage: https://github.com/kaimitai/skchain");
-	p_config.add_message("Welcome to Solomon's Keychain by Kai E. Froeland");
+	p_config.add_message("Welcome to Solomon's Keychain by Kai E. Froeland", c::MSG_CODE_SUCCESS);
 
 	/*
 	DEBUG: Extract binary item bytes per level
@@ -417,7 +424,7 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 			l_pos = get_metadata_tile_position(l_board_index);
 		klib::gfx::draw_rect(p_rnd,
 			l_pos.first * c::TILE_GFX_SIZE, l_pos.second * c::TILE_GFX_SIZE,
-			c::TILE_GFX_SIZE, c::TILE_GFX_SIZE, SDL_Color{ 255, 255, 0 }, 2);
+			c::TILE_GFX_SIZE, c::TILE_GFX_SIZE, c::COL_YELLOW, 2);
 	}
 
 	SDL_SetRenderTarget(p_rnd, nullptr);
@@ -449,6 +456,22 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(SKC_Config& p_confi
 	std::vector<std::size_t> l_item_offsets, l_enemy_offsets, l_enemy_sets_offsets;
 	std::size_t l_item_offset{ 0 }, lenemy_offset{ 0 };
 	const auto& l_item_bitmasks{ p_config.get_item_bitmasks() };
+
+	const auto check_data_section_size = [&p_config](const std::string& p_section_name,
+		std::size_t p_actual_value, std::size_t p_max_value) -> void {
+			int l_msg_color{ c::MSG_CODE_INFO };
+			if (p_actual_value > p_max_value)
+				l_msg_color = c::MSG_CODE_ERROR;
+			else if (p_actual_value == p_max_value)
+				l_msg_color = c::MSG_CODE_WARNING;
+
+			p_config.add_message(p_section_name + " data size (bytes): " +
+				std::to_string(p_actual_value) + "/" + std::to_string(p_max_value),
+				l_msg_color);
+			if (p_actual_value > p_max_value)
+				throw std::runtime_error(p_section_name + " data section too big");
+
+	};
 
 	std::vector<byte> l_item_data, l_enemy_data, l_block_data;
 	for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
@@ -544,15 +567,21 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(SKC_Config& p_confi
 	klib::util::append_or_overwrite_vector(l_output, l_enemy_sets_data,
 		p_config.get_offset_mirror_enemy_data(0));
 
-	p_config.add_message("Enemy set data size (bytes): " + std::to_string(l_enemy_sets_data.size()));
-	p_config.add_message("Enemy data size (bytes): " + std::to_string(l_enemy_data.size()));
-	p_config.add_message("Item data size (bytes): " + std::to_string(l_item_data.size()));
+	check_data_section_size("Enemy Set", l_enemy_sets_data.size(), p_config.get_length_mirror_enemy_data());
+	check_data_section_size("Enemy", l_enemy_data.size(), p_config.get_length_enemy_data());
+	check_data_section_size("Item", l_item_data.size(), p_config.get_length_item_data());
 
 	return l_output;
 }
 
 void skc::SKC_Main_window::save_nes_file(const std::string& p_file_path, SKC_Config& p_config) const {
-	klib::file::write_bytes_to_file(generate_patch_bytes(p_config), p_file_path);
+	try {
+		klib::file::write_bytes_to_file(generate_patch_bytes(p_config), p_file_path);
+		p_config.add_message("NES file generated", c::MSG_CODE_SUCCESS);
+	}
+	catch (const std::exception& ex) {
+		p_config.add_message(ex.what(), c::MSG_CODE_ERROR);
+	}
 }
 
 bool skc::SKC_Main_window::is_valid_constellation(byte p_constellation) const {
