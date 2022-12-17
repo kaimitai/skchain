@@ -8,6 +8,7 @@
 #include "./skc_windows/SKC_Main_window.h"
 #include "./SKC_Config.h"
 #include <iostream>
+#include <string>
 #include <vector>
 
 #if !SDL_VERSION_ATLEAST(2,0,17)
@@ -15,6 +16,28 @@
 #endif
 
 using byte = unsigned char;
+
+// try to return path to the executable folder
+std::string get_base_directory(void) {
+	auto l_sdl_base_dir_ptr{ SDL_GetBasePath() };
+	if (l_sdl_base_dir_ptr != nullptr) {
+		std::string result = std::string(l_sdl_base_dir_ptr);
+		SDL_free(l_sdl_base_dir_ptr);
+		return result;
+	}
+	else
+		return "./";
+}
+
+// try to find an input nes-file
+std::string get_file_full_path(int argc, char* args[]) {
+	if (argc > 1)
+		return args[1];
+	else {
+		return "./Solomon's Key (U) [!].nes";
+		//  return "./sk_test.nes";
+	}
+}
 
 int main(int argc, char* args[]) try {
 	SDL_Window* l_window{ nullptr };
@@ -48,13 +71,15 @@ int main(int argc, char* args[]) try {
 			ImGui::StyleColorsDark();
 			//ImGui::StyleColorsLight();
 
+			skc::SKC_Config l_config(get_base_directory(),
+				get_file_full_path(argc, args));
+
 			// Setup Platform/Renderer backends
 			ImGui_ImplSDL2_InitForSDLRenderer(l_window, l_rnd);
 			ImGui_ImplSDLRenderer_Init(l_rnd);
-			ImGui::GetIO().IniFilename = skc::c::FILENAME_IMGUI_INI;
+			std::string l_ini_filename{ l_config.get_imgui_ini_file_path() };
+			ImGui::GetIO().IniFilename = l_ini_filename.c_str();
 
-			skc::SKC_Config l_config(klib::file::read_file_as_bytes("Solomon's Key (U) [!].nes"));
-			//skc::SKC_Config l_config(klib::file::read_file_as_bytes("sk_test.nes"));
 			skc::SKC_Main_window main_window(l_rnd, l_config);
 			main_window.set_application_icon(l_window);
 

@@ -24,6 +24,8 @@ void skc::SKC_Main_window::draw_ui(SKC_Config& p_config) {
 	this->draw_ui_main_window(p_config);
 	this->draw_ui_level_window(p_config);
 	this->draw_ui_selected_tile_window(p_config);
+	if (m_schedule_win_index)
+		draw_ui_metadata_drop_schedules();
 
 	ImGui::Render();
 	ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
@@ -105,6 +107,15 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 	}
 
 	ImGui::Separator();
+	ImGui::Text("Metadata Editors");
+	if (imgui::button("Drop Schedules")) {
+		if (m_schedule_win_index)
+			m_schedule_win_index = std::nullopt;
+		else
+			m_schedule_win_index = 0;
+	}
+	ImGui::Separator();
+
 	auto l_lvl_no = imgui::slider("Level " + std::to_string(m_current_level + 1) +
 		"/" + std::to_string(m_levels.size()) + "###lvl", static_cast<int>(m_current_level) + 1,
 		1, static_cast<int>(m_levels.size()));
@@ -219,27 +230,7 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 
 	ImGui::BeginDisabled();
 
-	ImGui::Text("Spawn Schedule (initial)");
-
-	for (std::size_t i{ 0 }; i < 32; ++i) {
-		std::string l_id{ "###s01" + std::to_string(i) };
-		bool l_sched_bit{ m_drop_schedules.at(l_spawn_index)[i] };
-		ImGui::Checkbox(l_id.c_str(), &l_sched_bit);
-		if (i % 8 != 7)
-			ImGui::SameLine();
-	}
-
-	ImGui::NewLine();
-	ImGui::Separator();
-	ImGui::Text("Spawn Schedule (looping)");
-
-	for (std::size_t i{ 32 }; i < 64; ++i) {
-		bool l_sched_bit{ m_drop_schedules.at(l_spawn_index)[i] };
-		std::string l_id{ "###s01" + std::to_string(i) };
-		ImGui::Checkbox(l_id.c_str(), &l_sched_bit);
-		if (i % 8 != 7)
-			ImGui::SameLine();
-	}
+	imgui::spawn_schedule(m_drop_schedules.at(l_spawn_index), "###ds");
 
 	ImGui::Separator();
 	ImGui::Text("Enemy set");
@@ -454,4 +445,23 @@ void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config)
 		draw_ui_selected_mirror(0, p_config);
 	else if (l_index == c::MD_BYTE_NO_SPAWN02)
 		draw_ui_selected_mirror(1, p_config);
+}
+
+void skc::SKC_Main_window::draw_ui_metadata_drop_schedules(void) {
+	ImGui::Begin("Mirror Drop Schedules");
+
+	auto l_nv{ imgui::slider("Schedule###mdds",
+		static_cast<int>(m_schedule_win_index.value() + 1),
+		1, static_cast<int>(m_drop_schedules.size())) };
+
+	if (l_nv)
+		m_schedule_win_index = static_cast<std::size_t>(l_nv.value() - 1);
+
+	std::size_t l_index{ m_schedule_win_index.value() };
+	auto l_ce{ imgui::spawn_schedule(m_drop_schedules.at(l_index), "md") };
+	if (l_ce) {
+		m_drop_schedules.at(l_index).at(l_ce.value()) = !m_drop_schedules.at(l_index).at(l_ce.value());
+	}
+
+	ImGui::End();
 }

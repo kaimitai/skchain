@@ -43,3 +43,34 @@ bool skc::imgui::button(const std::string& p_label, const std::string& p_tooltip
 
 	return result;
 }
+
+std::optional<std::size_t> skc::imgui::spawn_schedule(const std::vector<bool>& p_schedule,
+	const std::string& p_id_prefix) {
+	std::optional<size_t> result;
+
+	ImGui::Text("Spawn Schedule (initial)");
+
+	for (std::size_t i{ 0 }; i < 32; ++i) {
+		std::string l_id{ "###s01" + std::to_string(i) };
+		bool l_sched_bit{ p_schedule.at(i) };
+		if (ImGui::Checkbox(l_id.c_str(), &l_sched_bit))
+			result = i;
+		if (i % 8 != 7)
+			ImGui::SameLine();
+	}
+
+	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::Text("Spawn Schedule (looping)");
+
+	for (std::size_t i{ 32 }; i < 64; ++i) {
+		bool l_sched_bit{ p_schedule.at(i) };
+		std::string l_id{ "###" + p_id_prefix + std::to_string(i) };
+		if (ImGui::Checkbox(l_id.c_str(), &l_sched_bit))
+			result = i;
+		if (i % 8 != 7)
+			ImGui::SameLine();
+	}
+
+	return result;
+}

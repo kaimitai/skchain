@@ -7,6 +7,7 @@
 #include "./common/pugixml/pugixml.hpp"
 #include "./common/pugixml/pugiconfig.hpp"
 #include <stdexcept>
+#include <string>
 
 using byte = unsigned char;
 
@@ -36,7 +37,7 @@ skc::SKC_Gfx::SKC_Gfx(SDL_Renderer* p_rnd,
 		);
 	}
 
-	this->load_metadata(lr_rom_data);
+	this->load_metadata(p_config.get_config_xml_full_path(), lr_rom_data);
 	this->generate_tile_textures(p_rnd);
 	this->generate_hex_textures(p_rnd);
 
@@ -131,9 +132,10 @@ SDL_Color skc::SKC_Gfx::nes_color_to_sdl(const klib::NES_Color& p_col) {
 	return SDL_Color{ p_col.m_r, p_col.m_g, p_col.m_b };
 }
 
-void skc::SKC_Gfx::load_metadata(const std::vector<byte> p_rom_data) {
+void skc::SKC_Gfx::load_metadata(const std::string& p_config_file_path,
+	const std::vector<byte> p_rom_data) {
 	pugi::xml_document doc;
-	if (!doc.load_file(skc::c::FILENAME_CONFIG_XML))
+	if (!doc.load_file(p_config_file_path.c_str()))
 		throw std::runtime_error("Could not load configuration xml");
 
 	auto n_meta = doc.child(skc::c::XML_TAG_META);

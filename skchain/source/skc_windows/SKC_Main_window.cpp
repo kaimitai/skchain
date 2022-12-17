@@ -75,11 +75,7 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config)
 		m_drop_enemies.push_back(l_drop_enemy);
 	}
 
-	auto l_base_path{ SDL_GetBasePath() };
-	if (l_base_path != nullptr) {
-		p_config.add_message("Executable folder: " + std::string(l_base_path));
-		SDL_free(l_base_path);
-	}
+	p_config.add_message("Executable folder: " + p_config.get_base_path());
 	p_config.add_message("Right Click: Insert Tile Picker element");
 	p_config.add_message("Shift + Left Click: Move selected board element");
 	p_config.add_message("Left Click: Select board element");

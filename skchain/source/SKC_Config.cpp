@@ -1,22 +1,26 @@
 #include "SKC_Config.h"
+#include "./common/klib/klib_file.h"
 #include "./common/klib/klib_util.h"
 #include "./common/pugixml/pugixml.hpp"
 #include "./common/pugixml/pugiconfig.hpp"
 #include "./skc_constants/Constants_xml.h"
 #include "./skc_constants/Constants_application.h"
 #include "./skc_constants/Constants_level.h"
+#include <filesystem>
 #include <stdexcept>
 
-skc::SKC_Config::SKC_Config(const std::vector<byte>& p_rom_data) :
-	m_rom_data{ p_rom_data },
-	m_descriptions{ std::vector<std::vector<std::string>>(3, std::vector<std::string>(256, c::TXT_UNKNOWN)) }
+skc::SKC_Config::SKC_Config(const std::string& p_base_dir, const std::string& p_filename) :
+	m_descriptions{ std::vector<std::vector<std::string>>(3, std::vector<std::string>(256, c::TXT_UNKNOWN)) },
+	m_base_dir{ p_base_dir }
 {
-	this->load_config_xml();
+	this->load_config_xml(get_config_xml_full_path());
+	m_rom_data = klib::file::read_file_as_bytes(p_filename);
+	add_message("Loaded " + p_filename);
 }
 
-void skc::SKC_Config::load_config_xml(void) {
+void skc::SKC_Config::load_config_xml(const std::string& p_config_file_path) {
 	pugi::xml_document doc;
-	if (!doc.load_file(skc::c::FILENAME_CONFIG_XML))
+	if (!doc.load_file(p_config_file_path.c_str()))
 		throw std::runtime_error("Could not load configuration xml");
 
 	auto n_meta = doc.child(skc::c::XML_TAG_META);
@@ -313,4 +317,27 @@ void skc::SKC_Config::add_message(const std::string& p_message, int p_msg_type) 
 
 const std::deque<std::pair<std::string, int>>& skc::SKC_Config::get_messages(void) const {
 	return m_messages;
+}
+
+std::string skc::SKC_Config::get_base_path(void) const {
+	return m_base_dir;
+}
+
+std::string skc::SKC_Config::get_file_path(void) const {
+	return m_file_dir;
+}
+
+std::string skc::SKC_Config::get_imgui_ini_file_path(void) const {
+	return path_combine(get_base_path(), c::FILENAME_IMGUI_INI);
+}
+
+std::string skc::SKC_Config::get_config_xml_full_path(void) const {
+	if (std::filesystem::exists(path_combine(m_base_dir, c::FILENAME_CONFIG_XML)))
+		return path_combine("./", c::FILENAME_CONFIG_XML);
+	else
+		return path_combine(m_base_dir, c::FILENAME_CONFIG_XML);
+}
+
+std::string skc::SKC_Config::path_combine(const std::string& p_folder, const std::string& p_filename) {
+	return p_folder + p_filename;
 }

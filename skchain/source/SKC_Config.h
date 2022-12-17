@@ -27,7 +27,7 @@ namespace skc {
 			m_length_mr_data, m_length_me_data, m_length_item_data, m_length_enemy_data;
 		unsigned int m_level_count, m_mirror_rate_count, m_mirror_enemy_count, m_gfx_tile_count;
 		int m_rom_ram_diff;
-		void load_config_xml(void);
+		void load_config_xml(const std::string& p_config_file_path);
 		std::vector<byte> m_rom_data;
 		std::vector<std::size_t> m_level_palettes;
 		std::vector<std::vector<std::string>> m_descriptions;
@@ -36,8 +36,11 @@ namespace skc {
 		std::vector<Metadata_item> m_meta_items;
 		std::deque<std::pair<std::string, int>> m_messages;
 
+		std::string m_base_dir, m_file_dir;
+
 	public:
-		SKC_Config(const std::vector<byte>& p_rom_data);
+		SKC_Config(const std::string& p_base_dir,
+			const std::string& p_filename);
 		const std::vector<byte>& get_rom_data(void) const;
 
 		std::size_t get_offset_gfx(void) const;
@@ -85,6 +88,13 @@ namespace skc {
 
 		void add_message(const std::string& p_message, int p_msg_type = c::MSG_CODE_INFO);
 		const std::deque<std::pair<std::string, int>>& get_messages(void) const;
+
+		// files and paths
+		static std::string path_combine(const std::string& p_folder, const std::string& p_filename);
+		std::string get_imgui_ini_file_path(void) const;
+		std::string get_config_xml_full_path(void) const;
+		std::string get_base_path(void) const;
+		std::string get_file_path(void) const;
 	};
 
 }

@@ -27,6 +27,7 @@ namespace skc {
 		std::map<std::size_t, std::vector<std::pair<std::size_t, position>>> m_meta_tiles;
 		std::vector<std::vector<bool>> m_drop_schedules;
 		std::vector<std::vector<byte>> m_drop_enemies;
+		std::optional<std::size_t> m_schedule_win_index;
 
 		bool is_selected_index_valid(void) const;
 		int get_selected_index_count(void) const;
@@ -50,6 +51,7 @@ namespace skc {
 		void draw_ui_selected_enemy(const SKC_Config& p_config);
 		void draw_ui_selected_mirror(std::size_t p_mirror_no, const SKC_Config& p_config);
 		void draw_ui_selected_metadata(const SKC_Config& p_config);
+		void draw_ui_metadata_drop_schedules(void);
 
 		bool is_valid_constellation(byte p_constellation) const;
 
