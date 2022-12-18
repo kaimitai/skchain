@@ -156,6 +156,9 @@
     <ClInclude Include="source\skc_constants\Constants_color.h">
       <Filter>Header Files\skc_constants</Filter>
     </ClInclude>
+    <ClInclude Include="source\Enemy_editor.h">
+      <Filter>Header Files\levels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\klib\klib_file.cpp">
@@ -235,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="source\skc_windows\SKC_Main_window_ui.cpp">
       <Filter>Source Files\skc_windows</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Enemy_editor.cpp">
+      <Filter>Source Files\levels</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

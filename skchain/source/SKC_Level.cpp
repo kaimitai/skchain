@@ -46,6 +46,10 @@ void skc::Level_element::set_position(const position& p_pos) {
 	m_position = p_pos;
 }
 
+void skc::Level_element::set_element_no(byte p_element_no) {
+	m_element_no = p_element_no;
+}
+
 skc::Level::Level(void) :
 	m_key_status{ c::DEFAULT_KEY_STATUS },
 	m_spawn_enemy_lifetime{ c::DEFAULT_SPAWN_ENEMY_LIFETIME },
@@ -274,6 +278,10 @@ void skc::Level::set_item_in_block(int p_index, bool p_value) {
 
 void skc::Level::set_item_position(int p_index, const position& l_pos) {
 	m_items.at(p_index).set_position(l_pos);
+}
+
+void skc::Level::set_enemy_no(int p_index, byte p_new_enemy_no) {
+	m_enemies.at(p_index).set_element_no(p_new_enemy_no);
 }
 
 void skc::Level::set_enemy_position(int p_index, const position& l_pos) {

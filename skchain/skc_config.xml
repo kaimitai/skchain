@@ -63,6 +63,8 @@
 	<!-- Overrides for rendering purposes -->
 	<metadata no="0x09" description="Player Start (left)" animation="70" />
 	<metadata no="0x10" description="Solomon's Key" animation="16" />
+	<!-- 0x11 and up to 0xef (theoretically) will represent meta-tiles, and will be generated
+         automatically by the application	-->
 	<!-- Keep the constellation bytes the same as their actual item values -->
     <metadata no="0xf0" description="Aries" animation="53" />
 	<metadata no="0xf1" description="Gemini" animation="54" />
@@ -140,7 +142,7 @@
   <enemy_definitions>
   
     <!-- 0x0c-0x0f and 0x10-0x13 are strange stationary fireballs -->
-	<!-- 0x14-0x17 are glithy gravity fairies and princesses -->
+	<!-- 0x14-0x17 are glitchy gravity fairies and princesses -->
 	<!-- 0x18-0x1a are mighty bomb jacks -->
 	<enemy no="0x18" description="Mighty Bomb Jack" animation="67" />
 	
@@ -157,107 +159,113 @@
     <enemy no="0x26" description="Panel Monster (up)" animation="51" />
     <enemy no="0x27" description="Panel Monster (down)" animation="52" />
 	
-	<enemy no="0x28" description="Fireball (right, ccw, fast)" animation="44" />
-    <enemy no="0x29" description="Fireball (left, cw, fast)" animation="44" />
-    <enemy no="0x2a" description="Fireball (up, cw, fast)" animation="44" />
-    <enemy no="0x2b" description="Fireball (down, ccw, fast)" animation="44" />
+	<enemy no="0x28" description="Fireball (right, ccw, speed 0)" animation="44" />
+    <enemy no="0x29" description="Fireball (left, cw, speed 0)" animation="44" />
+    <enemy no="0x2a" description="Fireball (up, cw, speed 0)" animation="44" />
+    <enemy no="0x2b" description="Fireball (down, ccw, speed 0)" animation="44" />
 	
-    <enemy no="0x2c" description="Fireball (right, ccw, very fast)" animation="44" />
-    <enemy no="0x2d" description="Fireball (left, cw, very fast)" animation="44" />
-    <enemy no="0x2e" description="Fireball (up, cw, very fast)" animation="44" />
-    <enemy no="0x2f" description="Fireball (down, ccv, very fast)" animation="44" />
+    <enemy no="0x2c" description="Fireball (right, ccw, speed 1)" animation="44" />
+    <enemy no="0x2d" description="Fireball (left, cw, speed 1)" animation="44" />
+    <enemy no="0x2e" description="Fireball (up, cw, speed 1)" animation="44" />
+    <enemy no="0x2f" description="Fireball (down, ccv, speed 1)" animation="44" />
 
-    <enemy no="0x30" description="Ghost (up)" animation="43" />
-    <enemy no="0x31" description="Ghost (up)" animation="43" />
-    <enemy no="0x32" description="Ghost (down)" animation="43" />
-    <enemy no="0x33" description="Ghost (down)" animation="43" />
-    <enemy no="0x34" description="Ghost (right)" animation="63" />
-    <enemy no="0x35" description="Ghost (right)" animation="63" />
-    <enemy no="0x36" description="Ghost (left)" animation="62" />
-    <enemy no="0x37" description="Ghost (left)" animation="62" />
-    <enemy no="0x38" description="Ghost (up, fast)" animation="43" />
-    <enemy no="0x39" description="Ghost (up, fast)" animation="43" />
-    <enemy no="0x3a" description="Ghost (down, fast)" animation="43" />
-    <enemy no="0x3b" description="Ghost (down, fast)" animation="43" />
-    <enemy no="0x3c" description="Ghost (right, fast)" animation="63" />
-    <enemy no="0x3d" description="Ghost (right, fast)" animation="63" />
-    <enemy no="0x3e" description="Ghost (left, fast)" animation="62" />
-    <enemy no="0x3f" description="Ghost (left, fast)" animation="62" />
+    <enemy no="0x30" description="Neul (up, speed 0)" animation="43" />
+    <enemy no="0x31" description="Neul (up, speed 0) #2" animation="43" />
+    <enemy no="0x32" description="Neul (down, speed 0)" animation="43" />
+    <enemy no="0x33" description="Neul (down, speed 0) #2" animation="43" />
 	
-    <enemy no="0x40" description="Ghost (up, fast, noslow)" animation="43" />
-    <enemy no="0x41" description="Ghost (up, fast, noslow)" animation="43" />
-    <enemy no="0x42" description="Ghost (down, fast, noslow)" animation="43" />
-    <enemy no="0x43" description="Ghost (down, fast, noslow)" animation="43" />
-    <enemy no="0x44" description="Ghost (right, fast, noslow)" animation="63" />
-    <enemy no="0x45" description="Ghost (right, fast, noslow)" animation="63" />
-    <enemy no="0x46" description="Ghost (left, fast, noslow)" animation="62" />
-    <enemy no="0x47" description="Ghost (left, fast, noslow)" animation="62" />
-    <enemy no="0x48" description="Ghost (up, very fast, noslow)" animation="43" />
-    <enemy no="0x49" description="Ghost (up, very fast, noslow)" animation="43" />
-    <enemy no="0x4a" description="Ghost (down, very fast, noslow)" animation="43" />
-    <enemy no="0x4b" description="Ghost (down, very fast, noslow)" animation="43" />
-    <enemy no="0x4c" description="Ghost (right, very fast, noslow)" animation="63" />
-    <enemy no="0x4d" description="Ghost (right, very fast, noslow)" animation="63" />
-    <enemy no="0x4e" description="Ghost (left, very fast, noslow)" animation="62" />
-    <enemy no="0x4f" description="Ghost (left, very fast, noslow)" animation="62" />
+    <enemy no="0x34" description="Ghost (right, speed 0)" animation="63" />
+    <enemy no="0x35" description="Ghost (right, speed 0) #2" animation="63" />
+    <enemy no="0x36" description="Ghost (left, speed 0)" animation="62" />
+    <enemy no="0x37" description="Ghost (left, speed 0) #2" animation="62" />
 	
-    <enemy no="0x50" description="Demonhead (right)" animation="71" />
-	<enemy no="0x51" description="Demonhead (left)" animation="71" />
-	<enemy no="0x52" description="Demonhead (right, fast)" animation="71" />
-	<enemy no="0x53" description="Demonhead (left, fast)" animation="71" />
-	<enemy no="0x54" description="Demonhead (right, fast)" animation="71" />
-	<enemy no="0x55" description="Demonhead (left, fast)" animation="71" />
-	<enemy no="0x56" description="Demonhead (right, fast)" animation="71" />
-	<enemy no="0x57" description="Demonhead (left, fast)" animation="71" />	
-	<enemy no="0x58" description="Demonhead (right, fast)" animation="71" />
-	<enemy no="0x59" description="Demonhead (left, fast)" animation="71" />
-	<enemy no="0x5a" description="Demonhead (right, very fast)" animation="71" />
-	<enemy no="0x5b" description="Demonhead (left, very fast)" animation="71" />
+    <enemy no="0x38" description="Neul (up, speed 1)" animation="43" />
+    <enemy no="0x39" description="Neul (up, speed 1) #2" animation="43" />
+    <enemy no="0x3a" description="Neul (down, speed 1)" animation="43" />
+    <enemy no="0x3b" description="Neul (down, speed 1) #2" animation="43" />
 	
-	<enemy no="0x5c" description="Saramandor (right, fast)" animation="73" />
-	<enemy no="0x5d" description="Saramandor (left, fast)" animation="72" />
-	<enemy no="0x5e" description="Saramandor (right, fast)" animation="73" />
-	<enemy no="0x5f" description="Saramandor (left, fast)" animation="72" />
-	<enemy no="0x60" description="Saramandor (right)" animation="73" />
-	<enemy no="0x61" description="Saramandor (left)" animation="72" />
-	<enemy no="0x62" description="Saramandor (right)" animation="73" />
-	<enemy no="0x63" description="Saramandor (left)" animation="72" />
-	<enemy no="0x64" description="Saramandor (right, very fast)" animation="73" />
-	<enemy no="0x65" description="Saramandor (left, very fast)" animation="72" />
-	<enemy no="0x66" description="Saramandor (right, very fast)" animation="73" />
-	<enemy no="0x67" description="Saramandor (left, very fast)" animation="72" />
+    <enemy no="0x3c" description="Ghost (right, speed 1)" animation="63" />
+    <enemy no="0x3d" description="Ghost (right, speed 1) #2" animation="63" />
+    <enemy no="0x3e" description="Ghost (left, speed 1)" animation="62" />
+    <enemy no="0x3f" description="Ghost (left, speed 1) #2" animation="62" />
 	
-    <enemy no="0x68" description="Dragon (right)" animation="64" />
-    <enemy no="0x69" description="Dragon (left)" animation="41" />
-	<enemy no="0x6a" description="Dragon (right)" animation="64" />
-	<enemy no="0x6b" description="Dragon (left)" animation="41" />
-    <enemy no="0x6c" description="Dragon (right,fast)" animation="64" />
-    <enemy no="0x6d" description="Dragon (left,fast)" animation="41" />
-	<enemy no="0x6e" description="Dragon (right,fast)" animation="64" />
-	<enemy no="0x6f" description="Dragon (left,fast)" animation="41" />
+    <enemy no="0x40" description="Neul (up, speed 2, noslow)" animation="43" />
+    <enemy no="0x41" description="Neul (up, speed 2, noslow) #2" animation="43" />
+    <enemy no="0x42" description="Neul (down, speed 2, noslow)" animation="43" />
+    <enemy no="0x43" description="Neul (down, speed 2, noslow) #2" animation="43" />
 	
-    <enemy no="0x70" description="Golem (right)" animation="65" />
-    <enemy no="0x71" description="Golem (left)" animation="40" />
-    <enemy no="0x72" description="Golem (right)" animation="65" />
-    <enemy no="0x73" description="Golem (left)" animation="40" />
-    <enemy no="0x74" description="Golem (right,fast)" animation="65" />
-    <enemy no="0x75" description="Golem (left,fast)" animation="40" />
-	<enemy no="0x76" description="Golem (right,fast)" animation="65" />
-	<enemy no="0x77" description="Golem (left,fast)" animation="40" />
+    <enemy no="0x44" description="Ghost (right, speed 2, noslow)" animation="63" />
+    <enemy no="0x45" description="Ghost (right, speed 2, noslow) #2" animation="63" />
+    <enemy no="0x46" description="Ghost (left, speed 2, noslow)" animation="62" />
+    <enemy no="0x47" description="Ghost (left, speed 2, noslow) #2" animation="62" />
+	
+    <enemy no="0x48" description="Neul (up, speed 3, noslow)" animation="43" />
+    <enemy no="0x49" description="Neul (up, speed 3, noslow) #2" animation="43" />
+    <enemy no="0x4a" description="Neul (down, speed 3, noslow)" animation="43" />
+    <enemy no="0x4b" description="Neul (down, speed 3, noslow) #2" animation="43" />
+	
+    <enemy no="0x4c" description="Ghost (right, speed 3, noslow)" animation="63" />
+    <enemy no="0x4d" description="Ghost (right, speed 3, noslow) #2" animation="63" />
+    <enemy no="0x4e" description="Ghost (left, speed 3, noslow)" animation="62" />
+    <enemy no="0x4f" description="Ghost (left, speed 3, noslow) #2" animation="62" />
+	
+    <enemy no="0x50" description="Demonhead (right, speed 0)" animation="71" />
+	<enemy no="0x51" description="Demonhead (left, speed 0)" animation="71" />
+	<enemy no="0x52" description="Demonhead (right, speed 0) #2" animation="71" />
+	<enemy no="0x53" description="Demonhead (left, speed 0) #2" animation="71" />
+	<enemy no="0x54" description="Demonhead (right, speed 1)" animation="71" />
+	<enemy no="0x55" description="Demonhead (left, speed 1)" animation="71" />
+	<enemy no="0x56" description="Demonhead (right, speed 1) #2" animation="71" />
+	<enemy no="0x57" description="Demonhead (left, speed 1) #2" animation="71" />	
+	<enemy no="0x58" description="Demonhead (right, speed 2)" animation="71" />
+	<enemy no="0x59" description="Demonhead (left, speed 2)" animation="71" />
+	<enemy no="0x5a" description="Demonhead (right, speed 2) #2" animation="71" />
+	<enemy no="0x5b" description="Demonhead (left, speed 2) #2" animation="71" />
+	
+	<enemy no="0x5c" description="Saramandor (right, speed 0)" animation="73" />
+	<enemy no="0x5d" description="Saramandor (left, speed 0)" animation="72" />
+	<enemy no="0x5e" description="Saramandor (right, speed 0) #2" animation="73" />
+	<enemy no="0x5f" description="Saramandor (left, speed 0) #2" animation="72" />
+	<enemy no="0x60" description="Saramandor (right, speed 1)" animation="73" />
+	<enemy no="0x61" description="Saramandor (left, speed 1)" animation="72" />
+	<enemy no="0x62" description="Saramandor (right, speed 1) #2" animation="73" />
+	<enemy no="0x63" description="Saramandor (left, speed 1) #2" animation="72" />
+	<enemy no="0x64" description="Saramandor (right, speed 2)" animation="73" />
+	<enemy no="0x65" description="Saramandor (left, speed 2)" animation="72" />
+	<enemy no="0x66" description="Saramandor (right, speed 2) #2" animation="73" />
+	<enemy no="0x67" description="Saramandor (left, speed 2) #2" animation="72" />
+	
+    <enemy no="0x68" description="Dragon (right, speed 0)" animation="64" />
+    <enemy no="0x69" description="Dragon (left, speed 0)" animation="41" />
+	<enemy no="0x6a" description="Dragon (right, speed 0) #2" animation="64" />
+	<enemy no="0x6b" description="Dragon (left, speed 0) #2" animation="41" />
+    <enemy no="0x6c" description="Dragon (right, speed 1)" animation="64" />
+    <enemy no="0x6d" description="Dragon (left, speed 1)" animation="41" />
+	<enemy no="0x6e" description="Dragon (right, speed 1) #2" animation="64" />
+	<enemy no="0x6f" description="Dragon (left, speed 1) #2" animation="41" />
+	
+    <enemy no="0x70" description="Golem (right, speed 0)" animation="65" />
+    <enemy no="0x71" description="Golem (left, speed 0)" animation="40" />
+    <enemy no="0x72" description="Golem (right, speed 0) #2" animation="65" />
+    <enemy no="0x73" description="Golem (left, speed 0) #2" animation="40" />
+    <enemy no="0x74" description="Golem (right, speed 1)" animation="65" />
+    <enemy no="0x75" description="Golem (left, speed 1)" animation="40" />
+	<enemy no="0x76" description="Golem (right, speed 1) #2" animation="65" />
+	<enemy no="0x77" description="Golem (left, speed 1) #2" animation="40" />
 
-    <enemy no="0x78" description="Gargoyle (right)" animation="66" />
-    <enemy no="0x79" description="Gargoyle (left)" animation="46" />
-	<enemy no="0x7a" description="Gargoyle (right)" animation="66" />
-	<enemy no="0x7b" description="Gargoyle (left)" animation="46" />
-	<enemy no="0x7c" description="Gargoyle (right,fast)" animation="66" />
-    <enemy no="0x7d" description="Gargoyle (left,fast)" animation="46" />
-	<enemy no="0x7e" description="Gargoyle (right,fast)" animation="66" />
-	<enemy no="0x7f" description="Gargoyle (left,fast)" animation="46" />
+    <enemy no="0x78" description="Gargoyle (right, speed 0)" animation="66" />
+    <enemy no="0x79" description="Gargoyle (left, speed 0)" animation="46" />
+	<enemy no="0x7a" description="Gargoyle (right, speed 0) #2" animation="66" />
+	<enemy no="0x7b" description="Gargoyle (left, speed 0) #2" animation="46" />
+	<enemy no="0x7c" description="Gargoyle (right, speed 1)" animation="66" />
+    <enemy no="0x7d" description="Gargoyle (left, speed 1)" animation="46" />
+	<enemy no="0x7e" description="Gargoyle (right, speed 1) #2" animation="66" />
+	<enemy no="0x7f" description="Gargoyle (left, speed 1) #2" animation="46" />
 
     <enemy no="0x80" description="Red Flame" animation="48" />
     <enemy no="0x81" description="White Flame" animation="47" />
-    <enemy no="0x82" description="Red Flame" animation="48" />
-    <enemy no="0x83" description="White Flame" animation="47" />
+    <enemy no="0x82" description="Red Flame #2" animation="48" />
+    <enemy no="0x83" description="White Flame #2" animation="47" />
 	
 	<!-- 0x84 and up are glitchy tiles, probably all undefined enemies -->
   </enemy_definitions>

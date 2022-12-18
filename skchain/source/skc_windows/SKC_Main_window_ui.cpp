@@ -146,13 +146,13 @@ void skc::SKC_Main_window::draw_ui_level_window(SKC_Config& p_config) {
 	std::string l_level_str{ "Level " + std::to_string(m_current_level + 1) + "###lvl" };
 	ImGui::Begin(l_level_str.c_str());
 
-	auto l_tileset{ imgui::slider("Tileset", l_level.get_tileset_no(), 0, 2) };
+	auto l_tileset{ imgui::slider<int>("Tileset", l_level.get_tileset_no(), 0, 2) };
 	if (l_tileset)
 		l_level.set_tileset_no(l_tileset.value());
-	auto l_time_decrease{ imgui::slider("Time Decrease Rate", l_level.get_time_decrease_rate(), 0, 15) };
+	auto l_time_decrease{ imgui::slider<int>("Time Decrease Rate", l_level.get_time_decrease_rate(), 0, 15) };
 	if (l_time_decrease)
 		l_level.set_time_decrease_rate(l_time_decrease.value());
-	auto l_spawn_life{ imgui::slider("Spawn Lifetime", l_level.get_spawn_enemy_lifetime(), 0, 255) };
+	auto l_spawn_life{ imgui::slider<int>("Spawn Lifetime", l_level.get_spawn_enemy_lifetime(), 0, 255) };
 	if (l_spawn_life)
 		l_level.set_spawn_enemy_lifetime(l_spawn_life.value());
 
@@ -217,11 +217,11 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 	byte l_spawn_index = l_level.get_spawn_schedule(p_mirror_no);
 	byte l_spawn_nmi_index = l_level.get_spawn_enemies(p_mirror_no);
 
-	auto l_schedule_no = skc::imgui::slider("Schedule",
+	auto l_schedule_no = skc::imgui::slider<int>("Schedule",
 		l_spawn_index, 0, p_config.get_mirror_rate_count() - 1);
 	if (l_schedule_no.has_value())
 		l_level.set_spawn_schedule(p_mirror_no, l_schedule_no.value());
-	auto l_nmi_set_no = skc::imgui::slider("Enemies",
+	auto l_nmi_set_no = skc::imgui::slider<int>("Enemies",
 		l_spawn_nmi_index, 0, p_config.get_mirror_enemy_count() - 1);
 	if (l_nmi_set_no.has_value())
 		l_level.set_spawn_enemies(p_mirror_no, l_nmi_set_no.value());
@@ -403,6 +403,23 @@ void skc::SKC_Main_window::draw_ui_selected_enemy(const SKC_Config& p_config) {
 	auto l_newpos{ imgui::position_sliders(l_enemies.at(l_index).get_position()) };
 	if (l_newpos)
 		l_level.set_enemy_position(l_index, l_newpos.value());
+
+	ImGui::Separator();
+	if (m_enemy_editor.has_direction(l_enemy_no)) {
+		auto l_direction = imgui::slider<std::size_t>("Direction", m_enemy_editor.get_direction(l_enemy_no), 0,
+			m_enemy_editor.get_direction_size(l_enemy_no) - 1);
+		if (l_direction)
+			l_level.set_enemy_no(l_index,
+				m_enemy_editor.get_enemy_no_by_direction(l_enemy_no, l_direction.value()));
+	}
+
+	if (m_enemy_editor.has_speed(l_enemy_no)) {
+		auto l_speed = imgui::slider<std::size_t>("Speed", m_enemy_editor.get_speed(l_enemy_no), 0,
+			m_enemy_editor.get_speed_size(l_enemy_no) - 1);
+		if (l_speed)
+			l_level.set_enemy_no(l_index,
+				m_enemy_editor.get_enemy_no_by_speed(l_enemy_no, l_speed.value()));
+	}
 }
 
 void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config) {
