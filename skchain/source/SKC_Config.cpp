@@ -332,10 +332,12 @@ std::string skc::SKC_Config::get_imgui_ini_file_path(void) const {
 }
 
 std::string skc::SKC_Config::get_config_xml_full_path(void) const {
-	if (std::filesystem::exists(path_combine(m_base_dir, c::FILENAME_CONFIG_XML)))
+	std::string l_exe_config_path{ path_combine(m_base_dir, c::FILENAME_CONFIG_XML) };
+
+	if (!std::filesystem::exists(l_exe_config_path))
 		return path_combine("./", c::FILENAME_CONFIG_XML);
 	else
-		return path_combine(m_base_dir, c::FILENAME_CONFIG_XML);
+		return l_exe_config_path;
 }
 
 std::string skc::SKC_Config::path_combine(const std::string& p_folder, const std::string& p_filename) {

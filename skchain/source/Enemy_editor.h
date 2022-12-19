@@ -67,6 +67,84 @@ namespace skc {
 		constexpr byte E_NEUL_S0_DOWN_1{ 0x32 };
 		constexpr byte E_NEUL_S0_DOWN_2{ 0x33 };
 
+		// neul speed 1
+		constexpr byte E_NEUL_S1_UP_1{ 0x38 };
+		constexpr byte E_NEUL_S1_UP_2{ 0x39 };
+		constexpr byte E_NEUL_S1_DOWN_1{ 0x3a };
+		constexpr byte E_NEUL_S1_DOWN_2{ 0x3b };
+
+		// neul speed 2
+		constexpr byte E_NEUL_S2_UP_1{ 0x40 };
+		constexpr byte E_NEUL_S2_UP_2{ 0x41 };
+		constexpr byte E_NEUL_S2_DOWN_1{ 0x42 };
+		constexpr byte E_NEUL_S2_DOWN_2{ 0x43 };
+
+		// neul speed 3
+		constexpr byte E_NEUL_S3_UP_1{ 0x48 };
+		constexpr byte E_NEUL_S3_UP_2{ 0x49 };
+		constexpr byte E_NEUL_S3_DOWN_1{ 0x4a };
+		constexpr byte E_NEUL_S3_DOWN_2{ 0x4b };
+
+		// ghosts speed 0
+		constexpr byte E_GHOST_S0_RIGHT_1{ 0x34 };
+		constexpr byte E_GHOST_S0_RIGHT_2{ 0x35 };
+		constexpr byte E_GHOST_S0_LEFT_1{ 0x36 };
+		constexpr byte E_GHOST_S0_LEFT_2{ 0x37 };
+
+		// ghosts speed 1
+		constexpr byte E_GHOST_S1_RIGHT_1{ 0x3c };
+		constexpr byte E_GHOST_S1_RIGHT_2{ 0x3d };
+		constexpr byte E_GHOST_S1_LEFT_1{ 0x3e };
+		constexpr byte E_GHOST_S1_LEFT_2{ 0x3f };
+
+		// ghosts speed 2
+		constexpr byte E_GHOST_S2_RIGHT_1{ 0x44 };
+		constexpr byte E_GHOST_S2_RIGHT_2{ 0x45 };
+		constexpr byte E_GHOST_S2_LEFT_1{ 0x46 };
+		constexpr byte E_GHOST_S2_LEFT_2{ 0x47 };
+
+		// ghosts speed 3
+		constexpr byte E_GHOST_S3_RIGHT_1{ 0x4c };
+		constexpr byte E_GHOST_S3_RIGHT_2{ 0x4d };
+		constexpr byte E_GHOST_S3_LEFT_1{ 0x4e };
+		constexpr byte E_GHOST_S3_LEFT_2{ 0x4f };
+
+		// demonheads speed 0
+		constexpr byte E_DH_S0_RIGHT_1{ 0x50 };
+		constexpr byte E_DH_S0_LEFT_1{ 0x51 };
+		constexpr byte E_DH_S0_RIGHT_2{ 0x52 };
+		constexpr byte E_DH_S0_LEFT_2{ 0x53 };
+
+		// demonheads speed 1
+		constexpr byte E_DH_S1_RIGHT_1{ 0x54 };
+		constexpr byte E_DH_S1_LEFT_1{ 0x55 };
+		constexpr byte E_DH_S1_RIGHT_2{ 0x56 };
+		constexpr byte E_DH_S1_LEFT_2{ 0x57 };
+
+		// demonheads speed 2
+		constexpr byte E_DH_S2_RIGHT_1{ 0x58 };
+		constexpr byte E_DH_S2_LEFT_1{ 0x59 };
+		constexpr byte E_DH_S2_RIGHT_2{ 0x5a };
+		constexpr byte E_DH_S2_LEFT_2{ 0x5b };
+
+		// saramandhors speed 0
+		constexpr byte E_SARA_S0_RIGHT_1{ 0x5c };
+		constexpr byte E_SARA_S0_LEFT_1{ 0x5d };
+		constexpr byte E_SARA_S0_RIGHT_2{ 0x5e };
+		constexpr byte E_SARA_S0_LEFT_2{ 0x5f };
+
+		// saramandhors speed 1
+		constexpr byte E_SARA_S1_RIGHT_1{ 0x60 };
+		constexpr byte E_SARA_S1_LEFT_1{ 0x61 };
+		constexpr byte E_SARA_S1_RIGHT_2{ 0x62 };
+		constexpr byte E_SARA_S1_LEFT_2{ 0x63 };
+
+		// saramandhors speed 2
+		constexpr byte E_SARA_S2_RIGHT_1{ 0x64 };
+		constexpr byte E_SARA_S2_LEFT_1{ 0x65 };
+		constexpr byte E_SARA_S2_RIGHT_2{ 0x66 };
+		constexpr byte E_SARA_S2_LEFT_2{ 0x67 };
+
 		// dragons speed 0
 		constexpr byte E_DRAGON_S0_RIGHT_1{ 0x68 };
 		constexpr byte E_DRAGON_S0_LEFT_1{ 0x69 };
@@ -102,6 +180,12 @@ namespace skc {
 		constexpr byte E_GARGOYLE_S1_LEFT_1{ 0x7d };
 		constexpr byte E_GARGOYLE_S1_RIGHT_2{ 0x7e };
 		constexpr byte E_GARGOYLE_S1_LEFT_2{ 0x7f };
+
+		// flames
+		constexpr byte E_FLAME_RED_1{ 0x80 };
+		constexpr byte E_FLAME_WHITE_1{ 0x81 };
+		constexpr byte E_FLAME_RED_2{ 0x82 };
+		constexpr byte E_FLAME_WHITE_2{ 0x83 };
 	}
 
 }

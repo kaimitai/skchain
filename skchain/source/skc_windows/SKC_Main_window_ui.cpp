@@ -116,11 +116,11 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 	}
 	ImGui::Separator();
 
-	auto l_lvl_no = imgui::slider("Level " + std::to_string(m_current_level + 1) +
-		"/" + std::to_string(m_levels.size()) + "###lvl", static_cast<int>(m_current_level) + 1,
-		1, static_cast<int>(m_levels.size()));
+	auto l_lvl_no = imgui::slider<std::size_t>("Level " + std::to_string(m_current_level + 1) +
+		"/" + std::to_string(m_levels.size()) + "###lvl", m_current_level + 1,
+		1, m_levels.size());
 	if (l_lvl_no)
-		m_current_level = static_cast<std::size_t>(l_lvl_no.value() - 1);
+		m_current_level = l_lvl_no.value() - 1;
 
 	ImGui::Separator();
 
@@ -406,19 +406,19 @@ void skc::SKC_Main_window::draw_ui_selected_enemy(const SKC_Config& p_config) {
 
 	ImGui::Separator();
 	if (m_enemy_editor.has_direction(l_enemy_no)) {
-		auto l_direction = imgui::slider<std::size_t>("Direction", m_enemy_editor.get_direction(l_enemy_no), 0,
-			m_enemy_editor.get_direction_size(l_enemy_no) - 1);
+		auto l_direction = imgui::slider<std::size_t>("Direction", m_enemy_editor.get_direction(l_enemy_no) + 1, 1,
+			m_enemy_editor.get_direction_size(l_enemy_no));
 		if (l_direction)
 			l_level.set_enemy_no(l_index,
-				m_enemy_editor.get_enemy_no_by_direction(l_enemy_no, l_direction.value()));
+				m_enemy_editor.get_enemy_no_by_direction(l_enemy_no, l_direction.value() - 1));
 	}
 
 	if (m_enemy_editor.has_speed(l_enemy_no)) {
-		auto l_speed = imgui::slider<std::size_t>("Speed", m_enemy_editor.get_speed(l_enemy_no), 0,
-			m_enemy_editor.get_speed_size(l_enemy_no) - 1);
+		auto l_speed = imgui::slider<std::size_t>("Speed", m_enemy_editor.get_speed(l_enemy_no) + 1, 1,
+			m_enemy_editor.get_speed_size(l_enemy_no));
 		if (l_speed)
 			l_level.set_enemy_no(l_index,
-				m_enemy_editor.get_enemy_no_by_speed(l_enemy_no, l_speed.value()));
+				m_enemy_editor.get_enemy_no_by_speed(l_enemy_no, l_speed.value() - 1));
 	}
 }
 

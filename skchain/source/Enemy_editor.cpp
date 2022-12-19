@@ -14,6 +14,42 @@ skc::Enemy_editor::Enemy_editor(void) {
 		{c::E_FB_S0_RIGHT, c::E_FB_S0_LEFT, c::E_FB_S0_UP, c::E_FB_S0_DOWN},
 		{c::E_FB_S1_RIGHT, c::E_FB_S1_LEFT, c::E_FB_S1_UP, c::E_FB_S1_DOWN},
 
+		// neul sets
+		{c::E_NEUL_S0_UP_1, c::E_NEUL_S0_DOWN_1},
+		{c::E_NEUL_S0_UP_2, c::E_NEUL_S0_DOWN_2},
+		{c::E_NEUL_S1_UP_1, c::E_NEUL_S1_DOWN_1},
+		{c::E_NEUL_S1_UP_2, c::E_NEUL_S1_DOWN_2},
+		{c::E_NEUL_S2_UP_1, c::E_NEUL_S2_DOWN_1},
+		{c::E_NEUL_S2_UP_2, c::E_NEUL_S2_DOWN_2},
+		{c::E_NEUL_S3_UP_1, c::E_NEUL_S3_DOWN_1},
+		{c::E_NEUL_S3_UP_2, c::E_NEUL_S3_DOWN_2},
+
+		// ghost sets
+		{c::E_GHOST_S0_RIGHT_1, c::E_GHOST_S0_LEFT_1},
+		{c::E_GHOST_S0_RIGHT_2, c::E_GHOST_S0_LEFT_2},
+		{c::E_GHOST_S1_RIGHT_1, c::E_GHOST_S1_LEFT_1},
+		{c::E_GHOST_S1_RIGHT_2, c::E_GHOST_S1_LEFT_2},
+		{c::E_GHOST_S2_RIGHT_1, c::E_GHOST_S2_LEFT_1},
+		{c::E_GHOST_S2_RIGHT_2, c::E_GHOST_S2_LEFT_2},
+		{c::E_GHOST_S3_RIGHT_1, c::E_GHOST_S3_LEFT_1},
+		{c::E_GHOST_S3_RIGHT_2, c::E_GHOST_S3_LEFT_2},
+
+		// demonhead sets
+		{c::E_DH_S0_RIGHT_1, c::E_DH_S0_LEFT_1},
+		{c::E_DH_S0_RIGHT_2, c::E_DH_S0_LEFT_2},
+		{c::E_DH_S1_RIGHT_1, c::E_DH_S1_LEFT_1},
+		{c::E_DH_S1_RIGHT_2, c::E_DH_S1_LEFT_2},
+		{c::E_DH_S2_RIGHT_1, c::E_DH_S2_LEFT_1},
+		{c::E_DH_S2_RIGHT_2, c::E_DH_S2_LEFT_2},
+
+		// saramandor sets
+		{c::E_SARA_S0_RIGHT_1, c::E_SARA_S0_LEFT_1},
+		{c::E_SARA_S0_RIGHT_2, c::E_SARA_S0_LEFT_2},
+		{c::E_SARA_S1_RIGHT_1, c::E_SARA_S1_LEFT_1},
+		{c::E_SARA_S1_RIGHT_2, c::E_SARA_S1_LEFT_2},
+		{c::E_SARA_S2_RIGHT_1, c::E_SARA_S2_LEFT_1},
+		{c::E_SARA_S2_RIGHT_2, c::E_SARA_S2_LEFT_2},
+
 		// dragon sets
 		{c::E_DRAGON_S0_LEFT_1, c::E_DRAGON_S0_RIGHT_1},
 		{c::E_DRAGON_S0_LEFT_2, c::E_DRAGON_S0_RIGHT_2},
@@ -39,6 +75,30 @@ skc::Enemy_editor::Enemy_editor(void) {
 		{c::E_FB_S0_LEFT, c::E_FB_S1_LEFT},
 		{c::E_FB_S0_UP, c::E_FB_S1_UP},
 		{c::E_FB_S0_DOWN, c::E_FB_S1_DOWN},
+
+		// neul sets
+		{c::E_NEUL_S0_DOWN_1, c::E_NEUL_S1_DOWN_1, c::E_NEUL_S2_DOWN_1, c::E_NEUL_S3_DOWN_1},
+		{c::E_NEUL_S0_DOWN_2, c::E_NEUL_S1_DOWN_2, c::E_NEUL_S2_DOWN_2, c::E_NEUL_S3_DOWN_2},
+		{c::E_NEUL_S0_UP_1, c::E_NEUL_S1_UP_1, c::E_NEUL_S2_UP_1, c::E_NEUL_S3_UP_1},
+		{c::E_NEUL_S0_UP_2, c::E_NEUL_S1_UP_2, c::E_NEUL_S2_UP_2, c::E_NEUL_S3_UP_2},
+
+		// ghost sets
+		{c::E_GHOST_S0_RIGHT_1, c::E_GHOST_S1_RIGHT_1, c::E_GHOST_S2_RIGHT_1, c::E_GHOST_S3_RIGHT_1},
+		{c::E_GHOST_S0_RIGHT_2, c::E_GHOST_S1_RIGHT_2, c::E_GHOST_S2_RIGHT_2, c::E_GHOST_S3_RIGHT_2},
+		{c::E_GHOST_S0_LEFT_1, c::E_GHOST_S1_LEFT_1, c::E_GHOST_S2_LEFT_1, c::E_GHOST_S3_LEFT_1},
+		{c::E_GHOST_S0_LEFT_2, c::E_GHOST_S1_LEFT_2, c::E_GHOST_S2_LEFT_2, c::E_GHOST_S3_LEFT_2},
+
+		// demonhead sets
+		{c::E_DH_S0_RIGHT_1, c::E_DH_S1_RIGHT_1, c::E_DH_S2_RIGHT_1},
+		{c::E_DH_S0_RIGHT_2, c::E_DH_S1_RIGHT_2, c::E_DH_S2_RIGHT_2},
+		{c::E_DH_S0_LEFT_1, c::E_DH_S1_LEFT_1, c::E_DH_S2_LEFT_1},
+		{c::E_DH_S0_LEFT_2, c::E_DH_S1_LEFT_2, c::E_DH_S2_LEFT_2},
+
+		// saramandor sets
+		{c::E_SARA_S0_RIGHT_1, c::E_SARA_S1_RIGHT_1, c::E_SARA_S2_RIGHT_1},
+		{c::E_SARA_S0_RIGHT_2, c::E_SARA_S1_RIGHT_2, c::E_SARA_S2_RIGHT_2},
+		{c::E_SARA_S0_LEFT_1, c::E_SARA_S1_LEFT_1, c::E_SARA_S2_LEFT_1},
+		{c::E_SARA_S0_LEFT_2, c::E_SARA_S1_LEFT_2, c::E_SARA_S2_LEFT_2},
 
 		// dragon sets
 		{c::E_DRAGON_S0_LEFT_1, c::E_DRAGON_S1_LEFT_1},
