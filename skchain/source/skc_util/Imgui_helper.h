@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 #include <optional>
+#include "./../skc_constants/Constants_color.h"
 #include "./../Enemy_editor.h"
 #include "./../common/imgui/imgui.h"
 #include "./../common/imgui/imgui_impl_sdl.h"
@@ -15,8 +16,8 @@ using position = std::pair<int, int>;
 namespace skc {
 	namespace imgui {
 
-		
-		template<class T=int>
+
+		template<class T = int>
 		std::optional<T> slider(const std::string& p_label,
 			T p_value, T p_min, T p_max) {
 			int l_value{ static_cast<int>(p_value) };
@@ -28,7 +29,9 @@ namespace skc {
 
 		std::optional<bool> checkbox(const std::string& p_label, bool p_value);
 		std::optional<position> position_sliders(const position& p_value);
-		bool button(const std::string& p_label, const std::string& p_tooltip = std::string());
+		bool button(const std::string& p_label,
+			const std::size_t p_style_no = c::COLOR_STYLE_NORMAL,
+			const std::string& p_tooltip = std::string());
 		std::optional<std::size_t> spawn_schedule(const std::vector<bool>& p_schedule, const std::string& p_id_prefix);
 		std::optional<byte> slider_enemy_properties(byte p_enemy_no, const skc::Enemy_editor& p_editor);
 	}

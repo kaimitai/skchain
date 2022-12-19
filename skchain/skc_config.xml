@@ -167,7 +167,7 @@
     <enemy no="0x2c" description="Fireball (right, ccw, speed 2)" animation="44" />
     <enemy no="0x2d" description="Fireball (left, cw, speed 2)" animation="44" />
     <enemy no="0x2e" description="Fireball (up, cw, speed 2)" animation="44" />
-    <enemy no="0x2f" description="Fireball (down, ccv, speed 2)" animation="44" />
+    <enemy no="0x2f" description="Fireball (down, ccw, speed 2)" animation="44" />
 
     <enemy no="0x30" description="Neul (up, speed 1)" animation="43" />
     <enemy no="0x31" description="Neul (up, speed 1) #2" animation="43" />

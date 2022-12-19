@@ -23,8 +23,25 @@ std::optional<position> skc::imgui::position_sliders(const position& p_value) {
 		return std::nullopt;
 }
 
-bool skc::imgui::button(const std::string& p_label, const std::string& p_tooltip_text) {
+bool skc::imgui::button(const std::string& p_label, const std::size_t p_style_no,
+	const std::string& p_tooltip_text) {
+
+	static std::vector<std::vector<ImVec4>> ls_color_styles{
+		{c::COLI_BLUE_DARK, c::COLI_BLUE, c::COLI_BLUE_ACTIVE, c::COLI_WHITE},
+		{c::COLI_GOLD, c::COLI_ORANGE, c::COLI_YELLOW, c::COLI_WHITE}
+	};
+
+	ImGui::PushStyleColor(ImGuiCol_Button, ls_color_styles.at(p_style_no).at(0));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ls_color_styles.at(p_style_no).at(1));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ls_color_styles.at(p_style_no).at(2));
+	ImGui::PushStyleColor(ImGuiCol_Text, ls_color_styles.at(p_style_no).at(3));
+
 	bool result{ ImGui::Button(p_label.c_str()) };
+
+	ImGui::PopStyleColor();
+	ImGui::PopStyleColor();
+	ImGui::PopStyleColor();
+	ImGui::PopStyleColor();
 
 	if (!p_tooltip_text.empty() && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
 		ImGui::SetTooltip(p_tooltip_text.c_str());

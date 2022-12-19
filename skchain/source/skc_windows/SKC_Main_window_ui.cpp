@@ -73,7 +73,7 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 		}
 	}
 
-	if (imgui::button("Load xml", "Hold ctrl to use this button")) {
+	if (imgui::button("Load xml", c::COLOR_STYLE_NORMAL, "Hold ctrl to use this button")) {
 		try {
 			auto l_meta_xml = skc::xml::load_metadata_xml("./xml", "level-metadata.xml");
 			m_drop_enemies = l_meta_xml.m_drop_enemies;
@@ -111,14 +111,14 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 
 	ImGui::Separator();
 	ImGui::Text("Metadata Editors");
-	if (imgui::button("Drop Schedules")) {
+	if (imgui::button("Drop Schedules", m_schedule_win_index ? c::COLOR_STYLE_ORANGE : c::COLOR_STYLE_NORMAL)) {
 		if (m_schedule_win_index)
 			m_schedule_win_index = std::nullopt;
 		else
 			m_schedule_win_index = 0;
 	}
 	ImGui::SameLine();
-	if (imgui::button("Enemy Sets")) {
+	if (imgui::button("Enemy Sets", m_enemy_set_win ? c::COLOR_STYLE_ORANGE : c::COLOR_STYLE_NORMAL)) {
 		if (m_enemy_set_win)
 			m_enemy_set_win = std::nullopt;
 		else
@@ -177,40 +177,14 @@ void skc::SKC_Main_window::draw_ui_level_window(SKC_Config& p_config) {
 
 	std::size_t l_tmp_selected_type = m_selected_type;
 
-	if (l_tmp_selected_type == c::ELM_TYPE_METADATA) {
-		ImGui::PushStyleColor(ImGuiCol_Button, c::COLI_YELLOW);
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.0f, 0.0f, 0.0f, 1.0f });
-	}
-	if (ImGui::Button("Meta"))
+	if (imgui::button("Meta", l_tmp_selected_type == c::ELM_TYPE_METADATA ? c::COLOR_STYLE_ORANGE : c::COLOR_STYLE_NORMAL))
 		m_selected_type = c::ELM_TYPE_METADATA;
-	if (l_tmp_selected_type == c::ELM_TYPE_METADATA) {
-		ImGui::PopStyleColor();
-		ImGui::PopStyleColor();
-	}
-
-	if (l_tmp_selected_type == c::ELM_TYPE_ITEM) {
-		ImGui::PushStyleColor(ImGuiCol_Button, c::COLI_YELLOW);
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.0f, 0.0f, 0.0f, 1.0f });
-	}
 	ImGui::SameLine();
-	if (ImGui::Button("Items"))
+	if (imgui::button("Items", l_tmp_selected_type == c::ELM_TYPE_ITEM ? c::COLOR_STYLE_ORANGE : c::COLOR_STYLE_NORMAL))
 		m_selected_type = c::ELM_TYPE_ITEM;
-	if (l_tmp_selected_type == c::ELM_TYPE_ITEM) {
-		ImGui::PopStyleColor();
-		ImGui::PopStyleColor();
-	}
-
-	if (l_tmp_selected_type == c::ELM_TYPE_ENEMY) {
-		ImGui::PushStyleColor(ImGuiCol_Button, c::COLI_YELLOW);
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.0f, 0.0f, 0.0f, 1.0f });
-	}
 	ImGui::SameLine();
-	if (ImGui::Button("Enemies"))
+	if (imgui::button("Enemies", l_tmp_selected_type == c::ELM_TYPE_ENEMY ? c::COLOR_STYLE_ORANGE : c::COLOR_STYLE_NORMAL))
 		m_selected_type = c::ELM_TYPE_ENEMY;
-	if (l_tmp_selected_type == c::ELM_TYPE_ENEMY) {
-		ImGui::PopStyleColor();
-		ImGui::PopStyleColor();
-	}
 
 	ImGui::Separator();
 
