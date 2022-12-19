@@ -71,20 +71,19 @@ void skc::Enemy_set_editor::draw_ui(std::vector<std::vector<byte>>& p_sets,
 			++m_current_monster_index;
 		}
 		ImGui::SameLine();
-		if (imgui::button("Delete") && l_set.size() > 1) {
+		if (imgui::button("Delete") && l_set.size() > 0) {
 			l_set.erase(begin(l_set) + m_current_monster_index);
 			if (m_current_monster_index > 0)
 				--m_current_monster_index;
-		}
-
-		if (imgui::button("Add from Tile Picker", c::COLOR_STYLE_NORMAL,
-			p_config.get_description(c::ELM_TYPE_ENEMY, p_available_monster_no)) && l_set.size() < 8) {
-			l_set.push_back(p_available_monster_no);
 		}
 	}
 	else
 		ImGui::Text("No enemy selected");
 
+	if (imgui::button("Add from Tile Picker", c::COLOR_STYLE_NORMAL,
+		p_config.get_description(c::ELM_TYPE_ENEMY, p_available_monster_no)) && l_set.size() < 8) {
+		l_set.push_back(p_available_monster_no);
+	}
 
 	ImGui::End();
 }

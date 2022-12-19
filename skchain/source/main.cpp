@@ -34,8 +34,8 @@ std::string get_file_full_path(int argc, char* args[]) {
 	if (argc > 1)
 		return args[1];
 	else {
-		return "./Solomon's Key (U) [!].nes";
-		//  return "./sk_test.nes";
+		//return "./Solomon's Key (U) [!].nes";
+		  return "./sk_test.nes";
 	}
 }
 
