@@ -27,6 +27,9 @@ void skc::SKC_Main_window::draw_ui(SKC_Config& p_config) {
 	if (m_schedule_win_index)
 		draw_ui_metadata_drop_schedules();
 
+	if (m_enemy_set_win)
+		m_enemy_set_win.value().draw_ui(m_drop_enemies, p_config, m_gfx, m_selected_picker_tile[c::ELM_TYPE_ENEMY], m_enemy_editor);
+
 	ImGui::Render();
 	ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
 }
@@ -114,6 +117,14 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 		else
 			m_schedule_win_index = 0;
 	}
+	ImGui::SameLine();
+	if (imgui::button("Enemy Sets")) {
+		if (m_enemy_set_win)
+			m_enemy_set_win = std::nullopt;
+		else
+			m_enemy_set_win = Enemy_set_editor();
+	}
+
 	ImGui::Separator();
 
 	auto l_lvl_no = imgui::slider<std::size_t>("Level " + std::to_string(m_current_level + 1) +
@@ -218,13 +229,13 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 	byte l_spawn_nmi_index = l_level.get_spawn_enemies(p_mirror_no);
 
 	auto l_schedule_no = skc::imgui::slider<int>("Schedule",
-		l_spawn_index, 0, p_config.get_mirror_rate_count() - 1);
-	if (l_schedule_no.has_value())
-		l_level.set_spawn_schedule(p_mirror_no, l_schedule_no.value());
+		l_spawn_index + 1, 1, p_config.get_mirror_rate_count());
+	if (l_schedule_no)
+		l_level.set_spawn_schedule(p_mirror_no, l_schedule_no.value() - 1);
 	auto l_nmi_set_no = skc::imgui::slider<int>("Enemies",
-		l_spawn_nmi_index, 0, p_config.get_mirror_enemy_count() - 1);
-	if (l_nmi_set_no.has_value())
-		l_level.set_spawn_enemies(p_mirror_no, l_nmi_set_no.value());
+		l_spawn_nmi_index + 1, 1, p_config.get_mirror_enemy_count());
+	if (l_nmi_set_no)
+		l_level.set_spawn_enemies(p_mirror_no, l_nmi_set_no.value() - 1);
 
 	ImGui::Separator();
 
@@ -405,28 +416,17 @@ void skc::SKC_Main_window::draw_ui_selected_enemy(const SKC_Config& p_config) {
 		l_level.set_enemy_position(l_index, l_newpos.value());
 
 	ImGui::Separator();
-	if (m_enemy_editor.has_direction(l_enemy_no)) {
-		auto l_direction = imgui::slider<std::size_t>("Direction", m_enemy_editor.get_direction(l_enemy_no) + 1, 1,
-			m_enemy_editor.get_direction_size(l_enemy_no));
-		if (l_direction)
-			l_level.set_enemy_no(l_index,
-				m_enemy_editor.get_enemy_no_by_direction(l_enemy_no, l_direction.value() - 1));
-	}
 
-	if (m_enemy_editor.has_speed(l_enemy_no)) {
-		auto l_speed = imgui::slider<std::size_t>("Speed", m_enemy_editor.get_speed(l_enemy_no) + 1, 1,
-			m_enemy_editor.get_speed_size(l_enemy_no));
-		if (l_speed)
-			l_level.set_enemy_no(l_index,
-				m_enemy_editor.get_enemy_no_by_speed(l_enemy_no, l_speed.value() - 1));
-	}
+	auto l_new_enemy_no{ imgui::slider_enemy_properties(l_enemy_no, m_enemy_editor) };
+	if (l_new_enemy_no)
+		l_level.set_enemy_no(l_index, l_new_enemy_no.value());
 }
 
 void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config) {
 	int l_index{ get_selected_index() };
 	bool l_is_meta_tile{ l_index >= c::MD_BYTE_NO_META_TILE_MIN };
 	std::size_t l_meta_tile_no{ l_is_meta_tile ?
-	m_meta_tiles.at(m_current_level).at(l_index - c::MD_BYTE_NO_META_TILE_MIN).first :
+	m_meta_tiles.at(m_current_level).at(static_cast<std::size_t>(l_index - c::MD_BYTE_NO_META_TILE_MIN)).first :
 	0 };
 
 	auto& l_level{ get_level() };

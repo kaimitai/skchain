@@ -62,3 +62,23 @@ std::optional<std::size_t> skc::imgui::spawn_schedule(const std::vector<bool>& p
 
 	return result;
 }
+
+std::optional<byte> skc::imgui::slider_enemy_properties(byte p_enemy_no, const skc::Enemy_editor& p_editor) {
+	std::optional<byte> result;
+
+	if (p_editor.has_direction(p_enemy_no)) {
+		auto l_direction = imgui::slider<std::size_t>("Direction", p_editor.get_direction(p_enemy_no) + 1, 1,
+			p_editor.get_direction_size(p_enemy_no));
+		if (l_direction)
+			result = p_editor.get_enemy_no_by_direction(p_enemy_no, l_direction.value() - 1);
+	}
+
+	if (p_editor.has_speed(p_enemy_no)) {
+		auto l_speed = imgui::slider<std::size_t>("Speed", p_editor.get_speed(p_enemy_no) + 1, 1,
+			p_editor.get_speed_size(p_enemy_no));
+		if (l_speed)
+			result = p_editor.get_enemy_no_by_speed(p_enemy_no, l_speed.value() - 1);
+	}
+
+	return result;
+}

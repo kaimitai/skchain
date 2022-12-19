@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 #include <optional>
+#include "./../Enemy_editor.h"
 #include "./../common/imgui/imgui.h"
 #include "./../common/imgui/imgui_impl_sdl.h"
 #include "./../common/imgui/imgui_impl_sdlrenderer.h"
@@ -29,6 +30,7 @@ namespace skc {
 		std::optional<position> position_sliders(const position& p_value);
 		bool button(const std::string& p_label, const std::string& p_tooltip = std::string());
 		std::optional<std::size_t> spawn_schedule(const std::vector<bool>& p_schedule, const std::string& p_id_prefix);
+		std::optional<byte> slider_enemy_properties(byte p_enemy_no, const skc::Enemy_editor& p_editor);
 	}
 }
 

@@ -159,6 +159,9 @@
     <ClInclude Include="source\Enemy_editor.h">
       <Filter>Header Files\levels</Filter>
     </ClInclude>
+    <ClInclude Include="source\Enemy_set_editor.h">
+      <Filter>Header Files\levels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\klib\klib_file.cpp">
@@ -240,6 +243,9 @@
       <Filter>Source Files\skc_windows</Filter>
     </ClCompile>
     <ClCompile Include="source\Enemy_editor.cpp">
+      <Filter>Source Files\levels</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Enemy_set_editor.cpp">
       <Filter>Source Files\levels</Filter>
     </ClCompile>
   </ItemGroup>

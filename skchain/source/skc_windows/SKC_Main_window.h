@@ -7,6 +7,7 @@
 #include "./../common/klib/User_input.h"
 #include "./../SKC_Config.h"
 #include "./../SKC_Level.h"
+#include "./../Enemy_set_editor.h"
 #include "./../Enemy_editor.h"
 #include "./../SKC_Gfx.h"
 
@@ -30,6 +31,7 @@ namespace skc {
 		std::vector<std::vector<bool>> m_drop_schedules;
 		std::vector<std::vector<byte>> m_drop_enemies;
 		std::optional<std::size_t> m_schedule_win_index;
+		std::optional<Enemy_set_editor> m_enemy_set_win;
 
 		bool is_selected_index_valid(void) const;
 		int get_selected_index_count(void) const;
