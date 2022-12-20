@@ -28,7 +28,8 @@ void skc::SKC_Main_window::draw_ui(SKC_Config& p_config) {
 		draw_ui_metadata_drop_schedules();
 
 	if (m_enemy_set_win)
-		m_enemy_set_win.value().draw_ui(m_drop_enemies, p_config, m_gfx, m_selected_picker_tile[c::ELM_TYPE_ENEMY],
+		m_enemy_set_win.value().draw_ui(m_drop_enemies, p_config, m_gfx,
+			m_selected_type == c::ELM_TYPE_ENEMY ? m_selected_picker_tile[c::ELM_TYPE_ENEMY] : 0,
 			p_config.get_enemy_editor());
 
 	ImGui::Render();
@@ -36,7 +37,8 @@ void skc::SKC_Main_window::draw_ui(SKC_Config& p_config) {
 }
 
 void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
-	ImGui::Begin("Main");
+
+	imgui::window("Main", c::WIN_MAIN_X, c::WIN_MAIN_Y, c::WIN_MAIN_W, c::WIN_MAIN_H);
 
 	if (ImGui::Button("Save xml"))
 		save_xml_files(p_config);
@@ -93,15 +95,16 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 void skc::SKC_Main_window::draw_ui_level_window(SKC_Config& p_config) {
 	auto& l_level{ get_level() };
 	std::string l_level_str{ "Level " + std::to_string(m_current_level + 1) + "###lvl" };
-	ImGui::Begin(l_level_str.c_str());
+	
+	imgui::window(l_level_str, c::WIN_LEVEL_X, c::WIN_LEVEL_Y, c::WIN_LEVEL_W, c::WIN_LEVEL_H);
 
 	auto l_tileset{ imgui::slider<int>("Tileset", l_level.get_tileset_no(), 0, 2) };
 	if (l_tileset)
 		l_level.set_tileset_no(l_tileset.value());
-	auto l_time_decrease{ imgui::slider<int>("Time Decrease Rate", l_level.get_time_decrease_rate(), 0, 15) };
+	auto l_time_decrease{ imgui::slider<int>("Time Rate", l_level.get_time_decrease_rate(), 0, 15) };
 	if (l_time_decrease)
 		l_level.set_time_decrease_rate(l_time_decrease.value());
-	auto l_spawn_life{ imgui::slider<int>("Spawn Lifetime", l_level.get_spawn_enemy_lifetime(), 0, 255) };
+	auto l_spawn_life{ imgui::slider<int>("Spawn Life", l_level.get_spawn_enemy_lifetime(), 0, 255) };
 	if (l_spawn_life)
 		l_level.set_spawn_enemy_lifetime(l_spawn_life.value());
 
@@ -258,7 +261,7 @@ void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_conf
 
 	l_stw_desc += "###stw";
 
-	ImGui::Begin(l_stw_desc.c_str());
+	imgui::window(l_stw_desc, c::WIN_STW_X, c::WIN_STW_Y, c::WIN_STW_W, c::WIN_STW_H);
 
 	if (l_index_valid) {
 		auto& l_level{ get_level() };
@@ -300,6 +303,12 @@ void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_conf
 			draw_ui_selected_enemy(p_config);
 		else if (m_selected_type == c::ELM_TYPE_METADATA)
 			draw_ui_selected_metadata(p_config);
+
+		if (m_selected_type != c::ELM_TYPE_METADATA) {
+			ImGui::Separator();
+			if (imgui::button("Delete", c::COLOR_STYLE_RED))
+				delete_selected_index();
+		}
 	}
 	else {
 		ImGui::Text("No element selected");
@@ -377,7 +386,7 @@ void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config)
 }
 
 void skc::SKC_Main_window::draw_ui_metadata_drop_schedules(void) {
-	ImGui::Begin("Mirror Drop Schedules");
+	imgui::window("Mirror Drop Schedules", c::WIN_DS_X, c::WIN_DS_Y, c::WIN_DS_W, c::WIN_DS_H);
 
 	auto l_nv{ imgui::slider("Schedule###mdds",
 		static_cast<int>(m_schedule_win_index.value() + 1),

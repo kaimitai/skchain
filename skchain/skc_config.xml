@@ -189,25 +189,25 @@
     <enemy no="0x3e" description="Ghost (left, speed 2)" animation="62" />
     <enemy no="0x3f" description="Ghost (left, speed 2) #2" animation="62" />
 	
-    <enemy no="0x40" description="Neul (up, speed 3, noslow)" animation="43" />
-    <enemy no="0x41" description="Neul (up, speed 3, noslow) #2" animation="43" />
-    <enemy no="0x42" description="Neul (down, speed 3, noslow)" animation="43" />
-    <enemy no="0x43" description="Neul (down, speed 3, noslow) #2" animation="43" />
+    <enemy no="0x40" description="Neul (up, speed 1, noslow)" animation="43" />
+    <enemy no="0x41" description="Neul (up, speed 1, noslow) #2" animation="43" />
+    <enemy no="0x42" description="Neul (down, speed 1, noslow)" animation="43" />
+    <enemy no="0x43" description="Neul (down, speed 1, noslow) #2" animation="43" />
 	
-    <enemy no="0x44" description="Ghost (right, speed 3, noslow)" animation="63" />
-    <enemy no="0x45" description="Ghost (right, speed 3, noslow) #2" animation="63" />
-    <enemy no="0x46" description="Ghost (left, speed 3, noslow)" animation="62" />
-    <enemy no="0x47" description="Ghost (left, speed 3, noslow) #2" animation="62" />
+    <enemy no="0x44" description="Ghost (right, speed 1, noslow)" animation="63" />
+    <enemy no="0x45" description="Ghost (right, speed 1, noslow) #2" animation="63" />
+    <enemy no="0x46" description="Ghost (left, speed 1, noslow)" animation="62" />
+    <enemy no="0x47" description="Ghost (left, speed 1, noslow) #2" animation="62" />
 	
-    <enemy no="0x48" description="Neul (up, speed 4, noslow)" animation="43" />
-    <enemy no="0x49" description="Neul (up, speed 4, noslow) #2" animation="43" />
-    <enemy no="0x4a" description="Neul (down, speed 4, noslow)" animation="43" />
-    <enemy no="0x4b" description="Neul (down, speed 4, noslow) #2" animation="43" />
+    <enemy no="0x48" description="Neul (up, speed 2, noslow)" animation="43" />
+    <enemy no="0x49" description="Neul (up, speed 2, noslow) #2" animation="43" />
+    <enemy no="0x4a" description="Neul (down, speed 2, noslow)" animation="43" />
+    <enemy no="0x4b" description="Neul (down, speed 2, noslow) #2" animation="43" />
 	
-    <enemy no="0x4c" description="Ghost (right, speed 4, noslow)" animation="63" />
-    <enemy no="0x4d" description="Ghost (right, speed 4, noslow) #2" animation="63" />
-    <enemy no="0x4e" description="Ghost (left, speed 4, noslow)" animation="62" />
-    <enemy no="0x4f" description="Ghost (left, speed 4, noslow) #2" animation="62" />
+    <enemy no="0x4c" description="Ghost (right, speed 2, noslow)" animation="63" />
+    <enemy no="0x4d" description="Ghost (right, speed 2, noslow) #2" animation="63" />
+    <enemy no="0x4e" description="Ghost (left, speed 2, noslow)" animation="62" />
+    <enemy no="0x4f" description="Ghost (left, speed 2, noslow) #2" animation="62" />
 	
     <enemy no="0x50" description="Demonhead (right, speed 1)" animation="71" />
 	<enemy no="0x51" description="Demonhead (left, speed 1)" animation="75" />
@@ -278,15 +278,15 @@
 		<bundle no="2" enemies="0x2a,0x2e" />
 		<bundle no="3" enemies="0x2b,0x2f" />
 		<!-- neul sets -->
-		<bundle no="4" enemies="0x32,0x3a,0x42,0x4a" />
-		<bundle no="5" enemies="0x33,0x3b,0x43,0x4b" />
-		<bundle no="6" enemies="0x30,0x38,0x40,0x48" />
-		<bundle no="7" enemies="0x31,0x39,0x41,0x49" />
+		<bundle no="4" enemies="0x32,0x42,0x3a,0x4a" />
+		<bundle no="5" enemies="0x33,0x43,0x3b,0x4b" />
+		<bundle no="6" enemies="0x30,0x40,0x38,0x48" />
+		<bundle no="7" enemies="0x31,0x41,0x39,0x49" />
 		<!-- ghost sets -->
-		<bundle no="8" enemies="0x34,0x3c,0x44,0x4c" />
-		<bundle no="9" enemies="0x35,0x3d,0x45,0x4d" />
-		<bundle no="10" enemies="0x36,0x3e,0x46,0x4e" />
-		<bundle no="11" enemies="0x37,0x3f,0x47,0x4f" />
+		<bundle no="8" enemies="0x34,0x44,0x3c,0x4c" />
+		<bundle no="9" enemies="0x35,0x45,0x3d,0x4d" />
+		<bundle no="10" enemies="0x36,0x46,0x3e,0x4e" />
+		<bundle no="11" enemies="0x37,0x47,0x3f,0x4f" />
 		<!-- demonhead sets -->
 		<bundle no="12" enemies="0x50,0x54,0x58" />
 		<bundle no="13" enemies="0x52,0x56,0x5a" />
@@ -393,7 +393,7 @@
 	  <section no="0" description="Ground" value="0x70,0x78,0x68,0x80,0x81" />
 	  <section no="1" desctiption="" value="0x28,0x50,0x5c" />
 	  <section no="2" description="Air" value="0x34,0x30,0x24,0x20" />
-	  <section no="5" description="Friends" value="0x1c,0x1d,0x18" />
+	  <section no="3" description="Friends" value="0x1c,0x1d,0x18" />
 	</tile_picker>
   </tile_pickers>
 

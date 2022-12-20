@@ -11,7 +11,8 @@ void skc::Enemy_set_editor::draw_ui(std::vector<std::vector<byte>>& p_sets,
 	byte p_available_monster_no,
 	const Enemy_editor& p_editor) {
 
-	ImGui::Begin("Mirror Enemy Sets");
+	imgui::window("Mirror Enemy Sets", c::WIN_ENEMYSET_X, c::WIN_ENEMYSET_Y,
+		c::WIN_ENEMYSET_W, c::WIN_ENEMYSET_H);
 
 	auto l_set_no{ imgui::slider<std::size_t>("Enemy Set", m_current_set_index + 1, 1, p_sets.size()) };
 	if (l_set_no)
@@ -80,7 +81,9 @@ void skc::Enemy_set_editor::draw_ui(std::vector<std::vector<byte>>& p_sets,
 	else
 		ImGui::Text("No enemy selected");
 
-	if (imgui::button("Add from Tile Picker", c::COLOR_STYLE_NORMAL,
+	if (p_available_monster_no == 0)
+		ImGui::Text("Select new enemies from the enemy tile picker");
+	else if (imgui::button("Add from Tile Picker", c::COLOR_STYLE_NORMAL,
 		p_config.get_description(c::ELM_TYPE_ENEMY, p_available_monster_no)) && l_set.size() < 8) {
 		l_set.push_back(p_available_monster_no);
 	}

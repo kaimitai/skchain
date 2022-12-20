@@ -23,12 +23,20 @@ std::optional<position> skc::imgui::position_sliders(const position& p_value) {
 		return std::nullopt;
 }
 
+void skc::imgui::window(const std::string& p_title, int p_x, int p_y, int p_w, int p_h) {
+	ImGui::SetNextWindowPos(ImVec2(static_cast<float>(p_x), static_cast<float>(p_y)), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(static_cast<float>(p_w), static_cast<float>(p_h)), ImGuiCond_FirstUseEver);
+
+	ImGui::Begin(p_title.c_str());
+}
+
 bool skc::imgui::button(const std::string& p_label, const std::size_t p_style_no,
 	const std::string& p_tooltip_text) {
 
 	static std::vector<std::vector<ImVec4>> ls_color_styles{
 		{c::COLI_BLUE_DARK, c::COLI_BLUE, c::COLI_BLUE_ACTIVE, c::COLI_WHITE},
-		{c::COLI_GOLD, c::COLI_ORANGE, c::COLI_YELLOW, c::COLI_WHITE}
+		{c::COLI_GOLD, c::COLI_ORANGE, c::COLI_YELLOW, c::COLI_WHITE},
+		{c::COLI_PINK_VR, c::COLI_PINK_DEEP, c::COLI_PINK, c::COLI_BLACK}
 	};
 
 	ImGui::PushStyleColor(ImGuiCol_Button, ls_color_styles.at(p_style_no).at(0));
