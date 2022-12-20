@@ -543,10 +543,15 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(SKC_Config& p_confi
 		}
 
 	// patch drop schedules
-	for (std::size_t i{ 0 }; i < p_config.get_mirror_rate_count(); ++i)
-		klib::util::append_or_overwrite_vector(l_output,
-			klib::util::bitmask_to_bytes(m_drop_schedules.at(i)),
-			p_config.get_offset_mirror_rate_data(i));
+	std::vector<byte> l_drop_data;
+
+	for (std::size_t i{ 0 }; i < p_config.get_mirror_rate_count(); ++i) {
+		std::vector<byte> l_drop_scehd{ klib::util::bitmask_to_bytes(m_drop_schedules[i]) };
+		l_drop_data.insert(end(l_drop_data), begin(l_drop_scehd), end(l_drop_scehd));
+	}
+
+
+	klib::util::append_or_overwrite_vector(l_output, l_drop_data, p_config.get_offset_mirror_rate_data(0));
 
 	// patch drop enemy sets table and drop enemy sets
 	std::vector<byte> l_enemy_sets_data;
@@ -567,6 +572,7 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(SKC_Config& p_confi
 	klib::util::append_or_overwrite_vector(l_output, l_enemy_sets_data,
 		p_config.get_offset_mirror_enemy_data(0));
 
+	check_data_section_size("Drop Schedule", l_drop_data.size(), p_config.get_length_mirror_rate_data());
 	check_data_section_size("Enemy Set", l_enemy_sets_data.size(), p_config.get_length_mirror_enemy_data());
 	check_data_section_size("Enemy", l_enemy_data.size(), p_config.get_length_enemy_data());
 	check_data_section_size("Item", l_item_data.size(), p_config.get_length_item_data());
