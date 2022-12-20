@@ -7,6 +7,7 @@
 #include <utility>
 #include <vector>
 #include "./skc_constants/Constants_application.h"
+#include "./Enemy_editor.h"
 
 using byte = unsigned char;
 
@@ -34,6 +35,7 @@ namespace skc {
 		std::vector<std::vector<std::pair<std::string, std::vector<byte>>>> m_tile_pickers;
 		std::map<std::size_t, std::pair<byte, std::size_t>> m_item_bitmasks;
 		std::vector<Metadata_item> m_meta_items;
+		skc::Enemy_editor m_enemy_editor;
 		std::deque<std::pair<std::string, int>> m_messages;
 
 		std::string m_base_dir, m_file_dir;
@@ -85,6 +87,7 @@ namespace skc {
 		std::pair<int, int> get_meta_tile_position(std::size_t p_index) const;
 		bool get_meta_tile_movable(std::size_t p_index) const;
 		const std::string& get_meta_tile_description(std::size_t p_index) const;
+		const skc::Enemy_editor& get_enemy_editor(void) const;
 
 		void add_message(const std::string& p_message, int p_msg_type = c::MSG_CODE_INFO);
 		const std::deque<std::pair<std::string, int>>& get_messages(void) const;

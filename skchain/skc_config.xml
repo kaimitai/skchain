@@ -270,6 +270,107 @@
 	<!-- 0x84 and up are glitchy tiles, probably all undefined enemies -->
   </enemy_definitions>
 
+  <enemy_editor>
+    <enemy_speeds>
+	    <!-- fireball sets -->
+		<bundle no="0" enemies="0x28,0x2c" />
+		<bundle no="1" enemies="0x29,0x2d" />
+		<bundle no="2" enemies="0x2a,0x2e" />
+		<bundle no="3" enemies="0x2b,0x2f" />
+		<!-- neul sets -->
+		<bundle no="4" enemies="0x32,0x3a,0x42,0x4a" />
+		<bundle no="5" enemies="0x33,0x3b,0x43,0x4b" />
+		<bundle no="6" enemies="0x30,0x38,0x40,0x48" />
+		<bundle no="7" enemies="0x31,0x39,0x41,0x49" />
+		<!-- ghost sets -->
+		<bundle no="8" enemies="0x34,0x3c,0x44,0x4c" />
+		<bundle no="9" enemies="0x35,0x3d,0x45,0x4d" />
+		<bundle no="10" enemies="0x36,0x3e,0x46,0x4e" />
+		<bundle no="11" enemies="0x37,0x3f,0x47,0x4f" />
+		<!-- demonhead sets -->
+		<bundle no="12" enemies="0x50,0x54,0x58" />
+		<bundle no="13" enemies="0x52,0x56,0x5a" />
+		<bundle no="14" enemies="0x51,0x55,0x59" />
+		<bundle no="15" enemies="0x53,0x57,0x5b" />
+		<!-- saramandor sets -->
+		<bundle no="16" enemies="0x5c,0x60,0x64" />
+		<bundle no="17" enemies="0x5e,0x62,0x66" />
+		<bundle no="18" enemies="0x5d,0x61,0x65" />
+		<bundle no="19" enemies="0x5f,0x63,0x67" />
+		<!-- dragon sets -->
+		<bundle no="20" enemies="0x69,0x6d" />
+		<bundle no="21" enemies="0x6b,0x6f" />
+		<bundle no="22" enemies="0x68,0x6c" />
+		<bundle no="23" enemies="0x6a,0x6e" />
+		<!-- golem sets -->
+		<bundle no="24" enemies="0x71,0x75" />
+		<bundle no="25" enemies="0x73,0x77" />
+		<bundle no="26" enemies="0x70,0x74" />
+		<bundle no="27" enemies="0x72,0x76" />
+		<!-- gargoyle sets -->
+		<bundle no="28" enemies="0x79,0x7d" />
+		<bundle no="29" enemies="0x7b,0x7f" />
+		<bundle no="30" enemies="0x78,0x7c" />
+		<bundle no="31" enemies="0x7a,0x7e" />
+	</enemy_speeds>
+	<enemy_directions>
+		<!-- bullets -->
+		<bundle no="0" enemies="0x20,0x21,0x22,0x23" />
+		<!-- panel monsters -->
+		<bundle no="1" enemies="0x24,0x25,0x26,0x27" />
+		<!-- fireball sets -->
+		<bundle no="2" enemies="0x28,0x29,0x2a,0x2b" />
+		<bundle no="3" enemies="0x2c,0x2d,0x2e,0x2f" />
+		<!-- neul sets -->
+		<bundle no="4" enemies="0x30,0x32" />
+		<bundle no="5" enemies="0x31,0x33" />
+		<bundle no="6" enemies="0x38,0x3a" />
+		<bundle no="7" enemies="0x39,0x3b" />
+		<bundle no="8" enemies="0x40,0x42" />
+		<bundle no="9" enemies="0x41,0x43" />
+		<bundle no="10" enemies="0x48,0x4a" />
+		<bundle no="11" enemies="0x49,0x4b" />
+		<!-- ghost sets -->
+		<bundle no="12" enemies="0x34,0x36" />
+		<bundle no="13" enemies="0x35,0x37" />
+		<bundle no="14" enemies="0x3c,0x3e" />
+		<bundle no="15" enemies="0x3d,0x3f" />
+		<bundle no="16" enemies="0x44,0x46" />
+		<bundle no="17" enemies="0x45,0x47" />
+		<bundle no="18" enemies="0x4c,0x4e" />
+		<bundle no="19" enemies="0x4d,0x4f" />
+		<!-- demonhead sets -->
+		<bundle no="20" enemies="0x50,0x51" />
+		<bundle no="21" enemies="0x52,0x53" />
+		<bundle no="22" enemies="0x54,0x55" />
+		<bundle no="23" enemies="0x56,0x57" />
+		<bundle no="24" enemies="0x58,0x59" />
+		<bundle no="25" enemies="0x5a,0x5b" />
+		<!-- saramandor sets -->
+		<bundle no="26" enemies="0x5c,0x5d" />
+		<bundle no="27" enemies="0x5e,0x5f" />
+		<bundle no="28" enemies="0x60,0x61" />
+		<bundle no="29" enemies="0x62,0x63" />
+		<bundle no="30" enemies="0x64,0x65" />
+		<bundle no="31" enemies="0x66,0x67" />
+		<!-- dragon sets -->
+		<bundle no="32" enemies="0x69,0x68" />
+		<bundle no="33" enemies="0x6b,0x6a" />
+		<bundle no="34" enemies="0x6d,0x6c" />
+		<bundle no="35" enemies="0x6f,0x6e" />
+		<!-- golem sets -->
+		<bundle no="36" enemies="0x71,0x70" />
+		<bundle no="37" enemies="0x73,0x72" />
+		<bundle no="38" enemies="0x75,0x74" />
+		<bundle no="39" enemies="0x77,0x76" />
+		<!-- gargoyle sets -->
+		<bundle no="40" enemies="0x79,0x78" />
+		<bundle no="41" enemies="0x7b,0x7a" />
+		<bundle no="42" enemies="0x7d,0x7c" />
+		<bundle no="43" enemies="0x7f,0x7e" />
+	</enemy_directions>
+  </enemy_editor>
+
   <tile_pickers>
     <!-- metadata tile picker -->
     <tile_picker no="0">

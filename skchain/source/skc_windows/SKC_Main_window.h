@@ -8,7 +8,6 @@
 #include "./../SKC_Config.h"
 #include "./../SKC_Level.h"
 #include "./../Enemy_set_editor.h"
-#include "./../Enemy_editor.h"
 #include "./../SKC_Gfx.h"
 
 using byte = unsigned char;
@@ -20,7 +19,6 @@ namespace skc {
 		SKC_Gfx m_gfx;
 		std::vector<skc::Level> m_levels;
 		std::size_t m_current_level;
-		Enemy_editor m_enemy_editor;
 		SDL_Texture* m_texture;
 
 		std::size_t m_selected_type; // 0 - metadata, 1 - items, 2 - enemies

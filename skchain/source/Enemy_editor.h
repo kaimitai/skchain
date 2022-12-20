@@ -19,7 +19,10 @@ namespace skc {
 			const std::vector<byte>& p_bundle) const;
 
 	public:
-		Enemy_editor(void);
+		Enemy_editor(void) = default;
+		void generate_maps(void);
+		void add_speed_bundle(const std::vector<byte>& p_enemy_list);
+		void add_direction_bundle(const std::vector<byte>& p_enemy_list);
 
 		bool has_direction(byte p_enemy_no) const;
 		bool has_speed(byte p_enemy_no) const;
@@ -186,6 +189,9 @@ namespace skc {
 		constexpr byte E_FLAME_WHITE_1{ 0x81 };
 		constexpr byte E_FLAME_RED_2{ 0x82 };
 		constexpr byte E_FLAME_WHITE_2{ 0x83 };
+
+		// texts
+		constexpr char TXT_ERR_MISCONFIG[]{ "Enemy property misconfiguration" };
 	}
 
 }

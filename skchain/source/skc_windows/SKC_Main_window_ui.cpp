@@ -28,7 +28,8 @@ void skc::SKC_Main_window::draw_ui(SKC_Config& p_config) {
 		draw_ui_metadata_drop_schedules();
 
 	if (m_enemy_set_win)
-		m_enemy_set_win.value().draw_ui(m_drop_enemies, p_config, m_gfx, m_selected_picker_tile[c::ELM_TYPE_ENEMY], m_enemy_editor);
+		m_enemy_set_win.value().draw_ui(m_drop_enemies, p_config, m_gfx, m_selected_picker_tile[c::ELM_TYPE_ENEMY],
+			p_config.get_enemy_editor());
 
 	ImGui::Render();
 	ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
@@ -391,7 +392,7 @@ void skc::SKC_Main_window::draw_ui_selected_enemy(const SKC_Config& p_config) {
 
 	ImGui::Separator();
 
-	auto l_new_enemy_no{ imgui::slider_enemy_properties(l_enemy_no, m_enemy_editor) };
+	auto l_new_enemy_no{ imgui::slider_enemy_properties(l_enemy_no, p_config.get_enemy_editor()) };
 	if (l_new_enemy_no)
 		l_level.set_enemy_no(l_index, l_new_enemy_no.value());
 }

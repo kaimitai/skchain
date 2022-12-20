@@ -114,6 +114,22 @@ void skc::SKC_Config::load_config_xml(const std::string& p_config_file_path) {
 		) = n_enemy.attribute(c::XML_ATTR_DESCRIPTION).as_string();
 	}
 
+	auto n_enemy_editor = n_meta.child(c::XML_TAG_ENEMY_EDITOR);
+	auto n_enemy_speeds = n_enemy_editor.child(c::XML_TAG_ENEMY_SPEEDS);
+	for (auto n_bundle = n_enemy_speeds.child(c::XML_TAG_BUNDLE); n_bundle;
+		n_bundle = n_bundle.next_sibling(c::XML_TAG_BUNDLE))
+		m_enemy_editor.add_speed_bundle(klib::util::string_split<byte>(
+			n_bundle.attribute(c::XML_TAG_ENEMIES).as_string(), ','
+			));
+
+	auto n_enemy_directions = n_enemy_editor.child(c::XML_TAG_ENEMY_DIRECTIONS);
+	for (auto n_bundle = n_enemy_directions.child(c::XML_TAG_BUNDLE); n_bundle;
+		n_bundle = n_bundle.next_sibling(c::XML_TAG_BUNDLE))
+		m_enemy_editor.add_direction_bundle(klib::util::string_split<byte>(
+			n_bundle.attribute(c::XML_TAG_ENEMIES).as_string(), ','
+			));
+	m_enemy_editor.generate_maps();
+
 	auto n_tilepickers = n_meta.child(c::XML_TAG_TILE_PICKERS);
 	for (auto n_tilepicker = n_tilepickers.child(c::XML_TAG_TILE_PICKER);
 		n_tilepicker;
@@ -342,4 +358,8 @@ std::string skc::SKC_Config::get_config_xml_full_path(void) const {
 
 std::string skc::SKC_Config::path_combine(const std::string& p_folder, const std::string& p_filename) {
 	return p_folder + p_filename;
+}
+
+const skc::Enemy_editor& skc::SKC_Config::get_enemy_editor(void) const {
+	return m_enemy_editor;
 }

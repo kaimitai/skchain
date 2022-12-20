@@ -19,6 +19,10 @@ namespace skc {
 		constexpr char XML_TAG_LEVEL_META_ITEM[]{ "level_meta_item" };
 		constexpr char XML_TAG_METADATA[]{ "metadata" };
 		constexpr char XML_TAG_ENEMY[]{ "enemy" };
+		constexpr char XML_TAG_ENEMY_EDITOR[]{ "enemy_editor" };
+		constexpr char XML_TAG_ENEMY_SPEEDS[]{ "enemy_speeds" };
+		constexpr char XML_TAG_ENEMY_DIRECTIONS[]{ "enemy_directions" };
+		constexpr char XML_TAG_BUNDLE[]{ "bundle" };
 		constexpr char XML_TAG_TILE_PICKERS[]{ "tile_pickers" };
 		constexpr char XML_TAG_TILE_PICKER[]{ "tile_picker" };
 		constexpr char XML_TAG_SECTION[]{ "section" };
