@@ -19,7 +19,8 @@
 
 skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config) :
 	m_gfx{ p_rnd, p_config }, m_current_level{ 0 }, m_selected_type{ 0 },
-	m_texture{ SDL_CreateTexture(p_rnd, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, c::LEVEL_W * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE) }
+	m_texture{ SDL_CreateTexture(p_rnd, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, c::LEVEL_W * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE) },
+	m_timer(255, 1, true)
 {
 	const auto& lr_rom_data{ p_config.get_rom_data() };
 
@@ -99,6 +100,8 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 	const klib::User_input& p_input,
 	skc::SKC_Config& p_config,
 	int p_screen_h) {
+
+	m_timer.move(p_delta_ms);
 
 	if (!ImGui::GetIO().WantCaptureMouse) {
 		if (p_input.mw_up() && m_current_level < m_levels.size() - 1)
@@ -418,9 +421,11 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 			l_pos = l_level.get_enemies().at(l_board_index).get_position();
 		else
 			l_pos = get_metadata_tile_position(l_board_index);
+
+		auto l_pulse_color{ klib::gfx::pulse_color(c::COL_YELLOW, c::COL_ORANGE, m_timer.get_frame()) };
 		klib::gfx::draw_rect(p_rnd,
 			l_pos.first * c::TILE_GFX_SIZE, l_pos.second * c::TILE_GFX_SIZE,
-			c::TILE_GFX_SIZE, c::TILE_GFX_SIZE, c::COL_YELLOW, 2);
+			c::TILE_GFX_SIZE, c::TILE_GFX_SIZE, l_pulse_color, 2);
 	}
 
 	SDL_SetRenderTarget(p_rnd, nullptr);
@@ -466,7 +471,6 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(SKC_Config& p_confi
 				l_msg_color);
 			if (p_actual_value > p_max_value)
 				throw std::runtime_error(p_section_name + " data section too big");
-
 	};
 
 	std::vector<byte> l_item_data, l_enemy_data, l_block_data;

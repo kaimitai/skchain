@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <utility>
 #include <vector>
+#include "./../common/klib/Timer.h"
 #include "./../common/klib/User_input.h"
 #include "./../SKC_Config.h"
 #include "./../SKC_Level.h"
@@ -30,6 +31,7 @@ namespace skc {
 		std::vector<std::vector<byte>> m_drop_enemies;
 		std::optional<std::size_t> m_schedule_win_index;
 		std::optional<Enemy_set_editor> m_enemy_set_win;
+		klib::Timer m_timer;
 
 		bool is_selected_index_valid(void) const;
 		int get_selected_index_count(void) const;

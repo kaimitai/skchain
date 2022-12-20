@@ -45,8 +45,14 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 	ImGui::SameLine();
 	if (ImGui::Button("Save IPS"))
 		save_ips_file(p_config);
+	ImGui::SameLine();
+	if (ImGui::Button("Save NES"))
+		save_nes_file(p_config);
 
-	if (imgui::button("Load xml", c::COLOR_STYLE_NORMAL, "Hold ctrl to use this button"))
+	bool l_ctrl = ImGui::GetIO().KeyCtrl;
+
+	if (imgui::button("Load xml", c::COLOR_STYLE_NORMAL, "Hold ctrl to use this button")
+		&& l_ctrl)
 		load_xml_files(p_config);
 
 	ImGui::Separator();
@@ -95,7 +101,7 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 void skc::SKC_Main_window::draw_ui_level_window(SKC_Config& p_config) {
 	auto& l_level{ get_level() };
 	std::string l_level_str{ "Level " + std::to_string(m_current_level + 1) + "###lvl" };
-	
+
 	imgui::window(l_level_str, c::WIN_LEVEL_X, c::WIN_LEVEL_Y, c::WIN_LEVEL_W, c::WIN_LEVEL_H);
 
 	auto l_tileset{ imgui::slider<int>("Tileset", l_level.get_tileset_no(), 0, 2) };
@@ -166,8 +172,7 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 		ImGui::Image(m_gfx.get_tile(c::ELM_TYPE_ENEMY, l_enemy_no, l_tileset),
 			{ c::TILE_GFX_SIZE, c::TILE_GFX_SIZE });
 
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-			ImGui::SetTooltip(p_config.get_description(c::ELM_TYPE_ENEMY, l_enemy_no).c_str());
+		imgui::tooltip_text(p_config.get_description(c::ELM_TYPE_ENEMY, l_enemy_no).c_str());
 
 		ImGui::SameLine();
 	}
@@ -198,8 +203,7 @@ void skc::SKC_Main_window::draw_tile_picker(const SKC_Config& p_config, std::siz
 					set_tile_selection(n);
 				}
 
-				if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-					ImGui::SetTooltip(p_config.get_description(p_element_types, n).c_str());
+				imgui::tooltip_text(p_config.get_description(p_element_types, n));
 
 				ImGui::PopID();
 				if (l_is_selected)
@@ -231,8 +235,7 @@ void skc::SKC_Main_window::draw_tile_picker(const SKC_Config& p_config, std::siz
 					set_tile_selection(l_id);
 				}
 
-				if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-					ImGui::SetTooltip(p_config.get_meta_tile_description(l_meta_elm_no).c_str());
+				imgui::tooltip_text(p_config.get_meta_tile_description(l_meta_elm_no));
 
 				ImGui::PopID();
 				if (l_is_selected)

@@ -25,7 +25,7 @@ namespace klib {
 		void put_pixel(SDL_Surface* srf, int x, int y, Uint32 pixel);
 		Uint32 get_pixel(SDL_Surface*, int, int);
 
-		SDL_Color pulse_color(SDL_Color a, SDL_Color b, float p_progress);
+		SDL_Color pulse_color(SDL_Color a, SDL_Color b, int p_progress);
 	}
 
 }

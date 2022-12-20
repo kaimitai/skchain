@@ -23,6 +23,11 @@ std::optional<position> skc::imgui::position_sliders(const position& p_value) {
 		return std::nullopt;
 }
 
+void skc::imgui::tooltip_text(const std::string& p_text) {
+	if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+		ImGui::SetTooltip(p_text.c_str());
+}
+
 void skc::imgui::window(const std::string& p_title, int p_x, int p_y, int p_w, int p_h) {
 	ImGui::SetNextWindowPos(ImVec2(static_cast<float>(p_x), static_cast<float>(p_y)), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(static_cast<float>(p_w), static_cast<float>(p_h)), ImGuiCond_FirstUseEver);

@@ -158,10 +158,12 @@ Uint32 klib::gfx::get_pixel(SDL_Surface* surface, int x, int y) {
 	}
 }
 
-SDL_Color klib::gfx::pulse_color(SDL_Color a, SDL_Color b, float p_progress) {
-	Uint8 cr = static_cast<Uint8>(a.r + (b.r - a.r) * p_progress);
-	Uint8 cg = static_cast<Uint8>(a.g + (b.g - a.g) * p_progress);
-	Uint8 cb = static_cast<Uint8>(a.b + (b.b - a.b) * p_progress);
-	Uint8 ca = static_cast<Uint8>(a.a + (b.a - a.a) * p_progress);
+SDL_Color klib::gfx::pulse_color(SDL_Color a, SDL_Color b, int p_progress) {
+	float l_progress{ static_cast<float>(p_progress / 255.0f) };
+
+	Uint8 cr = static_cast<Uint8>(a.r + (b.r - a.r) * l_progress);
+	Uint8 cg = static_cast<Uint8>(a.g + (b.g - a.g) * l_progress);
+	Uint8 cb = static_cast<Uint8>(a.b + (b.b - a.b) * l_progress);
+	Uint8 ca = static_cast<Uint8>(a.a + (b.a - a.a) * l_progress);
 	return SDL_Color{ cr,cg,cb,ca };
 }

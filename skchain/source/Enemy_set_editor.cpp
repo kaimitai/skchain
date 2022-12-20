@@ -29,11 +29,10 @@ void skc::Enemy_set_editor::draw_ui(std::vector<std::vector<byte>>& p_sets,
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
 		ImGui::PushID(l_id.c_str());
 
-		if (ImGui::ImageButton(p_gfx.get_enemy_tile(l_enemy_no, 0), { 32, 32 }))
+		if (ImGui::ImageButton(p_gfx.get_enemy_tile(l_enemy_no, 0), { c::TILE_GFX_SIZE, c::TILE_GFX_SIZE }))
 			m_current_monster_index = i;
 
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-			ImGui::SetTooltip(p_config.get_description(c::ELM_TYPE_ENEMY, l_enemy_no).c_str());
+		imgui::tooltip_text(p_config.get_description(c::ELM_TYPE_ENEMY, l_enemy_no));
 
 		ImGui::PopID();
 		if (l_is_selected)
