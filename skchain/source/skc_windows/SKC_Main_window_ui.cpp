@@ -38,77 +38,14 @@ void skc::SKC_Main_window::draw_ui(SKC_Config& p_config) {
 void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 	ImGui::Begin("Main");
 
-	if (ImGui::Button("Save xml")) {
-		try {
-			skc::xml::save_metadata_xml("./xml", "level-metadata.xml", m_meta_tiles,
-				m_drop_schedules,
-				m_drop_enemies,
-				p_config);
-			p_config.add_message("Saved metadata xml", c::MSG_CODE_SUCCESS);
-		}
-		catch (const std::exception& ex) {
-			p_config.add_message(ex.what(), c::MSG_CODE_ERROR);
-		}
-
-		int l_xml_out{ 0 };
-		for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
-			try {
-				skc::xml::save_level_xml(m_levels.at(i), "./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
-				++l_xml_out;
-			}
-			catch (const std::exception&) {}
-		}
-
-		p_config.add_message(std::to_string(l_xml_out) + " level xml files saved",
-			l_xml_out == p_config.get_level_count() ? c::MSG_CODE_SUCCESS : c::MSG_CODE_WARNING);
-	}
+	if (ImGui::Button("Save xml"))
+		save_xml_files(p_config);
 	ImGui::SameLine();
-	if (ImGui::Button("Save IPS")) {
-		try {
-			klib::file::write_bytes_to_file(klib::ips::generate_patch(p_config.get_rom_data(), generate_patch_bytes(p_config)),
-				"sk-output.ips");
-			p_config.add_message("IPS file generated", c::MSG_CODE_SUCCESS);
-		}
-		catch (const std::exception& ex) {
-			p_config.add_message(ex.what(), c::MSG_CODE_ERROR);
-		}
-	}
+	if (ImGui::Button("Save IPS"))
+		save_ips_file(p_config);
 
-	if (imgui::button("Load xml", c::COLOR_STYLE_NORMAL, "Hold ctrl to use this button")) {
-		try {
-			auto l_meta_xml = skc::xml::load_metadata_xml("./xml", "level-metadata.xml");
-			m_drop_enemies = l_meta_xml.m_drop_enemies;
-			m_drop_schedules = l_meta_xml.m_drop_schedules;
-
-			for (const auto& kv : l_meta_xml.m_meta_tiles) {
-				if (p_config.get_meta_tile_movable(kv.first)) {
-
-					// find the matching tile instance
-					for (auto& mkv : m_meta_tiles)
-						for (auto& mkvt : mkv.second)
-							if (mkvt.first == kv.first)
-								mkvt.second = kv.second;
-				}
-			}
-			p_config.add_message("Metadata xml file loaded", c::MSG_CODE_SUCCESS);
-		}
-		catch (const std::exception& ex) {
-			p_config.add_message(ex.what(), c::MSG_CODE_ERROR);
-		}
-
-		int l_import_count{ 0 };
-		for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
-			try {
-				auto l_level = skc::xml::load_level_xml("./xml", "level-" + klib::util::stringnum(i + 1, 2) + ".xml");
-				m_levels.at(i) = l_level;
-				reset_selections(i);
-				++l_import_count;
-			}
-			catch (const std::exception&) {}
-		}
-		p_config.add_message(std::to_string(l_import_count) + " level xml files loaded",
-			l_import_count == p_config.get_level_count() ? c::MSG_CODE_SUCCESS : c::MSG_CODE_WARNING);
-	}
+	if (imgui::button("Load xml", c::COLOR_STYLE_NORMAL, "Hold ctrl to use this button"))
+		load_xml_files(p_config);
 
 	ImGui::Separator();
 	ImGui::Text("Metadata Editors");

@@ -5,9 +5,10 @@
 #include "./skc_constants/Constants_application.h"
 #include "./common/klib/klib_file.h"
 #include "./common/klib/User_input.h"
+#include "./common/klib/klib_util.h"
 #include "./skc_windows/SKC_Main_window.h"
 #include "./SKC_Config.h"
-#include <iostream>
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -16,6 +17,8 @@
 #endif
 
 using byte = unsigned char;
+
+constexpr std::size_t ROM_FILE_SIZE{ 65552 };
 
 // try to return path to the executable folder
 std::string get_base_directory(void) {
@@ -30,12 +33,37 @@ std::string get_base_directory(void) {
 }
 
 // try to find an input nes-file
-std::string get_file_full_path(int argc, char* args[]) {
+std::string get_file_full_path(int argc, char* args[], const std::string& p_folder) {
 	if (argc > 1)
 		return args[1];
 	else {
-		//return "./Solomon's Key (U) [!].nes";
-		  return "./sk_test.nes";
+		std::string result;
+
+		for (const auto& ll_file :
+			std::filesystem::directory_iterator(p_folder)) {
+			if (ll_file.is_regular_file() && std::filesystem::file_size(ll_file) == ROM_FILE_SIZE) {
+				try {
+					std::filesystem::path l_file{ ll_file.path() };
+					std::string l_name{ l_file.filename().string() };
+					std::string l_ext = klib::util::to_lowercase(l_name.substr(l_name.find_last_of('.') + 1));
+
+					if (l_ext == "nes" && !klib::util::has_substring_caseless("-out", l_name)) {
+						if (klib::util::has_substring_caseless("solomon", l_name))
+							return "./" + l_name;
+						else
+							result = "./" + l_name;
+					}
+
+				}
+				catch (const std::exception&) {
+					// weird filename?
+					continue;
+				}
+			}
+		}
+
+
+		return result;
 	}
 }
 
@@ -71,8 +99,15 @@ int main(int argc, char* args[]) try {
 			ImGui::StyleColorsDark();
 			//ImGui::StyleColorsLight();
 
-			skc::SKC_Config l_config(get_base_directory(),
-				get_file_full_path(argc, args));
+			std::string l_base_dir{ get_base_directory() };
+			std::string l_load_file{ get_file_full_path(argc, args, "./") };
+			if (l_load_file.empty())
+				l_load_file = get_file_full_path(argc, args, l_base_dir);
+
+			if (l_load_file.empty())
+				throw std::runtime_error("Could not find ROM file");
+
+			skc::SKC_Config l_config(l_base_dir, l_load_file);
 
 			// Setup Platform/Renderer backends
 			ImGui_ImplSDL2_InitForSDLRenderer(l_window, l_rnd);

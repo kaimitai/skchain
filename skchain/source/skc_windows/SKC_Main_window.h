@@ -86,7 +86,10 @@ namespace skc {
 
 		// file
 		std::vector<byte> generate_patch_bytes(SKC_Config& p_config) const;
-		void save_nes_file(const std::string& p_file_path, SKC_Config& p_config) const;
+		void save_nes_file(SKC_Config& p_config) const;
+		void save_xml_files(SKC_Config& p_config) const;
+		void save_ips_file(SKC_Config& p_config) const;
+		void load_xml_files(SKC_Config& p_config);
 
 	public:
 		SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config);

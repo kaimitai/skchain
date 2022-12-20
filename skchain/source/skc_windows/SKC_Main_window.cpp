@@ -125,7 +125,7 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 		bool l_shift = p_input.is_shift_pressed();
 
 		if (p_input.is_ctrl_pressed() && p_input.is_pressed(SDL_SCANCODE_S))
-			save_nes_file("sk_test.nes", p_config);
+			save_nes_file(p_config);
 		else if (p_input.is_pressed(SDL_SCANCODE_DELETE) && is_selected_index_valid())
 			delete_selected_index();
 		else if (p_input.is_pressed(SDL_SCANCODE_KP_PLUS)) {
@@ -568,16 +568,6 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(SKC_Config& p_confi
 	check_data_section_size("Item", l_item_data.size(), p_config.get_length_item_data());
 
 	return l_output;
-}
-
-void skc::SKC_Main_window::save_nes_file(const std::string& p_file_path, SKC_Config& p_config) const {
-	try {
-		klib::file::write_bytes_to_file(generate_patch_bytes(p_config), p_file_path);
-		p_config.add_message("NES file generated", c::MSG_CODE_SUCCESS);
-	}
-	catch (const std::exception& ex) {
-		p_config.add_message(ex.what(), c::MSG_CODE_ERROR);
-	}
 }
 
 bool skc::SKC_Main_window::is_valid_constellation(byte p_constellation) const {

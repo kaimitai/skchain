@@ -20,6 +20,9 @@ namespace klib {
 		std::vector<bool> bytes_to_bitmask_1d(const std::vector<byte>& p_bytes, int p_w = 0, std::size_t p_start_pos = 0);
 		std::vector<byte> bitmask_to_bytes(const std::vector<bool>& p_bitmask);
 
+		std::string to_lowercase(const std::string& p_string);
+		bool has_substring_caseless(const std::string& p_needle, const std::string& p_haystack);
+
 		template<class T>
 		std::vector<std::vector<bool>> vec2_to_bitmask(const std::vector<std::vector<T>>& p_data, const std::set<T>& p_true_vals) {
 			std::vector<std::vector<bool>> result;

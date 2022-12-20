@@ -200,6 +200,7 @@
     <ClCompile Include="source\skc_util\Imgui_helper.cpp" />
     <ClCompile Include="source\skc_util\Xml_helper.cpp" />
     <ClCompile Include="source\skc_windows\SKC_Main_window.cpp" />
+    <ClCompile Include="source\skc_windows\SKC_Main_window_file.cpp" />
     <ClCompile Include="source\skc_windows\SKC_Main_window_ui.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

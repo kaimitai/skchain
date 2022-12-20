@@ -3,17 +3,14 @@
 #include <stdexcept>
 #include "./../skc_constants/Constants_application.h"
 #include "./../skc_constants/Constants_xml.h"
+#include "./../SKC_Config.h"
 #include "./../common/klib/klib_util.h"
-
-std::string skc::xml::get_full_file_path(const std::string& p_folder, const std::string& p_filename) {
-	return (p_folder + '/' + p_filename);
-}
 
 void skc::xml::save_xml_file(const pugi::xml_document& p_doc,
 	const std::string p_folder, const std::string p_filename) {
 
 	std::filesystem::create_directory(p_folder);
-	std::string l_file_path = get_full_file_path(p_folder, p_filename);
+	std::string l_file_path = SKC_Config::path_combine(p_folder, p_filename);
 	if (!p_doc.save_file(l_file_path.c_str()))
 		throw std::runtime_error("Could not save " + l_file_path);
 }
@@ -22,7 +19,7 @@ pugi::xml_document skc::xml::load_xml_file(const std::string p_folder,
 	const std::string p_filename) {
 
 	pugi::xml_document doc;
-	std::string l_filepath{ get_full_file_path(p_folder, p_filename) };
+	std::string l_filepath{ SKC_Config::path_combine(p_folder, p_filename) };
 	if (!doc.load_file(l_filepath.c_str()))
 		throw std::runtime_error("Could not load " + l_filepath);
 

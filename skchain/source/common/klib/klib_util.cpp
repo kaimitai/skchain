@@ -1,5 +1,7 @@
 #include "klib_util.h"
 
+#include <algorithm>
+
 using byte = unsigned char;
 
 std::vector<std::string> klib::util::string_split_strings(const std::string& p_values, char p_delimeter) {
@@ -78,4 +80,17 @@ std::vector<bool> klib::util::bytes_to_bitmask_1d(const std::vector<byte>& p_byt
 		p_w == 0 ? static_cast<int>(8 * (p_bytes.size() - p_start_pos)) : p_w,
 		1, p_start_pos) };
 	return l_tmp_2d.at(0);
+}
+
+std::string klib::util::to_lowercase(const std::string& p_string) {
+	std::string result{ p_string };
+	std::transform(begin(result), end(result), begin(result), ::tolower);
+	return result;
+}
+
+bool klib::util::has_substring_caseless(const std::string& p_needle, const std::string& p_haystack) {
+	std::string l_needle{ to_lowercase(p_needle) };
+	std::string l_haystack{ to_lowercase(p_haystack) };
+
+	return l_haystack.find(l_needle) != std::string::npos;
 }

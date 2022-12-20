@@ -38,7 +38,7 @@ namespace skc {
 		skc::Enemy_editor m_enemy_editor;
 		std::deque<std::pair<std::string, int>> m_messages;
 
-		std::string m_base_dir, m_file_dir;
+		std::string m_base_dir, m_file_dir, m_file_name;
 
 	public:
 		SKC_Config(const std::string& p_base_dir,
@@ -96,6 +96,11 @@ namespace skc {
 		static std::string path_combine(const std::string& p_folder, const std::string& p_filename);
 		std::string get_imgui_ini_file_path(void) const;
 		std::string get_config_xml_full_path(void) const;
+		std::string get_nes_output_file_path(void) const;
+		std::string get_ips_output_file_path(void) const;
+		std::string get_xml_path(void) const;
+		std::string get_level_xml_filename(std::size_t p_level_no) const;
+		std::string get_meta_xml_filename(void) const;
 		std::string get_base_path(void) const;
 		std::string get_file_path(void) const;
 	};

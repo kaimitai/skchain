@@ -32,8 +32,6 @@ namespace skc {
 		int wall_type_to_int(skc::Wall p_wall_type);
 		skc::Wall int_to_wall_type(int p_wall_type_no);
 
-		std::string get_full_file_path(const std::string& p_folder, const std::string& p_filename);
-
 	}
 }
 

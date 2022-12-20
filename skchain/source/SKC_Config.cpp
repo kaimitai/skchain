@@ -16,6 +16,12 @@ skc::SKC_Config::SKC_Config(const std::string& p_base_dir, const std::string& p_
 	this->load_config_xml(get_config_xml_full_path());
 	m_rom_data = klib::file::read_file_as_bytes(p_filename);
 	add_message("Loaded " + p_filename);
+
+	m_file_name = std::filesystem::path(p_filename).stem().string();
+	m_file_dir = std::filesystem::path(p_filename).parent_path().string();
+	if (m_file_dir.empty())
+		m_file_dir = ".";
+	m_file_dir += '/';
 }
 
 void skc::SKC_Config::load_config_xml(const std::string& p_config_file_path) {
@@ -358,6 +364,26 @@ std::string skc::SKC_Config::get_config_xml_full_path(void) const {
 
 std::string skc::SKC_Config::path_combine(const std::string& p_folder, const std::string& p_filename) {
 	return p_folder + p_filename;
+}
+
+std::string skc::SKC_Config::get_nes_output_file_path(void) const {
+	return m_file_dir + m_file_name + "-out.nes";
+}
+
+std::string skc::SKC_Config::get_ips_output_file_path(void) const {
+	return m_file_dir + m_file_name + "-out.ips";
+}
+
+std::string skc::SKC_Config::get_xml_path(void) const {
+	return m_file_dir + "xml/";
+}
+
+std::string skc::SKC_Config::get_level_xml_filename(std::size_t p_level_no) const {
+	return "level-" + klib::util::stringnum(p_level_no + 1, 2) + ".xml";
+}
+
+std::string skc::SKC_Config::get_meta_xml_filename(void) const {
+	return "levels-metadata.xml";
 }
 
 const skc::Enemy_editor& skc::SKC_Config::get_enemy_editor(void) const {
