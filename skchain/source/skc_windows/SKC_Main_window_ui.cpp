@@ -16,13 +16,14 @@
 #include <utility>
 #include <vector>
 
-void skc::SKC_Main_window::draw_ui(SKC_Config& p_config) {
+void skc::SKC_Main_window::draw_ui(SKC_Config& p_config,
+	const klib::User_input& p_input) {
 	ImGui_ImplSDLRenderer_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
 	this->draw_ui_main_window(p_config);
-	this->draw_ui_level_window(p_config);
+	this->draw_ui_tile_picker_window(p_config);
 	this->draw_ui_selected_tile_window(p_config);
 	if (m_schedule_win_index)
 		draw_ui_metadata_drop_schedules();
@@ -32,8 +33,85 @@ void skc::SKC_Main_window::draw_ui(SKC_Config& p_config) {
 			m_selected_type == c::ELM_TYPE_ENEMY ? m_selected_picker_tile[c::ELM_TYPE_ENEMY] : 0,
 			p_config.get_enemy_editor());
 
+	this->draw_ui_level_board(p_config, p_input);
+
 	ImGui::Render();
 	ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
+}
+
+void skc::SKC_Main_window::draw_ui_level_board(SKC_Config& p_config, const klib::User_input& p_input) {
+	auto& l_level{ get_level() };
+	std::string l_level_str{ "Level " + std::to_string(m_current_level + 1) + "###lvl" };
+
+	ImGui::Begin(l_level_str.c_str(), nullptr, ImGuiWindowFlags_NoScrollWithMouse);
+	bool l_win_focused{ ImGui::IsWindowFocused() };
+
+	ImVec2 l_wmin = ImGui::GetWindowContentRegionMin();
+	ImVec2 l_wmax = ImGui::GetWindowContentRegionMax();
+
+	constexpr float l_ow{ static_cast<float>(c::LEVEL_W * c::TILE_GFX_SIZE) };
+	constexpr float l_oh{ static_cast<float>(c::LEVEL_H * c::TILE_GFX_SIZE) };
+	float l_iw = (l_wmax.x - l_wmin.x);
+	float l_ih = (l_wmax.y - l_wmin.y);
+
+	float l_scale_w = l_iw / l_ow;
+	float l_scale_h = l_ih / l_oh;
+	float scale = std::min(l_scale_w, l_scale_h);
+
+	bool l_ctrl{ p_input.is_ctrl_pressed() };
+	bool l_shift{ p_input.is_shift_pressed() };
+	bool l_lclick{ p_input.mouse_held(true) };
+	bool l_rclick{ p_input.mouse_held(false) };
+	bool l_click{ l_lclick || l_rclick };
+	ImGuiIO& io = ImGui::GetIO();
+
+	ImGui::Image(m_texture, { l_ow * scale, l_oh * scale });
+
+	if (l_click && ImGui::IsItemHovered()) {
+		int lx = static_cast<int>(ImGui::GetItemRectMin().x);
+		int ly = static_cast<int>(ImGui::GetItemRectMin().y);
+		int lw = static_cast<int>(ImGui::GetItemRectMax().x - ImGui::GetItemRectMin().x);
+		int lh = static_cast<int>(ImGui::GetItemRectMax().y - ImGui::GetItemRectMin().y);
+
+		int tx = c::LEVEL_W * (static_cast<int>(io.MousePos.x) - lx) / lw;
+		int ty = c::LEVEL_H * (static_cast<int>(io.MousePos.y) - ly) / lh;
+		auto l_tpos{ std::make_pair(tx,ty) };
+
+		bool l_valid_tile{ tx >= 0 && tx < c::LEVEL_W&&
+			ty >= 0 && ty < c::LEVEL_H };
+
+		if (l_rclick && l_valid_tile)
+			right_click(l_tpos, p_config);
+		else if (l_lclick && l_valid_tile && l_win_focused) {
+			if (l_shift)
+				shift_click(l_tpos, p_config);
+			else
+				left_click(l_tpos, p_config);
+		}
+	}
+
+	ImGui::Separator();
+
+	ImGui::PushAllowKeyboardFocus(false);
+	auto l_tileset{ imgui::slider<int>("Tileset", l_level.get_tileset_no(), 0, 2) };
+	if (l_tileset)
+		l_level.set_tileset_no(l_tileset.value());
+	auto l_time_decrease{ imgui::slider<int>("Time Rate", l_level.get_time_decrease_rate(), 0, 15) };
+	if (l_time_decrease)
+		l_level.set_time_decrease_rate(l_time_decrease.value());
+	auto l_spawn_life{ imgui::slider<int>("Spawn Life", l_level.get_spawn_enemy_lifetime(), 0, 255) };
+	if (l_spawn_life)
+		l_level.set_spawn_enemy_lifetime(l_spawn_life.value());
+
+	if (l_level.has_constellation()) {
+		ImGui::Separator();
+		if (imgui::button("Remove constellation"))
+			l_level.delete_constellation();
+		ImGui::Separator();
+	}
+	ImGui::PopAllowKeyboardFocus();
+
+	ImGui::End();
 }
 
 void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
@@ -98,29 +176,8 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 	ImGui::End();
 }
 
-void skc::SKC_Main_window::draw_ui_level_window(SKC_Config& p_config) {
-	auto& l_level{ get_level() };
-	std::string l_level_str{ "Level " + std::to_string(m_current_level + 1) + "###lvl" };
-
-	imgui::window(l_level_str, c::WIN_LEVEL_X, c::WIN_LEVEL_Y, c::WIN_LEVEL_W, c::WIN_LEVEL_H);
-
-	auto l_tileset{ imgui::slider<int>("Tileset", l_level.get_tileset_no(), 0, 2) };
-	if (l_tileset)
-		l_level.set_tileset_no(l_tileset.value());
-	auto l_time_decrease{ imgui::slider<int>("Time Rate", l_level.get_time_decrease_rate(), 0, 15) };
-	if (l_time_decrease)
-		l_level.set_time_decrease_rate(l_time_decrease.value());
-	auto l_spawn_life{ imgui::slider<int>("Spawn Life", l_level.get_spawn_enemy_lifetime(), 0, 255) };
-	if (l_spawn_life)
-		l_level.set_spawn_enemy_lifetime(l_spawn_life.value());
-
-	ImGui::Separator();
-
-	if (l_level.has_constellation()) {
-		if (imgui::button("Remove constellation"))
-			l_level.delete_constellation();
-		ImGui::Separator();
-	}
+void skc::SKC_Main_window::draw_ui_tile_picker_window(SKC_Config& p_config) {
+	imgui::window("Element Picker", c::WIN_LEVEL_X, c::WIN_LEVEL_Y, c::WIN_LEVEL_W, c::WIN_LEVEL_H);
 
 	std::size_t l_tmp_selected_type = m_selected_type;
 

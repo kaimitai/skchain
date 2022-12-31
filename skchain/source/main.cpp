@@ -114,6 +114,7 @@ int main(int argc, char* args[]) try {
 			ImGui_ImplSDLRenderer_Init(l_rnd);
 			std::string l_ini_filename{ l_config.get_imgui_ini_file_path() };
 			ImGui::GetIO().IniFilename = l_ini_filename.c_str();
+			ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 
 			skc::SKC_Main_window main_window(l_rnd, l_config);
 			main_window.set_application_icon(l_window);
@@ -166,7 +167,7 @@ int main(int argc, char* args[]) try {
 
 				if (deltaDraw >= 25) { // capped frame rate of ~40 is ok
 					//main_window.draw(l_rnd, input, config, l_w, l_h);
-					main_window.draw(l_rnd, l_config, l_w, l_h);
+					main_window.draw(l_rnd, l_config, input, l_w, l_h);
 					last_draw_time = SDL_GetTicks();
 
 					//Update screen

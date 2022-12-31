@@ -108,20 +108,6 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 			++m_current_level;
 		else if (p_input.mw_down() && m_current_level > 0)
 			--m_current_level;
-		else if (p_input.mouse_held(false)) {
-			auto l_tile_pos = pixel_to_tile_pos(p_screen_h, p_input.mx(), p_input.my());
-			if (l_tile_pos.first < c::LEVEL_W && l_tile_pos.second < c::LEVEL_H)
-				right_click(l_tile_pos, p_config);
-		}
-		else if (p_input.mouse_held()) {
-			auto l_tile_pos = pixel_to_tile_pos(p_screen_h, p_input.mx(), p_input.my());
-			if (l_tile_pos.first < c::LEVEL_W && l_tile_pos.second < c::LEVEL_H) {
-				if (p_input.is_shift_pressed())
-					shift_click(l_tile_pos, p_config);
-				else
-					left_click(l_tile_pos, p_config);
-			}
-		}
 	}
 
 	if (!ImGui::GetIO().WantCaptureKeyboard) {
@@ -435,21 +421,23 @@ int skc::SKC_Main_window::get_tile_w(int p_screen_h) const {
 	return std::max<int>(1, p_screen_h / c::LEVEL_H);
 }
 
-void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, SKC_Config& p_config, int p_w, int p_h) {
+void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, SKC_Config& p_config,
+	const klib::User_input& p_input, int p_w, int p_h) {
 	this->generate_texture(p_rnd, p_config);
 
-	int l_tile_w{ get_tile_w(p_h) };
-	int l_screen_w = c::LEVEL_W * l_tile_w;
-	int l_screen_h = c::LEVEL_H * l_tile_w;
+	//int l_tile_w{ get_tile_w(p_h) };
+	//int l_screen_w = c::LEVEL_W * l_tile_w;
+	//int l_screen_h = c::LEVEL_H * l_tile_w;
 
 	SDL_SetRenderDrawColor(p_rnd, 126, 126, 255, 0);
 	SDL_RenderClear(p_rnd);
 
+	/*
 	klib::gfx::blit_full_spec(p_rnd, m_texture,
 		0, 0, l_screen_w, l_screen_h,
 		0, 0, c::LEVEL_W * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE);
-
-	this->draw_ui(p_config);
+		*/
+	this->draw_ui(p_config, p_input);
 }
 
 std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(SKC_Config& p_config) const {
