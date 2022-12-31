@@ -25,20 +25,25 @@ namespace skc {
 		constexpr char TXT_Y_POS[]{ "y-pos" };
 
 		// initial window positions and sizes
-		constexpr int WIN_MAIN_X{ 1030 };
+		constexpr int WIN_MAIN_X{ 715 };
 		constexpr int WIN_MAIN_Y{ 425 };
 		constexpr int WIN_MAIN_W{ 420 };
-		constexpr int WIN_MAIN_H{ 335 };
+		constexpr int WIN_MAIN_H{ 340 };
 
-		constexpr int WIN_LEVEL_X{ 1030 };
-		constexpr int WIN_LEVEL_Y{ 5 };
-		constexpr int WIN_LEVEL_W{ 420 };
-		constexpr int WIN_LEVEL_H{ 415 };
+		constexpr int WIN_BOARD_X{ 5 };
+		constexpr int WIN_BOARD_Y{ 5 };
+		constexpr int WIN_BOARD_W{ 705 };
+		constexpr int WIN_BOARD_H{ 660 };
 
-		constexpr int WIN_STW_X{ 745 };
-		constexpr int WIN_STW_Y{ 560 };
-		constexpr int WIN_STW_W{ 250 };
-		constexpr int WIN_STW_H{ 195 };
+		constexpr int WIN_EP_X{ 715 };
+		constexpr int WIN_EP_Y{ 5 };
+		constexpr int WIN_EP_W{ 420 };
+		constexpr int WIN_EP_H{ 415 };
+
+		constexpr int WIN_STW_X{ 1140 };
+		constexpr int WIN_STW_Y{ 5 };
+		constexpr int WIN_STW_W{ 315 };
+		constexpr int WIN_STW_H{ 760 };
 
 		constexpr int WIN_DS_X{ 10 };
 		constexpr int WIN_DS_Y{ 10 };

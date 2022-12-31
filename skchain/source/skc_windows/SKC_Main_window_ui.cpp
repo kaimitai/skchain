@@ -43,7 +43,8 @@ void skc::SKC_Main_window::draw_ui_level_board(SKC_Config& p_config, const klib:
 	auto& l_level{ get_level() };
 	std::string l_level_str{ "Level " + std::to_string(m_current_level + 1) + "###lvl" };
 
-	ImGui::Begin(l_level_str.c_str(), nullptr, ImGuiWindowFlags_NoScrollWithMouse);
+	//ImGui::Begin(l_level_str.c_str(), nullptr, ImGuiWindowFlags_NoScrollWithMouse);
+	imgui::window(l_level_str, c::WIN_BOARD_X, c::WIN_BOARD_Y, c::WIN_BOARD_W, c::WIN_BOARD_H);
 	bool l_win_focused{ ImGui::IsWindowFocused() };
 
 	ImVec2 l_wmin = ImGui::GetWindowContentRegionMin();
@@ -177,7 +178,7 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 }
 
 void skc::SKC_Main_window::draw_ui_tile_picker_window(SKC_Config& p_config) {
-	imgui::window("Element Picker", c::WIN_LEVEL_X, c::WIN_LEVEL_Y, c::WIN_LEVEL_W, c::WIN_LEVEL_H);
+	imgui::window("Element Picker", c::WIN_EP_X, c::WIN_EP_Y, c::WIN_EP_W, c::WIN_EP_H);
 
 	std::size_t l_tmp_selected_type = m_selected_type;
 
