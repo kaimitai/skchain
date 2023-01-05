@@ -11,5 +11,5 @@ The editor allows you to alter level data: Block layout, level enemies and items
 <br></br>
 The editor can save the edited levels as a patched ROM file (NES), or as a patch file (IPS). We also support our own xml format - which allows users to more easily compare file versions, use version control systems to track file history, and collaborate on level pack projects. One xml file will hold metadata changes, and the rest will represent each individual level.
 <br></br>
-### Comprehensible configuration xml
+### Comprehensive configuration xml
 The editor is in large parts defined by an external configuration xml. The default xml should be suitable for most users, but the config xml makes it possible to define the editor's graphics, element picker layout, element descriptions and more.
