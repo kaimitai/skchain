@@ -3,11 +3,20 @@
 <skchain app_version="0.1">
 
   <rom_metadata>
+  	<!-- US ROM specific -->
     <offset_mirror_rate_table offset="0x5c10" />
 	<offset_mirror_enemy_table offset="0x5c30" />
     <offset_enemy_table offset="0x5cfc" />
 	<offset_block_data offset="0x603c" />
 	<offset_item_table offset="0x6a2c" />
+  
+    <!-- EU ROM specific -->
+	<!--offset_mirror_rate_table offset="0x5b90" />
+	<offset_mirror_enemy_table offset="0x5bb0" />
+	<offset_enemy_table offset="0x5c7c" />
+	<offset_block_data offset="0x5fbc" />
+	<offset_item_table offset="0x69ac" / -->
+
 	<length_mirror_rate_data value="128" />
 	<length_mirror_enemy_data value="42" />
 	<length_enemy_data value="726" />
@@ -401,55 +410,55 @@
   <gfx_metadata>
     <palettes>
       <!-- background palettes red -->
-      <palette no="0" offset="0x0ed3" />
-      <palette no="1" offset="0x0ed7" />
-      <palette no="2" offset="0x0edb" />
-      <palette no="3" offset="0x0edf" />
+      <palette no="0" offset="0x07,0x10,0x30" />
+      <palette no="1" offset="0x07,0x27,0x30" />
+      <palette no="2" offset="0x07,0x2c,0x30" />
+      <palette no="3" offset="0x07,0x27,0x38" />
       <!-- sprite palettes -->
-      <palette no="4" offset="0x0ee3" />
-      <palette no="5" offset="0x0ee7" />
-      <palette no="6" offset="0x0eeb" />
-      <palette no="7" offset="0x0eef" />
+      <palette no="4" offset="0x26,0x29,0x30" />
+      <palette no="5" offset="0x30,0x16,0x27" />
+      <palette no="6" offset="0x16,0x10,0x30" />
+      <palette no="7" offset="0x2c,0x26,0x30" />
 	  <!-- background palettes cyan -->
 	  <palette no="8" offset="0x1c,0x10,0x30" />
       <palette no="9" offset="0x1c,0x27,0x30" />
       <palette no="10" offset="0x1c,0x2c,0x30" />
       <palette no="11" offset="0x1c,0x27,0x38" />
       <!-- sprite palettes -->
-      <palette no="12" offset="0x0ee3" />
-      <palette no="13" offset="0x0ee7" />
-      <palette no="14" offset="0x0eeb" />
-      <palette no="15" offset="0x0eef" />
+      <palette no="12" offset="0x26,0x29,0x30" />
+      <palette no="13" offset="0x30,0x16,0x27" />
+      <palette no="14" offset="0x16,0x10,0x30" />
+      <palette no="15" offset="0x2c,0x26,0x30" />
 	  <!-- background palettes purple -->
 	  <palette no="16" offset="0x04,0x10,0x30" />
       <palette no="17" offset="0x04,0x27,0x30" />
       <palette no="18" offset="0x04,0x2c,0x30" />
       <palette no="19" offset="0x04,0x27,0x38" />
       <!-- sprite palettes -->
-      <palette no="20" offset="0x0ee3" />
-      <palette no="21" offset="0x0ee7" />
-      <palette no="22" offset="0x0eeb" />
-      <palette no="23" offset="0x0eef" />
+      <palette no="20" offset="0x26,0x29,0x30" />
+      <palette no="21" offset="0x30,0x16,0x27" />
+      <palette no="22" offset="0x16,0x10,0x30" />
+      <palette no="23" offset="0x2c,0x26,0x30" />
 	  <!-- background palettes dark green -->
 	  <palette no="24" offset="0x09,0x10,0x30" />
       <palette no="25" offset="0x09,0x27,0x30" />
       <palette no="26" offset="0x09,0x2c,0x30" />
       <palette no="27" offset="0x09,0x27,0x38" />
       <!-- sprite palettes -->
-      <palette no="28" offset="0x0ee3" />
-      <palette no="29" offset="0x0ee7" />
-      <palette no="30" offset="0x0eeb" />
-      <palette no="31" offset="0x0eef" />
+      <palette no="28" offset="0x26,0x29,0x30" />
+      <palette no="29" offset="0x30,0x16,0x27" />
+      <palette no="30" offset="0x16,0x10,0x30" />
+      <palette no="31" offset="0x2c,0x26,0x30" />
 	  <!-- background palettes gray -->
 	  <palette no="32" offset="0x00,0x10,0x30" />
       <palette no="33" offset="0x00,0x27,0x30" />
       <palette no="34" offset="0x00,0x2c,0x30" />
       <palette no="35" offset="0x00,0x27,0x38" />
       <!-- sprite palettes -->
-      <palette no="36" offset="0x0ee3" />
-      <palette no="37" offset="0x0ee7" />
-      <palette no="38" offset="0x0eeb" />
-      <palette no="39" offset="0x0eef" />
+      <palette no="36" offset="0x26,0x29,0x30" />
+      <palette no="37" offset="0x30,0x16,0x27" />
+      <palette no="38" offset="0x16,0x10,0x30" />
+      <palette no="39" offset="0x2c,0x26,0x30" />
 	  
     </palettes>
 
