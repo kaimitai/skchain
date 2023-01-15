@@ -6,7 +6,7 @@
 * Demon Mirror Drop Rates
 * Demon Mirror Enemy Sets
 * Enemy Data
-* Block Data
+* [Block Data](#block-data)
 * Level Metadata and Item Data
 * Game Metadata
 * Map of Enemy Types
@@ -65,6 +65,22 @@ Example: Find the offset of the enemy data for Room 1 in an unmodified version o
 All data tables are decoded in this manner. By knowing the table offset, and the number of elements it contains the locations of - we can now deduce the start of any element's data section in the ROM file.
 
 Information on how decode the actual data for each section follows.
+
+<hr>
+
+## Block Data
+
+The block data section contains the definitions of the level block data, stored as bitmasks. Since each level is 16 by 12 tiles, one level's block definition containts (16x12)/8 = **24** bytes. Each level has a bitmask for brown (breakable) blocks, and white (unbreakable) blocks. The byte size is therefore 24x2 = **48** bytes per level, and with 53 levels the total block data section is 48x53 = **2544** bytes.
+
+For each level, the first 12 bytes define the brown blocks, and the next 12 bytes define the white blocks.
+
+The block data is read from top to bottom, left to right.
+
+<span style="color:lightgreen">
+Example: A given byte has value 0x63. In binary this is <b>01100011</b> This means that 4 of the 8 possible blocks are set: In this case at locations 2,3,7 and 8.
+</span>
+
+It is possible for a brown and white block to be set on the same location. In this case it will count as a white block.
 
 <hr>
 
