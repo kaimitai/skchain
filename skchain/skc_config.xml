@@ -99,13 +99,13 @@
 	<item no="0x05" description="Demon Mirror" animation="57" />
 	
     <item no="0x08" description="Diamond (blue, modifiable)" animation="10" />
-	<item no="0x09" description="Firejar (blue, modifiable)" animation="12" />
-	<item no="0x0a" description="Double Coin (gold, modifiable)" animation="35" />
+	<item no="0x09" description="Firejar (blue, modifiable)" animation="77" />
+	<item no="0x0a" description="Double Coin (gold, modifiable)" animation="79" />
     <item no="0x0b" description="Jewels (orange, modifiable)" animation="18" />
     <item no="0x0c" description="Diamond (orange, modifiable)" animation="11" />
-	<item no="0x0d" description="Firejar (orange, modifiable)" animation="13" />
-    <item no="0x0e" description="Scroll (modifiable)" animation="33" />
-	<item no="0x0f" description="Bell (modifiable)" animation="8" />
+	<item no="0x0d" description="Firejar (orange, modifiable)" animation="78" />
+    <item no="0x0e" description="Scroll (modifiable)" animation="80" />
+	<item no="0x0f" description="Bell (modifiable)" animation="76" />
 	
 	<!-- 0x10 nothing -->
     <item no="0x11" description="Timebottle (half)" animation="37" />
@@ -144,7 +144,7 @@
     <item no="0x32" description="Magic Lamp" animation="39" />
     <item no="0x33" description="E-bottle" animation="7" />
 	<!-- 0x33-0x36: glitch 1-ups -->
-	<!-- 0x34-0x39: garbage gfx -->
+	<!-- 0x37-0x3f: garbage gfx -->
   </item_definitions>
 
   <!-- each enemy mapped from byte value (0x01-0x83) to description and tile graphics indexes -->
@@ -612,6 +612,17 @@
 	  
 	  <!-- demonhead (left) -->
 	  <tile no="75" palette_no="7" nes_tiles="48,50,49,51" transparent="true" />
+
+	  <!-- modifiable indicators -->
+	  <!-- bell -->
+      <tile no="76" palette_no="3" nes_tiles="278,413,414,415" />
+	  <!-- firejars, blue and orange -->
+      <tile no="77" palette_no="2" nes_tiles="278,357,358,359" />
+      <tile no="78" palette_no="3" nes_tiles="278,357,358,359" />
+	  <!-- double coins, gold -->
+	  <tile no="79" palette_no="3" nes_tiles="278,384,310,386" />
+	  <!-- fire scroll -->
+      <tile no="80" palette_no="3" nes_tiles="278,409,410,411" />
 
     </tile_definitions>
 	

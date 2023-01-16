@@ -56,6 +56,7 @@ namespace skc {
 		constexpr unsigned int TILE_GFX_SIZE{ TILE_WIDTH * TILE_SCALE };
 		constexpr unsigned int SIZE_LEVEL_WALL_LAYER{ (LEVEL_W * LEVEL_H) / 8 };
 		constexpr unsigned int SIZE_LEVEL_WALLS{ 2 * SIZE_LEVEL_WALL_LAYER };
+		constexpr std::size_t ENEMY_COUNT_MAX{ 16 };
 
 		// metadata keys
 		constexpr byte MD_BYTE_NO_KEY{ 0x00 };

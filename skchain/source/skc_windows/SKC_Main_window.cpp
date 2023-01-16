@@ -20,7 +20,7 @@
 skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config) :
 	m_gfx{ p_rnd, p_config }, m_current_level{ 0 }, m_selected_type{ 0 },
 	m_texture{ SDL_CreateTexture(p_rnd, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, c::LEVEL_W * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE) },
-	m_timer(255, 1, true)
+	m_timer(255, 1, true), m_show_gridlines{ false }
 {
 	const auto& lr_rom_data{ p_config.get_rom_data() };
 
@@ -117,9 +117,8 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 			save_nes_file(p_config);
 		else if (p_input.is_pressed(SDL_SCANCODE_DELETE) && is_selected_index_valid())
 			delete_selected_index();
-		else if (p_input.is_pressed(SDL_SCANCODE_KP_PLUS)) {
-			byte l_tileset_no = get_level().get_tileset_no() + 1;
-			get_level().set_tileset_no(l_tileset_no > 2 ? 0 : l_tileset_no);
+		else if (p_input.is_pressed(SDL_SCANCODE_G)) {
+			m_show_gridlines = !m_show_gridlines;
 		}
 		else if (p_input.is_pressed(SDL_SCANCODE_TAB)) {
 			if (l_shift)
@@ -397,6 +396,19 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 	auto l_pstart = l_level.get_player_start_pos();
 	draw_tile(p_rnd, m_gfx.get_meta_tile(l_pstart.first >= c::LEVEL_W / 2 ? c::MD_BYTE_NO_PLAYER_START_LEFT : c::MD_BYTE_NO_PLAYER_START, l_tileset_no),
 		l_pstart.first, l_pstart.second);
+
+	// draw gridlines
+	if (m_show_gridlines) {
+		auto l_pulse_color{ klib::gfx::pulse_color(c::COL_WHITE, c::COL_GOLD, m_timer.get_frame()) };
+
+		SDL_SetRenderDrawColor(p_rnd, l_pulse_color.r,
+			l_pulse_color.g, l_pulse_color.b, 0);
+
+		for (int i{ 1 }; i < c::LEVEL_W; ++i)
+			SDL_RenderDrawLine(p_rnd, i * c::TILE_GFX_SIZE, 0, i * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE);
+		for (int i{ 1 }; i < c::LEVEL_H; ++i)
+			SDL_RenderDrawLine(p_rnd, 0, i * c::TILE_GFX_SIZE, c::LEVEL_W * c::TILE_GFX_SIZE, i * c::TILE_GFX_SIZE);
+	}
 
 	if (is_selected_index_valid()) {
 		std::pair<int, int> l_pos{ 0,0 };

@@ -21,6 +21,7 @@ namespace skc {
 		std::vector<skc::Level> m_levels;
 		std::size_t m_current_level;
 		SDL_Texture* m_texture;
+		bool m_show_gridlines;
 
 		std::size_t m_selected_type; // 0 - metadata, 1 - items, 2 - enemies
 		std::vector<byte> m_selected_picker_tile;	 // sub-selection

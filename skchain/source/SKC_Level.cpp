@@ -253,7 +253,8 @@ void skc::Level::add_item(byte p_item_no, const position& p_pos) {
 }
 
 void skc::Level::add_enemy(byte p_item_no, const position& p_pos) {
-	m_enemies.push_back(skc::Level_element(skc::Element_type::Enemy, p_pos, p_item_no));
+	if (m_enemies.size() < c::ENEMY_COUNT_MAX)
+		m_enemies.push_back(skc::Level_element(skc::Element_type::Enemy, p_pos, p_item_no));
 }
 
 void skc::Level::delete_item(int p_index) {
