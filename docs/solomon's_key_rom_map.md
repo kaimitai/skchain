@@ -224,18 +224,18 @@ In addition to the Demon Mirror [Drop Rates](#demon-mirror-drop-rates) and [Enem
 
 | Description | Offset (US/EU) | Offset (JP) | Type |
 | ----------- | -------------- | ----------- | ---- |
-| Level 20 bat symbols | 0x3ff2 | ? | 24-byte bitmask |
-| Level 30 blue opals | 0x400a | ? | 24-byte bitmask |
+| Level 20 bat symbols | 0x3ff2 | 0x3bc2 | 24-byte bitmask |
+| Level 30 blue opals | 0x400a | 0x3bda | 24-byte bitmask |
 | Bomb Jack (level 17) | 0x389f | ? | 1-byte position |
 | Bomb Jack (level 39) | 0x3994 | ? | 1-byte position |
-| Solomon's Seal (level 9) | 0x3fd6 | ? | 1-byte position |
-| Solomon's Seal (level 13) | 0x3fd7 | ? | 1-byte position |
-| Solomon's Seal (level 17) | 0x3fd8 | ? | 1-byte position |
-| Solomon's Seal (level 19) | 0x3fd9 | ? | 1-byte position |
-| Solomon's Seal (level 21) | 0x3fda | ? | 1-byte position |
-| Solomon's Seal (level 29) | 0x3fdb | ? | 1-byte position |
-| Solomon's Seal (level 46) | 0x3fdc | ? | 1-byte position |
-| Solomon's Seal (level 47) | 0x3fdd | ? | 1-byte position |
+| Solomon's Seal (level 9) | 0x3fd6 | 0x3ba6 | 1-byte position |
+| Solomon's Seal (level 13) | 0x3fd7 | 0x3ba7 | 1-byte position |
+| Solomon's Seal (level 17) | 0x3fd8 | 0x3ba8 | 1-byte position |
+| Solomon's Seal (level 19) | 0x3fd9 | 0x3ba9 | 1-byte position |
+| Solomon's Seal (level 21) | 0x3fda | 0x3baa | 1-byte position |
+| Solomon's Seal (level 29) | 0x3fdb | 0x3bab | 1-byte position |
+| Solomon's Seal (level 46) | 0x3fdc | 0x3bac | 1-byte position |
+| Solomon's Seal (level 47) | 0x3fdd | 0x3bad | 1-byte position |
 
 The 24-byte bitmasks are decoded just like layers of blocks. Instead of blocks, they are layers of items. For level 20 they describe bat symbols (item no 0x04) and for level 30 they descrive blue opals (item no 0x27).
 
@@ -467,7 +467,7 @@ Item codes 0xc0 and up are illegal, as they signify other things in the item dat
 <hr>
 
 ## Contact
-This document is written and maintained by Kai E. Frøland aka [kaimitai](https://github.com/kaimitai/skchain). If you have comments, corrections or other feedback - contact me at kaimiai@pm.me.
+This document is written and maintained by Kai E. Frøland aka [kaimitai](https://github.com/kaimitai/skchain). If you have comments, corrections or other feedback - contact me at kaimitai@pm.me.
 
 <hr>
 

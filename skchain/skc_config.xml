@@ -30,14 +30,20 @@
 	<!-- bitmasks which indicate a certain item overlay on a certain level; in the original game this is the bat symbols in level 20 and blue opals in level 30 -->
     <!-- this configuration will be used both when loading and saving data, to perform the necessary conversions -->
 	<item_bitmasks>
+	  <!-- US/EU bitmasks -->
 	  <item_bitmask level_no="19" item_no="0x04" offset="0x3ff2" />
 	  <item_bitmask level_no="29" item_no="0x27" offset="0x400a" />
+	  
+	  <!-- JP bitmasks -->
+	  <!--item_bitmask level_no="19" item_no="0x04" offset="0x3bc2" />
+	  <item_bitmask level_no="29" item_no="0x27" offset="0x3bda" /-->
 	</item_bitmasks>
 	<!-- meta items are solomon's seals, mighty bomb jack and tecmo bunny (position offset unknown) -->
 	<!-- in the future we hope to find out how to move these between levels -->
 	<!-- the tecmo bunny and page offsets are unknown at this point, so its position is static -->
 	<!-- TODO: Add overlay to breakable white blocks, and see if we can find the offsets -->
 	<level_meta_items>
+	  <!-- for JP ROM - the seals start at 0x3ba6 -->
 	  <level_meta_item no="0" description="Solomon's seal (meta)" level_no="8" animation="29" transparent="true" offset="0x3fd6" />
 	  <level_meta_item no="1" description="Solomon's seal (meta)" level_no="12" animation="29" transparent="true" offset="0x3fd7" />
 	  <level_meta_item no="2" description="Solomon's seal (meta)" level_no="16" animation="29" transparent="true" offset="0x3fd8" />
