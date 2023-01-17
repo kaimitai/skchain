@@ -117,9 +117,16 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 			save_nes_file(p_config);
 		else if (p_input.is_pressed(SDL_SCANCODE_DELETE) && is_selected_index_valid())
 			delete_selected_index();
-		else if (p_input.is_pressed(SDL_SCANCODE_G)) {
+		else if (p_input.is_pressed(SDL_SCANCODE_G))
 			m_show_gridlines = !m_show_gridlines;
-		}
+		else if (p_input.is_pressed(SDL_SCANCODE_UP) && m_current_level < m_levels.size() - 1)
+			++m_current_level;
+		else if (p_input.is_pressed(SDL_SCANCODE_DOWN) && m_current_level > 0)
+			--m_current_level;
+		else if (p_input.is_pressed(SDL_SCANCODE_END))
+			m_current_level = m_levels.size() - 1;
+		else if (p_input.is_pressed(SDL_SCANCODE_HOME))
+			m_current_level = 0;
 		else if (p_input.is_pressed(SDL_SCANCODE_TAB)) {
 			if (l_shift)
 				decrease_selected_index();

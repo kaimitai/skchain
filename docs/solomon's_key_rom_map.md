@@ -8,7 +8,7 @@
 * [Enemy Data](#enemy-data)
 * [Block Data](#block-data)
 * [Level Metadata and Item Data](#item-data)
-* Game Metadata
+* [Game Metadata and open questions](#game-metadata)
 * [Map of Enemy Types](#enemy-types)
 * [Map of Item Types](#item-types)
 * [Contact](#contact)
@@ -35,6 +35,14 @@ There are several data tables in the ROM: Demon Mirror Drop Rates, Demon Mirror 
 | Item Data | 0x6a96 | 0x6a16 | 1402 |
 
 Information on how to decode the data tables, and the actual data they point to, follows. All numbers which start with **0x** are hexadecimal values. Otherwise, they are decimal.
+
+The document often refers to 1-byte positions. The gameboard is 16x12 tiles, and we will call the top left corner position (0, 0).
+
+Given a position byte, the high nibble is the y-position plus one, and the low nibble is the x-position. For example the value 0xb5 gives the position:
+
+**(0x5, 0xb - 1) = (0x5, 0xa) = (5, 10)**
+
+A high nibble value of 0 gives a y-value of -1, which is not visible on the screen. (this is used to hide the key and door on some of the special rooms)
 
 <hr>
 
@@ -108,8 +116,6 @@ Every two bytes will thus define an enemy, until the end-of-stream delimiter 0x0
 
 See the [Enemy Table](#enemy-types) for information on all possible enemy values.
 
-Positions consist of one byte, where the high nibble is the y-position minus one, and the low nibble is the x-position. For example the value 0xa5 gives the position (5, 9). A high nibble value of 0 gives a y-value of -1, which is not visible on the screen.
-
 <span style="color:lightgreen">
 Example: Level 1's enemy data section consists of the following bytes: 0x20, 0x71, 0x67, 0x00.
 
@@ -127,7 +133,7 @@ The fourth byte is 0x00, which is the end-of-stream indicator. This means that l
 
 ## Block Data
 
-The block data section contains the definitions of the level block data, stored as bitmasks. Since each level is 16 by 12 tiles, one level's block definition containts (16x12)/8 = **24** bytes. Each level has a bitmask for brown (breakable) blocks, and white (unbreakable) blocks. The byte size is therefore 24x2 = **48** bytes per level, and with 53 levels the total block data section is 48x53 = **2544** bytes.
+No data table exists for this section, as each entry is of fixed size. The block data section contains the definitions of the level block data, stored as bitmasks. Since each level is 16 by 12 tiles, one level's block definition containts (16x12)/8 = **24** bytes. Each level has a bitmask for brown (breakable) blocks, and white (unbreakable) blocks. The byte size is therefore 24x2 = **48** bytes per level, and with 53 levels the total block data section is 48x53 = **2544** bytes.
 
 For each level, the first 12 bytes define the brown blocks, and the next 12 bytes define the white blocks.
 
@@ -147,7 +153,7 @@ The rightmost row always consists of white blocks in the original game. If one o
 
 Each of the 53 levels has an item data section, meaning that the Item Data Table consists of 106 (2x53) bytes.
 
-Any given utem data section is of variable length, as the different levels have varying amounts of items in them. The item data section contains some level metadata too, and supports a simple compression routine when a level contains several items of the same type.
+Any given item data section is of variable length, as the different levels have varying amounts of items in them. The item data section contains some level metadata too, and supports a simple compression routine when a level contains several items of the same type.
 
 The first ten bytes of the data section for a given level make up a level metadata header:
 
@@ -177,7 +183,7 @@ Codes from 0xc0 to 0xdf indicates that the next item will be repeated, and provi
 <span style="color:lightgreen">
 Example: In a data section we see the following bytes: 0xc2, 0x12, 0xa1, 0x22, 0x5a.
 
-We see that the first byte is between 0xc0 and 0xdf, meaning we are compressing.  We subtract 0xc0 and add 1, which gives us 3. Three items of the same type will follow; first the item type; 0x12 - and then the positions of the three items; (1, 9), (2, 1) and (10, 4).
+We see that the first byte is between 0xc0 and 0xdf, meaning we are compressing.  We subtract 0xc0 and add 1, which gives us 3. Three items of the same type will follow; first the item type; 0x12 (Timebottle) - and then the positions of the three items; (1, 9), (2, 1) and (10, 4).
 
 </span>
 
@@ -208,7 +214,48 @@ The tileset number is derived in the same way as for codes 0xe0 - 0xef, and the 
 | 0xfa | Libra | 2 |
 | 0xfb | Sagittarius | 2 |
 
-Codes 0xfc and up are invalid.
+Codes 0xfc and up are invalid, and so are 0xec - 0xef really, as there is no usable fourth tileset.
+
+<hr>
+
+## Game Metadata
+
+In addition to the Demon Mirror [Drop Rates](#demon-mirror-drop-rates) and [Enemy Sets](#demon-mirror-enemy-sets) which have already been explained, there is some game metadata which has an effect on individual levels. A table of the known metadata follows, with an explanation underneath:
+
+| Description | Offset (US/EU) | Offset (JP) | Type |
+| ----------- | -------------- | ----------- | ---- |
+| Level 20 bat symbols | 0x3ff2 | ? | 24-byte bitmask |
+| Level 30 blue opals | 0x400a | ? | 24-byte bitmask |
+| Bomb Jack (level 17) | 0x389f | ? | 1-byte position |
+| Bomb Jack (level 39) | 0x3994 | ? | 1-byte position |
+| Solomon's Seal (level 9) | 0x3fd6 | ? | 1-byte position |
+| Solomon's Seal (level 13) | 0x3fd7 | ? | 1-byte position |
+| Solomon's Seal (level 17) | 0x3fd8 | ? | 1-byte position |
+| Solomon's Seal (level 19) | 0x3fd9 | ? | 1-byte position |
+| Solomon's Seal (level 21) | 0x3fda | ? | 1-byte position |
+| Solomon's Seal (level 29) | 0x3fdb | ? | 1-byte position |
+| Solomon's Seal (level 46) | 0x3fdc | ? | 1-byte position |
+| Solomon's Seal (level 47) | 0x3fdd | ? | 1-byte position |
+
+The 24-byte bitmasks are decoded just like layers of blocks. Instead of blocks, they are layers of items. For level 20 they describe bat symbols (item no 0x04) and for level 30 they descrive blue opals (item no 0x27).
+
+**Question: Where are the level number and item number stored? How can we, for example, turn the level 20 bat symbol bitmask into a level 17 star coin bitmask?**
+
+Bomb Jacks appear on level 17 and 39. We need to hit the block at the given position 11 times to make Bomb Jack appear.
+
+**Question: We know the position of the Bomb Jacks, but how can we deduce from the ROM the levels in which he appears?**
+
+Solomon's Seals appear on eight levels. It is not known by the author why this was not part of the item data section for those levels, as Solomon's Seals already have an item code - and there is plenty more space in the total item data in the ROM.
+
+**Question: We know the positions of the Solomon's Seals, but how can we deduce from the ROM the levels in which they appear?**
+
+In addition to these, there are Tecmo Bunnies on levels 20 and 38, a page of time on level 52 and a page of space on level 53. None of these are part of the level item data, and in fact the Tecmo Bunny is not modeled as an item at all.
+
+**Question: Where is the data for the level number and position for the Tecmo Bunnies, and Space/Time Pages?**
+
+In addition to this, we would like to know how to deduce which white blocks can be broken.
+
+See the [Contact](#contact) section for how to contact me. Any contribution would be much appreciated as we try to fill in the gaps in our knowledge of the ROM data.
 
 <hr>
 
