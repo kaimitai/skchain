@@ -123,7 +123,7 @@ The first byte is the spawn enemy lifetime, bit-shifted right by 3 bits. 0x20 in
 
 The next two bytes define an enemy with enemy code 0x71 and position 0x67.
 
-Enemy 0x71 is "Golem (left, speed 1)", and its position is (6, 6) when counting the top left corner of the level as (0, 0). Note that we subtracted 1 from the y-position.
+Enemy 0x71 is "Golem (left, speed 1)", and its position is (7, 5) when counting the top left corner of the level as (0, 0). Note that we subtracted 1 from the y-position.
 
 The fourth byte is 0x00, which is the end-of-stream indicator. This means that level one only has one enemy.
 

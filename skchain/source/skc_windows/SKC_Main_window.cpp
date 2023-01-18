@@ -77,7 +77,7 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config)
 	}
 
 	p_config.add_message("Executable folder: " + p_config.get_base_path());
-	p_config.add_message("Right Click: Insert Tile Picker element");
+	p_config.add_message("Right Click: Insert Element Picker element");
 	p_config.add_message("Shift + Left Click: Move selected board element");
 	p_config.add_message("Left Click: Select board element");
 	p_config.add_message("Read the documentation for efficient usage tips!");

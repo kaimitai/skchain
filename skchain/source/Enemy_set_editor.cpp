@@ -81,8 +81,8 @@ void skc::Enemy_set_editor::draw_ui(std::vector<std::vector<byte>>& p_sets,
 		ImGui::Text("No enemy selected");
 
 	if (p_available_monster_no == 0)
-		ImGui::Text("Select new enemies from the enemy tile picker");
-	else if (imgui::button("Add from Tile Picker", c::COLOR_STYLE_NORMAL,
+		ImGui::Text("Select new enemies from the enemy element picker");
+	else if (imgui::button("Add from Element Picker", c::COLOR_STYLE_NORMAL,
 		p_config.get_description(c::ELM_TYPE_ENEMY, p_available_monster_no)) && l_set.size() < 8) {
 		l_set.push_back(p_available_monster_no);
 	}

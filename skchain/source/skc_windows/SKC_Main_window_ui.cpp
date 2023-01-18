@@ -97,10 +97,10 @@ void skc::SKC_Main_window::draw_ui_level_board(SKC_Config& p_config, const klib:
 	auto l_tileset{ imgui::slider<int>("Tileset", l_level.get_tileset_no(), 0, 2) };
 	if (l_tileset)
 		l_level.set_tileset_no(l_tileset.value());
-	auto l_time_decrease{ imgui::slider<int>("Time Rate", l_level.get_time_decrease_rate(), 0, 15) };
+	auto l_time_decrease{ imgui::slider<int>("Time Decrease Rate", l_level.get_time_decrease_rate(), 0, 15) };
 	if (l_time_decrease)
 		l_level.set_time_decrease_rate(l_time_decrease.value());
-	auto l_spawn_life{ imgui::slider<int>("Spawn Life", l_level.get_spawn_enemy_lifetime(), 0, 255) };
+	auto l_spawn_life{ imgui::slider<int>("Demonhead/Saramandor Lifetime", l_level.get_spawn_enemy_lifetime(), 0, 255) };
 	if (l_spawn_life)
 		l_level.set_spawn_enemy_lifetime(l_spawn_life.value());
 
@@ -410,6 +410,7 @@ void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config)
 	std::size_t l_meta_tile_no{ l_is_meta_tile ?
 	m_meta_tiles.at(m_current_level).at(static_cast<std::size_t>(l_index - c::MD_BYTE_NO_META_TILE_MIN)).first :
 	0 };
+	bool l_meta_movable{ !l_is_meta_tile || p_config.get_meta_tile_movable(l_meta_tile_no) };
 
 	auto& l_level{ get_level() };
 	byte l_tileset{ l_level.get_tileset_no() };
@@ -436,7 +437,7 @@ void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config)
 		ImGui::Separator();
 	}
 
-	auto l_newpos{ imgui::position_sliders(get_metadata_tile_position(l_index)) };
+	auto l_newpos{ imgui::position_sliders(get_metadata_tile_position(l_index), !l_meta_movable) };
 	if (l_newpos)
 		set_metadata_tile_position(l_index, l_newpos.value(), p_config);
 

@@ -28,7 +28,7 @@ namespace skc {
 		}
 
 		std::optional<bool> checkbox(const std::string& p_label, bool p_value);
-		std::optional<position> position_sliders(const position& p_value);
+		std::optional<position> position_sliders(const position& p_value, bool p_disabled = false);
 		void tooltip_text(const std::string& p_text);
 		void window(const std::string& p_title, int p_x, int p_y, int p_w, int p_h);
 		bool button(const std::string& p_label,

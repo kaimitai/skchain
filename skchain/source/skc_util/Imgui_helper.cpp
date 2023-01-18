@@ -10,9 +10,13 @@ std::optional<bool> skc::imgui::checkbox(const std::string& p_label, bool p_valu
 		return std::nullopt;
 }
 
-std::optional<position> skc::imgui::position_sliders(const position& p_value) {
+std::optional<position> skc::imgui::position_sliders(const position& p_value, bool p_disabled) {
+	if (p_disabled)
+		ImGui::BeginDisabled();
 	auto l_x{ slider<int>(c::TXT_X_POS, p_value.first, 0, c::LEVEL_W - 1) };
 	auto l_y{ slider<int>(c::TXT_Y_POS, p_value.second, 0, c::LEVEL_H - 1) };
+	if (p_disabled)
+		ImGui::EndDisabled();
 
 	if (l_x || l_y) {
 		int r_x{ l_x ? l_x.value() : p_value.first };
