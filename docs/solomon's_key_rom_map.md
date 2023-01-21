@@ -1,4 +1,4 @@
-# Solomon's Key (NES) ROM map (v1.0-snapshot)
+# Solomon's Key (NES) ROM map (v1.0)
 
 ## Table of Contents
 * [Introduction](#introduction)
@@ -226,8 +226,8 @@ In addition to the Demon Mirror [Drop Rates](#demon-mirror-drop-rates) and [Enem
 | ----------- | -------------- | ----------- | ---- |
 | Level 20 bat symbols | 0x3ff2 | 0x3bc2 | 24-byte bitmask |
 | Level 30 blue opals | 0x400a | 0x3bda | 24-byte bitmask |
-| Bomb Jack (level 17) | 0x389f | ? | 1-byte position |
-| Bomb Jack (level 39) | 0x3994 | ? | 1-byte position |
+| Bomb Jack (level 17) | 0x389f | 0x346f | 1-byte position |
+| Bomb Jack (level 39) | 0x3994 | 0x3564 | 1-byte position |
 | Solomon's Seal (level 9) | 0x3fd6 | 0x3ba6 | 1-byte position |
 | Solomon's Seal (level 13) | 0x3fd7 | 0x3ba7 | 1-byte position |
 | Solomon's Seal (level 17) | 0x3fd8 | 0x3ba8 | 1-byte position |
@@ -472,4 +472,5 @@ This document is written and maintained by Kai E. Frøland aka [kaimitai](https:
 <hr>
 
 ## Changelog
-* 2023-15-01: v1.0 in progress
+* 2023-01-21: v1.0 released
+* 2023-01-15: v1.0 started

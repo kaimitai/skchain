@@ -211,7 +211,7 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 		l_spawn_index + 1, 1, p_config.get_mirror_rate_count());
 	if (l_schedule_no)
 		l_level.set_spawn_schedule(p_mirror_no, l_schedule_no.value() - 1);
-	auto l_nmi_set_no = skc::imgui::slider<int>("Enemies",
+	auto l_nmi_set_no = skc::imgui::slider<int>("Enemy Set",
 		l_spawn_nmi_index + 1, 1, p_config.get_mirror_enemy_count());
 	if (l_nmi_set_no)
 		l_level.set_spawn_enemies(p_mirror_no, l_nmi_set_no.value() - 1);
@@ -223,7 +223,7 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 	imgui::spawn_schedule(m_drop_schedules.at(l_spawn_index), "###ds");
 
 	ImGui::Separator();
-	ImGui::Text("Enemy set");
+	ImGui::Text("Enemy Set");
 
 	for (byte l_enemy_no : m_drop_enemies.at(l_spawn_nmi_index)) {
 
