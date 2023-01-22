@@ -113,9 +113,6 @@
 
                 <img src="./images/subwin01_main.png" alt="Main Window" />
 
-                <p>
-                    The Main Window is present in all editor modes, and contain the following elements:
-                </p>
                 <ul>
                     <li><b>Save xml</b> button: Saves your work as a group of xmls, stored under a subfolder ./xml of the loaded ROM-file. This is the recommended file format to use for development.</li>
                     <li><b>Save IPS</b> button: Saves your work as an IPS-patch, which is the difference between your work and the initially loaded NES-file. This is the recommended format for patch distribution, as long as the base ROM loaded is the "official" version.</li>
@@ -165,10 +162,10 @@
 					<li><b>Down</b> keyboard button: Go to previous level</li>
 					<li><b>Home</b> keyboard button: Go to first level</li>
 					<li><b>End</b> keyboard button: Go to last level</li>
-					<li><b>Mousewheel Up/Down:</b> Scroll between levels, as long as now window is hovered</li>
-                    <li><b>Tileset</b> button: Will set the level's tileset, out of 3 possible tilesets.</li>
-                    <li><b>Time Decrease Rate</b> button: Increase to make the level's time decrease faster in the game</li>
-					<li><b>Demonhead/Saramandor Lifetime</b> button: Determines how long the spawned enemies will live before despawning. The higher the number, the longer they live</li>
+					<li><b>Mousewheel Up/Down:</b> Scroll between levels, as long as no window is hovered</li>
+                    <li><b>Tileset</b> slider: Will set the level's tileset, out of 3 possible tilesets.</li>
+                    <li><b>Time Decrease Rate</b> slider: Increase to make the level's time decrease faster in the game</li>
+					<li><b>Demonhead/Saramandor Lifetime</b> slider: Determines how long the spawned enemies will live before despawning. The higher the number, the longer they live</li>
 					<li><b>Remove constellation</b> button: Removes constellation from the level, if it has one</li>
                 </ul>
                 <hr>
@@ -209,7 +206,7 @@
                 <hr>
 				
 				<img src="./images/subwin06_mirror_enemy_schedules.png" alt="Demon Mirror Drop Schedules Sets" width="400" />
-				<p>The Mirror Drop Schedules-window will let you change the enemy drop schedules which can be used by Demon Mirrors. Each set consists of an intial schedule, and a looping schedule. When the level starts, the initial set is cycled through - and then the looping section is repeatedly cycled through.</p>
+				<p>The Mirror Drop Schedules-window will let you change the enemy drop schedules which can be used by Demon Mirrors. Each set consists of an intial schedule, and a looping schedule. When the level starts, the initial set is played through once - and then the looping section is repeatedly cycled through.</p>
 				
 				<p>A selected checkbox means an enemy will drop at that time. The game time between each checkbox seems to be a little lower than 100.</p>
 
@@ -293,7 +290,7 @@
                 </p>
 
                 <ul>
-                    <li>Support chaning ROM mapper in order to increase the data sections</li>
+                    <li>Support changing ROM mapper in order to increase the data sections</li>
                     <li>Clean up the code, and reduce wasted cycles :)</li>
                     <li>Automatically deduce ROM type (US/EU/JP) and load the corresponding configuration</li>
 					<li>Allow bmp import/export to change the graphics with bmp-files</li>

@@ -10,7 +10,7 @@ Make sure to read the included documentation (readme.html in the docs folder) fo
 The editor allows you to alter level data: Block layout, level enemies and items, as well as level metadata. Both the US, EU and JP-versions of the ROM are supported. In addition we support editing game metadata; Demon Mirror enemy drop sets and schedules.
 <br></br>
 ![alt text](./docs/images/01_editor.png)
-###### The editor will show all the level and tile information
+###### The editor will show level and game metadata information
 <br></br>
 The editor can save the edited levels as a patched ROM file (NES), or as a patch file (IPS). We also support our own xml format - which allows users to more easily compare file versions, use version control systems to track file history, and collaborate on level pack projects. One xml file will hold metadata changes, and the rest will represent each individual level.
 <br></br>
@@ -27,6 +27,12 @@ The [ROM map document](./docs/solomon's_key_rom_map.md) contains all information
 
 <hr>
 
+### Development Roadmap
+* Support saving NES-file using a different ROM mapper, to make space for more items/enemies in the ROM than the original developers had available (SKEdit-compatibility)
+* Automatically deduce the region of the loaded ROM file, and use the corresponsing configuration
+
+<hr>
+
 ### Version History
 
-2022-01-24: Release v0.1?
+2022-01-24: Released v0.1
