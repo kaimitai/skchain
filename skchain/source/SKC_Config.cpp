@@ -366,12 +366,12 @@ std::string skc::SKC_Config::path_combine(const std::string& p_folder, const std
 	return p_folder + p_filename;
 }
 
-std::string skc::SKC_Config::get_nes_output_file_path(void) const {
-	return m_file_dir + m_file_name + "-out.nes";
+std::string skc::SKC_Config::get_nes_output_file_path(bool p_overwrite) const {
+	return m_file_dir + m_file_name + (p_overwrite ? ".nes" : "-out.nes");
 }
 
 std::string skc::SKC_Config::get_ips_output_file_path(void) const {
-	return m_file_dir + m_file_name + "-out.ips";
+	return m_file_dir + m_file_name + ".ips";
 }
 
 std::string skc::SKC_Config::get_xml_path(void) const {

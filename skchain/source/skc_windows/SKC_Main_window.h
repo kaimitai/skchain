@@ -50,7 +50,7 @@ namespace skc {
 		// ui stuff
 		void draw_ui(SKC_Config& p_config, const klib::User_input& p_input);
 		void draw_ui_level_board(SKC_Config& p_config, const klib::User_input& p_input);
-		void draw_ui_main_window(SKC_Config& p_config);
+		void draw_ui_main_window(SKC_Config& p_config, const klib::User_input& p_input);
 		void draw_ui_tile_picker_window(SKC_Config& p_config);
 		void draw_ui_selected_tile_window(const SKC_Config& p_config);
 		void draw_tile_picker(const SKC_Config& p_config, std::size_t p_element_types);
@@ -90,7 +90,7 @@ namespace skc {
 
 		// file
 		std::vector<byte> generate_patch_bytes(SKC_Config& p_config) const;
-		void save_nes_file(SKC_Config& p_config) const;
+		void save_nes_file(SKC_Config& p_config, bool p_overwrite) const;
 		void save_xml_files(SKC_Config& p_config) const;
 		void save_ips_file(SKC_Config& p_config) const;
 		void load_xml_files(SKC_Config& p_config);

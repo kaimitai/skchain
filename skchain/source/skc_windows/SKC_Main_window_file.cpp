@@ -4,9 +4,9 @@
 #include "./../common/klib/klib_util.h"
 #include "./../common/klib/IPS_Patch.h"
 
-void skc::SKC_Main_window::save_nes_file(SKC_Config& p_config) const {
+void skc::SKC_Main_window::save_nes_file(SKC_Config& p_config, bool p_overwrite) const {
 	try {
-		std::string l_output_path{ p_config.get_nes_output_file_path() };
+		std::string l_output_path{ p_config.get_nes_output_file_path(p_overwrite) };
 
 		klib::file::write_bytes_to_file(generate_patch_bytes(p_config), l_output_path);
 		p_config.add_message("Saved " + l_output_path, c::MSG_CODE_SUCCESS);

@@ -114,7 +114,7 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 		bool l_shift = p_input.is_shift_pressed();
 
 		if (p_input.is_ctrl_pressed() && p_input.is_pressed(SDL_SCANCODE_S))
-			save_nes_file(p_config);
+			save_nes_file(p_config, l_shift);
 		else if (p_input.is_pressed(SDL_SCANCODE_DELETE) && is_selected_index_valid())
 			delete_selected_index();
 		else if (p_input.is_pressed(SDL_SCANCODE_G))

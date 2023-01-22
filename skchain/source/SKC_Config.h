@@ -96,7 +96,7 @@ namespace skc {
 		static std::string path_combine(const std::string& p_folder, const std::string& p_filename);
 		std::string get_imgui_ini_file_path(void) const;
 		std::string get_config_xml_full_path(void) const;
-		std::string get_nes_output_file_path(void) const;
+		std::string get_nes_output_file_path(bool p_overwrite = false) const;
 		std::string get_ips_output_file_path(void) const;
 		std::string get_xml_path(void) const;
 		std::string get_level_xml_filename(std::size_t p_level_no) const;

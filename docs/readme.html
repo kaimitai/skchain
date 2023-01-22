@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Solomon's Keychain v0.1 - Documentation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="main-body">
+
+        <nav id="navbar">
+            <header style="font-size: 24px;">Documentation Menu</header>
+            <a href="#intro" class="nav-link">
+                Introduction
+            </a>
+            <a href="#basics" class="nav-link">
+                Basics
+            </a>
+            <a href="#configuration" class="nav-link">
+                Configuration
+            </a>
+            <a href="#edit_main" class="nav-link">
+                Main Window
+            </a>
+            <a href="#edit_lvl" class="nav-link">
+                Level Editor Window
+            </a>
+            <a href="#xml_format" class="nav-link">
+                XML formats
+            </a>
+            <a href="#acknowledgments" class="nav-link">
+                Acknowledgments
+            </a>
+            <a href="#changelog" class="nav-link">
+                Changelog
+            </a>
+            <a href="#roadmap" class="nav-link">
+                Roadmap
+            </a>
+            <a href="#troubleshooting" class="nav-link">
+                Troubleshooting
+            </a>
+            <a href="#contact" class="nav-link">
+                Contact
+            </a>
+			<a href="#appconfig" class="nav-link">
+                Advanced Config
+            </a>
+
+        </nav>
+
+        <main id="main-doc">
+
+            <section class="main-section" id="intro">
+
+                <hr>
+
+                <header>Solomon's Keychain v0.1 - Documentation</header>
+
+                <p>Thank you for checking out <a href="https://github.com/kaimitai/skchain/">Solomon's Keychain</a>. With this tool you will be able to alter the level data and game metadata for Solomon's Key (NES). We support altering the US, EU and JP versions of the game. Check out the various sections of this document for an explanation of the program's functionality.</p>
+
+                <p>In order to use the level editor efficiently, it is recommended to read the documentation.</p>
+
+            </section>
+
+            <hr>
+
+            <section class="main-section" id="basics">
+
+                <header>Basics</header>
+
+				<p>When starting the editor, the application will look for NES-files in the application directory, and load any if found. By default the editor is set up to load the US version of the ROM file, but it is possible to switch to the EU or JP version by switching configurations in skc_config.xml - the configuration xml.</p>
+				
+				<p>The application can also be started from the command-line with path to a NES-file as parameter. This means you can drag and drop a ROM file on the application to immediately load the file, at least on Windows.</p>
+
+                <p>When the editor starts successfully, it will tell you which NES-ROM file is loaded and which directory it uses as the working directory.</p>
+
+                <p>There are three element types in the editor: Items, Monsters and Metadata. You can select elements from the element picker, and right-click on the gameboard to insert them. Metadata elements are blocks, constellation background, key position, door position, player start position and so on. The item elements are game items, which can be hidden or inside breakable blocks. The third type, enemies, represents game enemies and other sprites; fairies and Mighty Bomb Jack.</p>
+				
+				<p>Your work can be stored as a NES-ROM, IPS patch or xml-files. We recommend using xml-files during development, and IPS when distributing your patch. xml-files have no space-limitations like the ROM-files, and they are easier to use in version control systems like git, since they are text files.</p>
+				
+				<p>When saving your work as a NES-file or an IPS-file, the editor checks if you exceed the space limits imposed by the game. Check the output section of the Main Window to see if your file was saved successfully, or if a data section was too big. When a data section is too big, you need to delete elements (items, enemies) from the section to save NES or IPS-files.</p>
+
+                
+
+            </section>
+
+            <hr>
+
+            <section class="main-section" id="configuration">
+
+                <header>Configuration</header>
+
+                <p>When opening the editor, the program looks for a file skc_config.xml in the same directory as the executable, or in the folder from which the NES-ROM was loaded. This is a configuration XML which lets you configure the editor's graphics and layouts, ROM-data offsets and so on.</p>
+				
+				<p>The default configuration xml which ships with the editor should be fine for most users, but we explain the configuration format for advanced modders in a separate section.</p>
+				
+				<p>By default the configuration supports the US version of the ROM, but by altering the configuration xml you can edit the EU or JP versions as well:</p>
+				
+				<ul>
+				  <li>EU: Comment in the EU ROM specific block of tag <b>skchain/rom_metadata</b>, and uncomment the US/JP-specific block.</li>
+				  <li>JP: Comment in the JP item bitmasks, under tag <b>skchain/rom_metadata/item_bitmasks</b>, and comment out the US/EU-versions. Comment in the JP-versions of the Solomon's Seal and Mighty Bomb Jack-locations, under tag <b>skchain/rom_metadata/level_meta_items</b>, and comment out the US/EU-version.</li>
+				</ul>
+
+            </section>
+
+            <hr>
+
+            <section class="main-section" id="edit_main">
+                <header>Main Window</header>
+
+                <img src="./images/subwin01_main.png" alt="Main Window" />
+
+                <p>
+                    The Main Window is present in all editor modes, and contain the following elements:
+                </p>
+                <ul>
+                    <li><b>Save xml</b> button: Saves your work as a group of xmls, stored under a subfolder ./xml of the loaded ROM-file. This is the recommended file format to use for development.</li>
+                    <li><b>Save IPS</b> button: Saves your work as an IPS-patch, which is the difference between your work and the initially loaded NES-file. This is the recommended format for patch distribution, as long as the base ROM loaded is the "official" version.</li>
+                    <li><b>Save NES</b> button: Saves your work as an NES-file. This is the recommended format when testing your levels. If you loaded "SK.nes", the output filename will be "SK-out.nes" to avoid overwriting your base ROM which was loaded. If you want to overwrite the file instead, hold Shift when saving.</li>
+                    <li><b>Load xml</b> button: Will load xml-files from the xml-subfolder, if they exist.</li>
+					<li><b>Drop Schedules</b> button: Will open/close the Demon Mirror Drop Schedules-window. Button is yellow when the window is active. See separate section.</li>
+					<li><b>Enemy Sets</b> button: Will open/close the Demon Mirror Enemy Sets-window. Button is yellow when the window is active. See separate section.</li>
+					<li><b>Level</b>-slider. Use to select which level to edit.</li>
+					<li>Finally a section for output messages follow.</li>
+                </ul>
+
+            </section>
+
+            <hr>
+
+            <section class="main-section" id="edit_lvl">
+                <header>Level Editing</header>
+
+                <img src="./images/subwin02_elements.png" alt="Element Picker" />
+				
+				<p>The Element Picker lets you pick items to place in the level. There are three element modes; metadata, items and enemies. The current mode will be highlighted. To place the selected element in the level, simply right click at the Levels-window to insert it at any given location.</p>
+				
+				<p>The layout, tooltip descriptions and icon graphics of the element picker can be altered in the configuration xml.</p>
+
+                <ul>
+                    <li><b>Meta</b> button: Enter metadata editing mode</li>
+                    <li><b>Items</b> button: Enter items editing mode</li>
+					<li><b>Enemies</b> button: Enter enemies editing mode</li>
+                </ul>
+
+                <hr>
+                <img src="./images/subwin03_level.png" alt="Tiles sub-window" />
+
+                <p>
+                    The level window is where level editing takes place. You can click any element on the board (apart from blocks and constellation graphics), move it around and change its properties. You can also insert new elements from the element picker.
+                </p>
+
+                <ul>
+                    <li><b>Right Click</b>: Will insert the selected element picker element at the location, unless one exists there already. If you want to place more than one enemy at the same location - make one in a free location and move it.</li>
+                    <li><b>Left Click</b>: Select item on the gameboard. Will change element mode to the type of the selected element. (if you are in items editing mode and click on a metadata item, the editing mode will change to metadata) The selected element will be outlined by a pulsating yellow square</li>
+                    <li><b>Shift + Left Click</b>: Move the selected element to the clicked location</li>
+                    <li><b>Delete</b> keyboard button: Delete selected board element. (if this element is a door or a key, it will be hidden instead - and other metadata items cannot be deleted)</li>
+					<li><b>Tab</b> keyboard button: Will cycle between items of the same type. Hold shift to browse backward.</b>
+					<li><b>G</b> keyboard button: Toggle gridlines</li>
+					<li><b>Ctrl+S</b> keyboard buttons: Save NES-file. Hold Shift to overwrite the input file</li>
+                    <li><b>Up</b> keyboard button: Go to next level</li>
+					<li><b>Down</b> keyboard button: Go to previous level</li>
+					<li><b>Home</b> keyboard button: Go to first level</li>
+					<li><b>End</b> keyboard button: Go to last level</li>
+					<li><b>Mousewheel Up/Down:</b> Scroll between levels, as long as now window is hovered</li>
+                    <li><b>Tileset</b> button: Will set the level's tileset, out of 3 possible tilesets.</li>
+                    <li><b>Time Decrease Rate</b> button: Increase to make the level's time decrease faster in the game</li>
+					<li><b>Demonhead/Saramandor Lifetime</b> button: Determines how long the spawned enemies will live before despawning. The higher the number, the longer they live</li>
+					<li><b>Remove constellation</b> button: Removes constellation from the level, if it has one</li>
+                </ul>
+                <hr>
+
+                <p>The Selected Element-window will allow altering all properties of the selected element. This window will look different depending on which type of element is selected.</p>
+				
+				<img src="./images/subwin04_01_selected_element_meta.png" alt="Selected Element: Metadata" />
+
+                <p>If we are in metadata mode and select a Demon Mirror on the board, the properties will look like this.</p>
+
+                <p>All elements have position-sliders, which lets you change its position. (an alternative to Shift+Click) For Demon Mirrors, you can also set the drop schedule and enemy set - and a read-only preview will show at the bottom.</p>
+				
+				<p>For the key position, you can also set properties "hidden" and "in block". All other metadata items have no other property than "position"</p>
+				
+				
+                <img src="./images/subwin04_02_selected_element_item.png" alt="Selected Element: Items" width="400" />
+
+                <p>For element type Item, the properties are positions, as well as making the item hidden or stored in a block. In addition there is a delete-button, which is an alternative to keyboard button Delete</p>
+				
+				<img src="./images/subwin04_03_selected_element_enemy.png" alt="Selected Element: Items" width="400" />
+
+                <p>For element type Enemy, the properties are positions, as well as speed and direction, depending on the enemy.</p>
+				
+				<hr>
+				
+				<img src="./images/subwin05_mirror_enemy_sets.png" alt="Demon Mirror Enemy Sets" width="400" />
+				<p>The Mirror Enemy Sets-window will let you change and rearrange the enemy sets which can be used by Demon Mirrors. Each set consists of one or more enemies, and these will be cycled through as they are dropped by a demon mirror spawn point. (Technically an enemy set can be empty, but if any demon mirror uses such an enemy set, the game will crash)</p>
+				
+				<ul>
+				  <li><b>Enemy Set</b> slider: Select enemy set to edit</li>
+				  <li><b>Enemy</b> graphical button: Select a character in the current enemy set. Selected character will have a yellow background</li>
+				  <li><b>Direction/Speed</b> slider: Set properties for selected enemy</li>
+				  <li><b>Move Left/Right</b> buttons: Move selected enemy to the left or the right in the cycle</li>
+				  <li><b>Delete</b> button: Remove selected enemy</li>
+				  <li><b>Add from Element Picker</b> button: Insert selected enemy from the Element Picker into the current Enemy Set</li>
+				</ul>
+
+                <hr>
+				
+				<img src="./images/subwin06_mirror_enemy_schedules.png" alt="Demon Mirror Drop Schedules Sets" width="400" />
+				<p>The Mirror Drop Schedules-window will let you change the enemy drop schedules which can be used by Demon Mirrors. Each set consists of an intial schedule, and a looping schedule. When the level starts, the initial set is cycled through - and then the looping section is repeatedly cycled through.</p>
+				
+				<p>A selected checkbox means an enemy will drop at that time. The game time between each checkbox seems to be a little lower than 100.</p>
+
+            </section>
+
+
+            <hr>
+
+            <section class="main-section" id="xml_format">
+                <header>XML formats</header>
+
+                <p>When the levelset is saved as xml, 54 xml-files are created in a sufolder <b>xml</b> of the loaded NES-file: 53 files for the levels, and one for the metadata.</p>
+				
+				<p>The xml for metadata configuration is called levels-metadata.xml, and has the following tags:</p>
+				
+				<ul>
+				  <li><b>skchain/level_meta_items</b>: Positions of movable meta-items, like Solomon's Seals and Mighty Bomb Jacks</li>
+				  <li><b>skchain/schedules</b>: The demon mirror drop schedules. 64-values 0 and 1, corresponding to the checkboxes in the corresponding editor window</li>
+				  <li><b>skchain/enemy_sets</b>: The demon mirror enemy sets. Enemy numbers are comma-separated</li>
+				</ul>
+				
+				<p>The level xml-files are named level-01.xml to level-53.xml, and have the following tags and attributes:</p>
+				
+				<ul>
+				  <li><b>skchain/level</b> attributes:
+				  
+				    <ul>
+					  <li><b>start_position</b>: Player Start Position</li>
+					  <li><b>door_position</b>: Door Position</li>
+					  <li><b>key_position</b>: Key Position</li>
+					  <li><b>key_status</b>: Key Status (normal, hidden or in-block - and time decrease rate)</li>
+					  <li><b>spawn_enemy_lifetime</b>: How long Saramandors and Demonheads live before despawning</li>
+					  <li><b>time_decrease_rate</b>: In-game time countdown rate</li>
+					  <li><b>tileset</b>: Level tileset number</li>
+					</ul>
+				  
+				  </li>
+				  
+				  <li><b>skchain/level/blocks</b>: 12 rows of 16 blocks. 0 is no block, 1 is brown and 2 is white block. 3 means both brown and white are set</li>
+				  <li><b>skchain/level/items</b>: All items in the level; item code and position</li>
+				  <li><b>skchain/level/enemies</b>: All enemies in the level; enemy code and position</li>
+				  <li><b>skchain/level/mirrors</b>: Two demon mirrors, with position, drop schedule no and enemy set no</li>
+				  
+				</ul>
+
+            </section>
+
+			<hr>
+
+            <section class="main-section" id="acknowledgments">
+
+                <header>Thanks and Acknowledgments</header>
+
+                <p>
+                    Program written in C++20, using the following external libraries:
+                    <br><a href="https://github.com/ocornut/imgui/">Dear ImGui</a>
+                    <br><a href="https://pugixml.org/">pugixml</a>
+                    <br><a href="https://www.libsdl.org/">SDL2 (2.24.0)</a>
+                </p>
+
+            </section>
+
+            <hr>
+
+            <section class="main-section" id="changelog">
+			
+                <header>2023-01-22: Initial release (v0.1)</header>
+                <ul>
+                    <li>Released version 0.1</li>
+				</ul>
+
+			</section>
+
+            <hr>
+
+            <section class="main-section" id="roadmap">
+                <header>Roadmap</header>
+
+                <p>
+                    Apart from fixing bugs as they are discovered, the following ideas are possible extensions in the future:
+                </p>
+
+                <ul>
+                    <li>Support chaning ROM mapper in order to increase the data sections</li>
+                    <li>Clean up the code, and reduce wasted cycles :)</li>
+                    <li>Automatically deduce ROM type (US/EU/JP) and load the corresponding configuration</li>
+					<li>Allow bmp import/export to change the graphics with bmp-files</li>
+                </ul>
+
+            </section>
+
+            <hr>
+
+            <section class="main-section" id="troubleshooting">
+                <header>Troubleshooting</header>
+
+                <p>If the program does not start at all, check the file skc_errors.log which will be created when an unhandled exception occurs.</p>
+				
+				<p>Make sure you start the application with the Solomon's Key NES ROM in the same folder as the executable, or drag-and-drop a file on the application to load it.</p>
+
+                <p>If Windows gives you a message that the program cannot be started, make sure you have the x64 Visual C++ Redistributables. This should be part of most Windows installations by default, but can also be found at <a href="https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0">Microsoft Support Visual C++ downloads</a>.</p>
+
+            </section>
+
+            <hr>
+
+            <section class="main-section" id="contact">
+                <header>Contact Information</header>
+
+                <p>For feedback, suggestions, bug reports and questions, the author (Kai E. Fr&oslash;land aka "kaimitai") can be reached via <a href="mailto:kaimitai@pm.me">email</a>, <a href="https://threema.id/79K5EKHC">Threema</a> or <a href="https://github.com/kaimitai">GitHub</a>.</p>
+
+            </section>
+			
+			<section class="main-section" id="appconfig">
+
+                <hr>
+
+                <header>Configuration XML (advanced)</header>
+
+                <p>Most of the behavior of the editor is defined in skc_config.xml. If you want to alter this file, make sure you keep a backup, as the application requires this file to start. By changing the config xml, you can set your own graphics, tooltip descriptions, element picker layout and ROM memory map. Numbers starting with 0x are considered hex-values, otherwise decimal. A description of the tags and attributes follows:</p>
+				
+				<ul>
+				  <li><b>skchain/rom_metadata/offset_mirror_rate_table</b>: ROM offset to the demon mirror drop rate table</li>
+				  <li><b>skchain/rom_metadata/offset_mirror_enemy_table</b>: ROM offset to the demon enemy set table</li>
+				  <li><b>skchain/rom_metadata/offset_enemy_table</b>: ROM offset to the levels enemy data table</li>
+				  <li><b>skchain/rom_metadata/offset_block_data</b>: ROM offset to the levels block data</li>
+				  <li><b>skchain/rom_metadata/offset_item_table</b>: ROM offset to the levels item data table</li>
+				  <li><b>skchain/rom_metadata/length_mirror_rate_data</b>: Length, in bytes, of the demon mirror rate data section</li>
+				  <li><b>skchain/rom_metadata/length_mirror_enemy_data</b>: Length, in bytes, of the demon mirror enemy sets data section</li>
+				  <li><b>skchain/rom_metadata/length_enemy_data</b>: Length, in bytes, of the enemy data section</li>
+				  <li><b>skchain/rom_metadata/length_item_data</b>: Length, in bytes, of the item data section</li>
+				  <li><b>skchain/rom_metadata/offset_gfx</b>: ROM offset to the graphics</li>
+				  <li><b>skchain/rom_metadata/rom_ram_diff</b>: Diff used when converting ROM to RAM address and vice versa</li>
+				  <li><b>skchain/rom_metadata/level_count</b>: Number of levels in the game</li>
+				  <li><b>skchain/rom_metadata/mirror_rate_count</b>: Number of demon mirror drop schedules</li>
+				  <li><b>skchain/rom_metadata/mirror_enemy_count</b>: Number of demon mirror enemy sets</li>
+				  <li><b>skchain/rom_metadata/nes_tile_count</b>: Number of 8x8 NES tiles to be loaded from the gfx-section of the ROM</li>
+				  <li><b>skchain/rom_metadata/item_bitmasks</b>: Item bitmasks (game metadata): 
+				  
+				  <ul>
+				    <li><b>level_no</b>: Which level the bitmask belongs to to (count from 0)</li>
+					<li><b>item_no</b>: Which item the bitmask represents</li>
+					<li><b>offset</b>: ROM offset of the start of the 24-byte bitmask</li>
+				  </ul>
+				  
+				  </li>
+				  
+				  <li><b>skchain/rom_metadata/level_meta_items</b>: List of meta items (game metadata, will be appended to the element picker):
+				  
+				    <ul>
+					  <li><b>description</b>: In-editor description of the meta-tile</li>
+					  <li><b>level_no</b>: Which level the meta-item appears on (count from 0)</li>
+					  <li><b>animation</b>: The gfx-tile to represent this item with (see gfx-section for details)</li>
+					  <li><b>transparent</b>: Draw as a transparent tile in the editor</li>
+					  <li><b>offset</b>: ROM-offset to the positional byte. If a position is given instead of a ROM address, the meta-item will be immovable</li>
+					</ul>
+				  
+				  </li>
+				  
+				  <li><b>skchain/rom_metadata/level_palettes</b>: Which palette to use for each level. See gfx-section for palette creation</li>
+				  
+				</ul>
+				
+				<ul>
+				  <li><b>skchain/metadata_definitions</b>, Element Picker definitions:
+				  
+				    <ul>
+					  <li><b>no</b>: Code of the metadata item (hard-coded in the editor)</li>
+					  <li><b>description</b>: Element Picker tooltip text</li>
+					  <li><b>animation</b>: Gfx-tile to use for this element</li>
+					</ul>
+				  
+				  </li>
+				</ul>
+				
+				<ul>
+				  <li><b>skchain/item_definitions</b>, Element Picker definitions:
+				  
+				    <ul>
+					  <li><b>no</b>: Code of the item</li>
+					  <li><b>description</b>: Element Picker tooltip text</li>
+					  <li><b>animation</b>: Gfx-tile to use for this element</li>
+					</ul>
+				  
+				  </li>
+				</ul>
+				
+				<ul>
+				  <li><b>skchain/enemy_definitions</b>, Element Picker definitions:
+				  
+				    <ul>
+					  <li><b>no</b>: Code of the enemy</li>
+					  <li><b>description</b>: Element Picker tooltip text</li>
+					  <li><b>animation</b>: Gfx-tile to use for this element</li>
+					</ul>
+				  
+				  </li>
+				</ul>
+				
+				<ul>
+				  <li><b>skchain/enemy_editor</b>, Two sets of enemy editor property connections; speed and direction:
+				  
+				    <ul>
+					  <li><b>enemy_speeds</b>: Lists of enemy codes (comma-separated) of how enemies relate to each other along the speed-dimension. No enemy code should be in more than one bundle.</li>
+					  <li><b>enemy_directions</b>: Lists of enemy codes (comma-separated) of how enemies relate to each other along the direction-dimension. No enemy code should be in more than one bundle.</li>
+					</ul>
+				  
+				  </li>
+				</ul>
+				
+				
+				
+				<ul>
+				  <li><b>skchain/tile_pickers</b>, three tile pickers (metadata, items and enemies, respectively):
+				    <ul>
+					  <li><b>description</b>: Section header in the element picker</li>
+					  <li><b>value</b>: Comma-separated list of element codes in this section</li>
+					</ul>
+				  </li>
+				</ul>
+				
+				
+			<ul>
+			  <li><b>skchain/gfx_metadata/palettes</b>: List of palettes, 8 per group. If 3 or 4 comma-separated values are given, these are the NES colors the palette consists of. If one value is given, this will be the ROM offset to the palette (4 bytes will be read)</li>
+			</ul>
+			
+			<ul>
+			  <li><b>skchain/gfx_metadata/tile_definitions</b>: List of NES tiles to be created from the gfx-data. Counting from 0, each tile is 8x8 pixels.
+			    <ul>
+				  <li><b>no</b>: Tile number, counting up from 0. Is the code used for the animation-tags when linking enemies/items to metatile-codes.</li>
+				  <li><b>palette_no</b>: Palette (0-7) to be used by the tile</li>
+				  <li><b>w</b>: Width of the meta-tile; will assume 2 if 4 values are given for nes_tiles</li>
+				  <li><b>nes_tiles</b>: Comma separated list of NES-tiles to be used, going from top left to bottom right. add ":v" or ":h" to rotate the sprite vertically or horizontally, or ":r" for both.</li>
+				  <li><b>transparent</b>: Whether color 0 of the palette will be transparent</li>
+				</ul>
+			  </li>
+			</ul>
+			
+			<ul>
+			  <li><b>skchain/gfx_metadata/tilesets</b>: Defining tiles and palette combinations for generating all editor data. This way we do not need to define each gfx-tile for all of the 3 tilesets.
+			  
+			    <ul>
+				  <li><b>palette_offset</b>: Starting palette, from the palettes defined earlier</li>
+				  <li><b>tile_offset</b>: Starting tile, from the tiles available in the ROM. 0: Tileset 0, 512: Tileset 1, 1024: Tileset 2</li>
+				</ul>
+			  
+			  </li>
+			</ul>
+
+            </section>
+
+        </main>
+    </div>
+</body>
+</html>

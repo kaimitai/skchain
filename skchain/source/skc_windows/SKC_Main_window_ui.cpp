@@ -22,7 +22,7 @@ void skc::SKC_Main_window::draw_ui(SKC_Config& p_config,
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
-	this->draw_ui_main_window(p_config);
+	this->draw_ui_main_window(p_config, p_input);
 	this->draw_ui_tile_picker_window(p_config);
 	this->draw_ui_selected_tile_window(p_config);
 	if (m_schedule_win_index)
@@ -115,7 +115,7 @@ void skc::SKC_Main_window::draw_ui_level_board(SKC_Config& p_config, const klib:
 	ImGui::End();
 }
 
-void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
+void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config, const klib::User_input& p_input) {
 
 	imgui::window("Main", c::WIN_MAIN_X, c::WIN_MAIN_Y, c::WIN_MAIN_W, c::WIN_MAIN_H);
 
@@ -126,7 +126,7 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config) {
 		save_ips_file(p_config);
 	ImGui::SameLine();
 	if (ImGui::Button("Save NES"))
-		save_nes_file(p_config);
+		save_nes_file(p_config, p_input.is_shift_pressed());
 
 	bool l_ctrl = ImGui::GetIO().KeyCtrl;
 
