@@ -1,6 +1,6 @@
   # Solomon's Keychain - An editor for Solomon's Key (NES)
 
-Welcome to the Solomon's Keychain code repository and release page. The editor is currently in development, and the first release is expected by February 2023. The code is standard C++20, and the project files were created using Microsoft Visual Studio Community 2022. You can compile the application from source, or get the latest precompiled win-x64 distribution under the [repository releases](https://github.com/kaimitai/skchain/releases/) once we ship. \
+Welcome to the Solomon's Keychain code repository and release page. The code is standard C++20, and the project files were created using Microsoft Visual Studio Community 2022. You can compile the application from source, or get the latest precompiled win-x64 distribution under the [repository releases](https://github.com/kaimitai/skchain/releases/) . \
 Make sure to read the included documentation (readme.html in the docs folder) for a detailed overview.
 <br></br>
 
