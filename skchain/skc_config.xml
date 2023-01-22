@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <!-- Configuration file for Solomon's Keychain (https://github.com/kaimitai/skchain) -->
-<skchain app_version="0.1">
+<skchain app_version="0.2">
 
   <rom_metadata>
   	<!-- US/JP ROM specific -->
-    <offset_mirror_rate_table offset="0x5c10" />
-	<offset_mirror_enemy_table offset="0x5c30" />
-    <offset_enemy_table offset="0x5cfc" />
-	<offset_block_data offset="0x603c" />
-	<offset_item_table offset="0x6a2c" />
+    <offset_mirror_rate_table region="US,JP" offset="0x5c10" />
+	<offset_mirror_enemy_table region="US,JP" offset="0x5c30" />
+    <offset_enemy_table region="US,JP" offset="0x5cfc" />
+	<offset_block_data region="US,JP" offset="0x603c" />
+	<offset_item_table region="US,JP" offset="0x6a2c" />
   
     <!-- EU ROM specific -->
-	<!--offset_mirror_rate_table offset="0x5b90" />
-	<offset_mirror_enemy_table offset="0x5bb0" />
-	<offset_enemy_table offset="0x5c7c" />
-	<offset_block_data offset="0x5fbc" />
-	<offset_item_table offset="0x69ac" / -->
+	<offset_mirror_rate_table region="EU" offset="0x5b90" />
+	<offset_mirror_enemy_table region="EU" offset="0x5bb0" />
+	<offset_enemy_table region="EU" offset="0x5c7c" />
+	<offset_block_data region="EU" offset="0x5fbc" />
+	<offset_item_table region="EU" offset="0x69ac" />
 
 	<length_mirror_rate_data value="128" />
 	<length_mirror_enemy_data value="42" />
@@ -31,12 +31,12 @@
     <!-- this configuration will be used both when loading and saving data, to perform the necessary conversions -->
 	<item_bitmasks>
 	  <!-- US/EU bitmasks -->
-	  <item_bitmask level_no="19" item_no="0x04" offset="0x3ff2" />
-	  <item_bitmask level_no="29" item_no="0x27" offset="0x400a" />
+	  <item_bitmask level_no="19" item_no="0x04" region="US,EU" offset="0x3ff2" />
+	  <item_bitmask level_no="29" item_no="0x27" region="US,EU" offset="0x400a" />
 	  
 	  <!-- JP bitmasks -->
-	  <!--item_bitmask level_no="19" item_no="0x04" offset="0x3bc2" />
-	  <item_bitmask level_no="29" item_no="0x27" offset="0x3bda" /-->
+	  <item_bitmask level_no="19" item_no="0x04" region="JP" offset="0x3bc2" />
+	  <item_bitmask level_no="29" item_no="0x27" region="JP" offset="0x3bda" />
 	</item_bitmasks>
 	<!-- meta items are solomon's seals, mighty bomb jack and tecmo bunny (position offset unknown) -->
 	<!-- in the future we hope to find out how to move these between levels -->
@@ -44,28 +44,28 @@
 	<!-- TODO: Add overlay to breakable white blocks, and see if we can find the offsets -->
 	<level_meta_items>
 	  <!-- US/EU specific: Seals and Bomb Jacks -->
-	  <level_meta_item no="0" description="Solomon's seal (meta)" level_no="8" animation="29" transparent="true" offset="0x3fd6" />
-	  <level_meta_item no="1" description="Solomon's seal (meta)" level_no="12" animation="29" transparent="true" offset="0x3fd7" />
-	  <level_meta_item no="2" description="Solomon's seal (meta)" level_no="16" animation="29" transparent="true" offset="0x3fd8" />
-	  <level_meta_item no="3" description="Solomon's seal (meta)" level_no="18" animation="29" transparent="true" offset="0x3fd9" />
-	  <level_meta_item no="4" description="Solomon's seal (meta)" level_no="20" animation="29" transparent="true" offset="0x3fda" />
-	  <level_meta_item no="5" description="Solomon's seal (meta)" level_no="28" animation="29" transparent="true" offset="0x3fdb" />
-	  <level_meta_item no="6" description="Solomon's seal (meta)" level_no="45" animation="29" transparent="true" offset="0x3fdc" />
-	  <level_meta_item no="7" description="Solomon's seal (meta)" level_no="46" animation="29" transparent="true" offset="0x3fdd" />
-	  <level_meta_item no="8" description="Bomb Jack (meta)" level_no="16" animation="67" offset="0x389f" />
-	  <level_meta_item no="9" description="Bomb Jack (meta)" level_no="38" animation="67" offset="0x3994" />
+	  <level_meta_item no="0" description="Solomon's seal (meta)" level_no="8" animation="29" transparent="true" region="US,EU" offset="0x3fd6" />
+	  <level_meta_item no="1" description="Solomon's seal (meta)" level_no="12" animation="29" transparent="true" region="US,EU" offset="0x3fd7" />
+	  <level_meta_item no="2" description="Solomon's seal (meta)" level_no="16" animation="29" transparent="true" region="US,EU" offset="0x3fd8" />
+	  <level_meta_item no="3" description="Solomon's seal (meta)" level_no="18" animation="29" transparent="true" region="US,EU" offset="0x3fd9" />
+	  <level_meta_item no="4" description="Solomon's seal (meta)" level_no="20" animation="29" transparent="true" region="US,EU" offset="0x3fda" />
+	  <level_meta_item no="5" description="Solomon's seal (meta)" level_no="28" animation="29" transparent="true" region="US,EU" offset="0x3fdb" />
+	  <level_meta_item no="6" description="Solomon's seal (meta)" level_no="45" animation="29" transparent="true" region="US,EU" offset="0x3fdc" />
+	  <level_meta_item no="7" description="Solomon's seal (meta)" level_no="46" animation="29" transparent="true" region="US,EU" offset="0x3fdd" />
+	  <level_meta_item no="8" description="Bomb Jack (meta)" level_no="16" animation="67" region="US,EU" offset="0x389f" />
+	  <level_meta_item no="9" description="Bomb Jack (meta)" level_no="38" animation="67" region="US,EU" offset="0x3994" />
 	
 	  <!-- JP specific: Seals and Bomb Jacks -->
-	  <!--level_meta_item no="0" description="Solomon's seal (meta)" level_no="8" animation="29" transparent="true" offset="0x3ba6" />
-	  <level_meta_item no="1" description="Solomon's seal (meta)" level_no="12" animation="29" transparent="true" offset="0x3ba7" />
-	  <level_meta_item no="2" description="Solomon's seal (meta)" level_no="16" animation="29" transparent="true" offset="0x3ba8" />
-	  <level_meta_item no="3" description="Solomon's seal (meta)" level_no="18" animation="29" transparent="true" offset="0x3ba9" />
-	  <level_meta_item no="4" description="Solomon's seal (meta)" level_no="20" animation="29" transparent="true" offset="0x3baa" />
-	  <level_meta_item no="5" description="Solomon's seal (meta)" level_no="28" animation="29" transparent="true" offset="0x3bab" />
-	  <level_meta_item no="6" description="Solomon's seal (meta)" level_no="45" animation="29" transparent="true" offset="0x3bac" />
-	  <level_meta_item no="7" description="Solomon's seal (meta)" level_no="46" animation="29" transparent="true" offset="0x3bad" />
-	  <level_meta_item no="8" description="Bomb Jack (meta)" level_no="16" animation="67" offset="0x346f" />
-	  <level_meta_item no="9" description="Bomb Jack (meta)" level_no="38" animation="67" offset="0x3564" /-->
+	  <level_meta_item no="0" description="Solomon's seal (meta)" level_no="8" animation="29" transparent="true" region="JP" offset="0x3ba6" />
+	  <level_meta_item no="1" description="Solomon's seal (meta)" level_no="12" animation="29" transparent="true" region="JP" offset="0x3ba7" />
+	  <level_meta_item no="2" description="Solomon's seal (meta)" level_no="16" animation="29" transparent="true" region="JP" offset="0x3ba8" />
+	  <level_meta_item no="3" description="Solomon's seal (meta)" level_no="18" animation="29" transparent="true" region="JP" offset="0x3ba9" />
+	  <level_meta_item no="4" description="Solomon's seal (meta)" level_no="20" animation="29" transparent="true" region="JP" offset="0x3baa" />
+	  <level_meta_item no="5" description="Solomon's seal (meta)" level_no="28" animation="29" transparent="true" region="JP" offset="0x3bab" />
+	  <level_meta_item no="6" description="Solomon's seal (meta)" level_no="45" animation="29" transparent="true" region="JP" offset="0x3bac" />
+	  <level_meta_item no="7" description="Solomon's seal (meta)" level_no="46" animation="29" transparent="true" region="JP" offset="0x3bad" />
+	  <level_meta_item no="8" description="Bomb Jack (meta)" level_no="16" animation="67" region="JP" offset="0x346f" />
+	  <level_meta_item no="9" description="Bomb Jack (meta)" level_no="38" animation="67" region="JP" offset="0x3564" />
 	  
 	  <level_meta_item no="10" description="Tecmo bunny (meta)" level_no="19" animation="69" transparent="true" position="0,1" />
 	  <level_meta_item no="11" description="Tecmo bunny (meta)" level_no="37" animation="69" transparent="true" position="14,8" />

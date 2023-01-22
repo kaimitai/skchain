@@ -31,6 +31,7 @@ namespace skc {
 		constexpr char XML_TAG_TILESET[]{ "tileset" };
 		constexpr char XML_TAG_TILE[]{ "tile" };
 
+		constexpr char XML_ATTR_APP_REGION[]{ "region" };
 		constexpr char XML_ATTR_APP_VERSION[]{ "app_version" };
 		constexpr char XML_TAG_OFFSET_GFX[]{ "offset_gfx" };
 		constexpr char XML_ATTR_ITEM_NO[]{ "item_no" };

@@ -298,3 +298,33 @@ skc::Game_metadata skc::xml::load_metadata_xml(const std::string p_folder, const
 
 	return result;
 }
+
+bool skc::xml::node_has_region_attribute(const pugi::xml_node p_node) {
+	std::string l_code = p_node.attribute(c::XML_ATTR_APP_REGION).as_string();
+	return !l_code.empty();
+}
+
+bool skc::xml::node_has_region_code(const pugi::xml_node p_node, const std::string& p_region_code) {
+	std::string l_codes_str = p_node.attribute(c::XML_ATTR_APP_REGION).as_string();
+	auto l_codes = klib::util::string_split_strings(l_codes_str, ',');
+	for (const auto& l_code : l_codes)
+		if (l_code == p_region_code)
+			return true;
+
+	return false;
+}
+
+std::string skc::xml::node_region_best_match(const pugi::xml_node p_node,
+	const std::string& p_region_code,
+	const std::string& p_xml_tag, const std::string p_value_attr) {
+	std::string result;
+
+	for (auto n_child = p_node.child(p_xml_tag.c_str());
+		n_child; n_child = n_child.next_sibling(p_xml_tag.c_str())) {
+		if ((result.empty() && !node_has_region_code(n_child, p_region_code)) ||
+			node_has_region_code(n_child, p_region_code))
+			result = n_child.attribute(p_value_attr.c_str()).as_string();
+	}
+
+	return result;
+}

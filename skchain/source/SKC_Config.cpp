@@ -3,6 +3,7 @@
 #include "./common/klib/klib_util.h"
 #include "./common/pugixml/pugixml.hpp"
 #include "./common/pugixml/pugiconfig.hpp"
+#include "./skc_util/Xml_helper.h"
 #include "./skc_constants/Constants_xml.h"
 #include "./skc_constants/Constants_application.h"
 #include "./skc_constants/Constants_level.h"
@@ -13,9 +14,20 @@ skc::SKC_Config::SKC_Config(const std::string& p_base_dir, const std::string& p_
 	m_descriptions{ std::vector<std::vector<std::string>>(3, std::vector<std::string>(256, c::TXT_UNKNOWN)) },
 	m_base_dir{ p_base_dir }
 {
-	this->load_config_xml(get_config_xml_full_path());
 	m_rom_data = klib::file::read_file_as_bytes(p_filename);
 	add_message("Loaded " + p_filename);
+
+	byte l_chk{ m_rom_data.at(0x0bf2) };
+	if (l_chk == 0xff)
+		m_region_code = c::REGION_EU;
+	else if (l_chk == 0xea)
+		m_region_code = c::REGION_JP;
+	else
+		m_region_code = c::REGION_US;
+
+	add_message("Detected ROM region code " + m_region_code);
+
+	this->load_config_xml(get_config_xml_full_path());
 
 	m_file_name = std::filesystem::path(p_filename).stem().string();
 	m_file_dir = std::filesystem::path(p_filename).parent_path().string();
@@ -33,64 +45,84 @@ void skc::SKC_Config::load_config_xml(const std::string& p_config_file_path) {
 	auto n_rom_meta = n_meta.child(c::XML_TAG_ROM_METADATA);
 
 	m_offset_gfx = klib::util::string_to_numeric<std::size_t>(
-		n_rom_meta.child(c::XML_TAG_OFFSET_GFX).attribute(c::XML_ATTR_OFFSET).as_string());
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_OFFSET_GFX, c::XML_ATTR_OFFSET)
+		);
 	m_offset_blocks = klib::util::string_to_numeric<std::size_t>(
-		n_rom_meta.child(c::XML_TAG_OFFSET_BLOCKS).attribute(c::XML_ATTR_OFFSET).as_string());
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_OFFSET_BLOCKS, c::XML_ATTR_OFFSET)
+		);
 	m_offset_enemy_table = klib::util::string_to_numeric<std::size_t>(
-		n_rom_meta.child(c::XML_TAG_OFFSET_ENEMIES).attribute(c::XML_ATTR_OFFSET).as_string());
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_OFFSET_ENEMIES, c::XML_ATTR_OFFSET)
+		);
 	m_offset_item_table = klib::util::string_to_numeric<std::size_t>(
-		n_rom_meta.child(c::XML_TAG_OFFSET_ITEMS).attribute(c::XML_ATTR_OFFSET).as_string());
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_OFFSET_ITEMS, c::XML_ATTR_OFFSET)
+		);
 	m_offset_mirror_rate_table = klib::util::string_to_numeric<std::size_t>(
-		n_rom_meta.child(c::XML_TAG_OFFSET_MIRROR_RATE_TABLE).attribute(c::XML_ATTR_OFFSET).as_string());
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_OFFSET_MIRROR_RATE_TABLE, c::XML_ATTR_OFFSET)
+		);
 	m_offset_mirror_enemy_table = klib::util::string_to_numeric<std::size_t>(
-		n_rom_meta.child(c::XML_TAG_OFFSET_MIRROR_ENEMY_TABLE).attribute(c::XML_ATTR_OFFSET).as_string());
-
-	m_rom_ram_diff = klib::util::string_to_numeric<unsigned int>(
-		n_rom_meta.child(c::XML_TAG_ROM_RAM_DIFF).attribute(c::XML_ATTR_VALUE).as_string());
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_OFFSET_MIRROR_ENEMY_TABLE, c::XML_ATTR_OFFSET)
+		);
+	m_rom_ram_diff = klib::util::string_to_numeric<int>(
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_ROM_RAM_DIFF, c::XML_ATTR_VALUE)
+		);
 	m_level_count = klib::util::string_to_numeric<unsigned int>(
-		n_rom_meta.child(c::XML_TAG_LEVEL_COUNT).attribute(c::XML_ATTR_VALUE).as_string());
-	m_mirror_rate_count = klib::util::string_to_numeric<unsigned int>(
-		n_rom_meta.child(c::XML_TAG_MIRROR_RATE_COUNT).attribute(c::XML_ATTR_VALUE).as_string());
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_LEVEL_COUNT, c::XML_ATTR_VALUE)
+		);
+	m_mirror_rate_count = klib::util::string_to_numeric<int>(
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_MIRROR_RATE_COUNT, c::XML_ATTR_VALUE)
+		);
 	m_mirror_enemy_count = klib::util::string_to_numeric<unsigned int>(
-		n_rom_meta.child(c::XML_TAG_MIRROR_ENEMY_COUNT).attribute(c::XML_ATTR_VALUE).as_string());
-
-	m_length_mr_data = klib::util::string_to_numeric<unsigned int>(
-		n_rom_meta.child(c::XML_TAG_LENGTH_MIRROR_RATE_DATA).attribute(c::XML_ATTR_VALUE).as_string());
-	m_length_me_data = klib::util::string_to_numeric<unsigned int>(
-		n_rom_meta.child(c::XML_TAG_LENGTH_MIRROR_ENEMY_DATA).attribute(c::XML_ATTR_VALUE).as_string());
-	m_length_item_data = klib::util::string_to_numeric<unsigned int>(
-		n_rom_meta.child(c::XML_TAG_LENGTH_ITEM_DATA).attribute(c::XML_ATTR_VALUE).as_string());
-	m_length_enemy_data = klib::util::string_to_numeric<unsigned int>(
-		n_rom_meta.child(c::XML_TAG_LENGTH_ENEMY_DATA).attribute(c::XML_ATTR_VALUE).as_string());
-
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_MIRROR_ENEMY_COUNT, c::XML_ATTR_VALUE)
+		);
+	m_length_mr_data = klib::util::string_to_numeric<std::size_t>(
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_LENGTH_MIRROR_RATE_DATA, c::XML_ATTR_VALUE)
+		);
+	m_length_me_data = klib::util::string_to_numeric<std::size_t>(
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_LENGTH_MIRROR_ENEMY_DATA, c::XML_ATTR_VALUE)
+		);
+	m_length_item_data = klib::util::string_to_numeric<std::size_t>(
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_LENGTH_ITEM_DATA, c::XML_ATTR_VALUE)
+		);
+	m_length_enemy_data = klib::util::string_to_numeric<std::size_t>(
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_LENGTH_ENEMY_DATA, c::XML_ATTR_VALUE)
+		);
 	m_gfx_tile_count = klib::util::string_to_numeric<unsigned int>(
-		n_rom_meta.child(c::XML_TAG_NES_TILE_COUNT).attribute(c::XML_ATTR_VALUE).as_string());
-
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_NES_TILE_COUNT, c::XML_ATTR_VALUE)
+		);
 	m_level_palettes = klib::util::string_split<std::size_t>(
-		n_rom_meta.child(c::XML_TAG_LEVEL_PALETTES).attribute(c::XML_ATTR_VALUE).as_string(),
+		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_LEVEL_PALETTES, c::XML_ATTR_VALUE),
 		',');
 
 	auto n_item_bitmasks = n_rom_meta.child(c::XML_TAG_ITEM_BITMASKS);
 	for (auto n_item_bitmask = n_item_bitmasks.child(c::XML_TAG_ITEM_BITMASK); n_item_bitmask;
 		n_item_bitmask = n_item_bitmask.next_sibling(c::XML_TAG_ITEM_BITMASK)) {
-		std::size_t l_level_no{ klib::util::string_to_numeric<std::size_t>(n_item_bitmask.attribute(c::XML_ATTR_LEVEL_NO).as_string()) };
-		byte l_item_no{ klib::util::string_to_numeric<byte>(n_item_bitmask.attribute(c::XML_ATTR_ITEM_NO).as_string()) };
-		std::size_t l_offset{ klib::util::string_to_numeric<std::size_t>(n_item_bitmask.attribute(c::XML_ATTR_OFFSET).as_string()) };
-		m_item_bitmasks.insert(std::make_pair(l_level_no, std::make_pair(l_item_no, l_offset)));
+
+		if (xml::node_has_region_code(n_item_bitmask, m_region_code)) {
+			std::size_t l_level_no{ klib::util::string_to_numeric<std::size_t>(n_item_bitmask.attribute(c::XML_ATTR_LEVEL_NO).as_string()) };
+			byte l_item_no{ klib::util::string_to_numeric<byte>(n_item_bitmask.attribute(c::XML_ATTR_ITEM_NO).as_string()) };
+			std::size_t l_offset{ klib::util::string_to_numeric<std::size_t>(n_item_bitmask.attribute(c::XML_ATTR_OFFSET).as_string()) };
+			m_item_bitmasks.insert(std::make_pair(l_level_no, std::make_pair(l_item_no, l_offset)));
+		}
+
 	}
 
 	auto n_lvl_meta_items = n_rom_meta.child(c::XML_TAG_LEVEL_META_ITEMS);
 	for (auto n_lvl_meta = n_lvl_meta_items.child(c::XML_TAG_LEVEL_META_ITEM); n_lvl_meta;
 		n_lvl_meta = n_lvl_meta.next_sibling(c::XML_TAG_LEVEL_META_ITEM)) {
-		std::size_t l_level_no{ klib::util::string_to_numeric<std::size_t>(n_lvl_meta.attribute(c::XML_ATTR_LEVEL_NO).as_string()) };
-		std::size_t l_animation{ klib::util::string_to_numeric<std::size_t>(n_lvl_meta.attribute(c::XML_ATTR_ANIMATION).as_string()) };
-		std::size_t l_offset{ klib::util::string_to_numeric<std::size_t>(n_lvl_meta.attribute(c::XML_ATTR_OFFSET).as_string()) };
-		bool l_transparent{ n_lvl_meta.attribute(c::XML_ATTR_TRANSPARENT).as_bool() };
-		auto l_pos_vec{ klib::util::string_split<int>(n_lvl_meta.attribute(c::XML_ATTR_POSITION).as_string(), ',') };
-		std::pair<int, int> l_position{ l_offset == 0 ? std::make_pair(l_pos_vec.at(0), l_pos_vec.at(1)) : std::make_pair(0,0) };
-		std::string l_description{ n_lvl_meta.attribute(c::XML_ATTR_DESCRIPTION).as_string() };
 
-		m_meta_items.push_back(Metadata_item(l_level_no, l_animation, l_description, l_transparent, l_offset, l_position));
+		if (!xml::node_has_region_attribute(n_lvl_meta) ||
+			xml::node_has_region_code(n_lvl_meta, m_region_code)) {
+
+			std::size_t l_level_no{ klib::util::string_to_numeric<std::size_t>(n_lvl_meta.attribute(c::XML_ATTR_LEVEL_NO).as_string()) };
+			std::size_t l_animation{ klib::util::string_to_numeric<std::size_t>(n_lvl_meta.attribute(c::XML_ATTR_ANIMATION).as_string()) };
+			std::size_t l_offset{ klib::util::string_to_numeric<std::size_t>(n_lvl_meta.attribute(c::XML_ATTR_OFFSET).as_string()) };
+			bool l_transparent{ n_lvl_meta.attribute(c::XML_ATTR_TRANSPARENT).as_bool() };
+			auto l_pos_vec{ klib::util::string_split<int>(n_lvl_meta.attribute(c::XML_ATTR_POSITION).as_string(), ',') };
+			std::pair<int, int> l_position{ l_offset == 0 ? std::make_pair(l_pos_vec.at(0), l_pos_vec.at(1)) : std::make_pair(0,0) };
+			std::string l_description{ n_lvl_meta.attribute(c::XML_ATTR_DESCRIPTION).as_string() };
+
+			m_meta_items.push_back(Metadata_item(l_level_no, l_animation, l_description, l_transparent, l_offset, l_position));
+		}
 	}
 
 	auto n_metadatas = n_meta.child(c::XML_TAG_MD_DEFINITIONS);
@@ -156,6 +188,10 @@ void skc::SKC_Config::load_config_xml(const std::string& p_config_file_path) {
 
 		m_tile_pickers.push_back(l_tile_picker);
 	}
+}
+
+std::string skc::SKC_Config::get_region_code(void) const {
+	return m_region_code;
 }
 
 const std::vector<byte>& skc::SKC_Config::get_rom_data(void) const {

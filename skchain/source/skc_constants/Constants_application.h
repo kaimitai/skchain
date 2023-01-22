@@ -6,8 +6,8 @@
 namespace skc {
 	namespace c {
 
-		constexpr char APP_VERSION[]{ "0.1" };
-		constexpr char APP_TITLE[]{ "Solomon's Keychain v0.1" };
+		constexpr char APP_VERSION[]{ "0.2" };
+		constexpr char APP_TITLE[]{ "Solomon's Keychain v0.2" };
 		constexpr int APP_W{ 1024 + 435 }, APP_H{ 768 };
 
 		constexpr char FILENAME_CONFIG_XML[]{ "skc_config.xml" };
@@ -54,7 +54,11 @@ namespace skc {
 		constexpr int WIN_ENEMYSET_Y{ 10 };
 		constexpr int WIN_ENEMYSET_W{ 330 };
 		constexpr int WIN_ENEMYSET_H{ 225 };
-		
+
+		// region codes
+		constexpr char REGION_EU[]{ "EU" };
+		constexpr char REGION_JP[]{ "JP" };
+		constexpr char REGION_US[]{ "US" };
 	}
 }
 
