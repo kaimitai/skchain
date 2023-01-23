@@ -17,17 +17,8 @@ skc::SKC_Config::SKC_Config(const std::string& p_base_dir, const std::string& p_
 	m_rom_data = klib::file::read_file_as_bytes(p_filename);
 	add_message("Loaded " + p_filename);
 
-	byte l_chk{ m_rom_data.at(0x0bf2) };
-	if (l_chk == 0xff)
-		m_region_code = c::REGION_EU;
-	else if (l_chk == 0xea)
-		m_region_code = c::REGION_JP;
-	else
-		m_region_code = c::REGION_US;
-
-	add_message("Detected ROM region code " + m_region_code);
-
 	this->load_config_xml(get_config_xml_full_path());
+	add_message("Detected ROM region " + m_region_code);
 
 	m_file_name = std::filesystem::path(p_filename).stem().string();
 	m_file_dir = std::filesystem::path(p_filename).parent_path().string();
@@ -43,6 +34,9 @@ void skc::SKC_Config::load_config_xml(const std::string& p_config_file_path) {
 
 	auto n_meta = doc.child(skc::c::XML_TAG_META);
 	auto n_rom_meta = n_meta.child(c::XML_TAG_ROM_METADATA);
+
+	m_region_code = xml::get_region_code(n_meta.child(c::XML_TAG_REGIONS),
+		m_rom_data);
 
 	m_offset_gfx = klib::util::string_to_numeric<std::size_t>(
 		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_OFFSET_GFX, c::XML_ATTR_OFFSET)

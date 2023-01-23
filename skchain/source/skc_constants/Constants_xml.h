@@ -6,6 +6,7 @@ namespace skc {
 
 		constexpr char XML_TAG_META[]{ "skchain" };
 
+		constexpr char XML_TAG_REGIONS[]{ "regions" };
 		constexpr char XML_TAG_ROM_METADATA[]{ "rom_metadata" };
 		constexpr char XML_TAG_GFX_METADATA[]{ "gfx_metadata" };
 		constexpr char XML_TAG_PALETTES[]{ "palettes" };
@@ -31,7 +32,7 @@ namespace skc {
 		constexpr char XML_TAG_TILESET[]{ "tileset" };
 		constexpr char XML_TAG_TILE[]{ "tile" };
 
-		constexpr char XML_ATTR_APP_REGION[]{ "region" };
+		constexpr char XML_ATTR_REGION[]{ "region" };
 		constexpr char XML_ATTR_APP_VERSION[]{ "app_version" };
 		constexpr char XML_TAG_OFFSET_GFX[]{ "offset_gfx" };
 		constexpr char XML_ATTR_ITEM_NO[]{ "item_no" };
@@ -62,6 +63,8 @@ namespace skc {
 		constexpr char XML_ATTR_NES_TILES[]{ "nes_tiles" };
 		constexpr char XML_ATTR_PALETTE_OFFSET[]{ "palette_offset" };
 		constexpr char XML_ATTR_TILE_OFFSET[]{ "tile_offset" };
+		constexpr char XML_ATTR_NAME[]{ "name" };
+		constexpr char XML_ATTR_RULE[]{ "rule" };
 
 		// level/metadata xml files
 		constexpr char XML_META_COMMENTS[]{ " Solomon's Key level metadata file created with Solomon's Keychain (https://github.com/kaimitai/skchain) " };

@@ -33,6 +33,7 @@ namespace skc {
 		skc::Wall int_to_wall_type(int p_wall_type_no);
 
 		// get region information from xml nodes
+		std::string get_region_code(const pugi::xml_node p_node, const std::vector<byte> p_rom_bytes);
 		bool node_has_region_attribute(const pugi::xml_node p_node);
 		bool node_has_region_code(const pugi::xml_node p_node, const std::string& p_region_code);
 		std::string node_region_best_match(const pugi::xml_node p_node,

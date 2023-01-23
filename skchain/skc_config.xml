@@ -2,6 +2,12 @@
 <!-- Configuration file for Solomon's Keychain (https://github.com/kaimitai/skchain) -->
 <skchain app_version="0.2">
 
+  <regions>
+    <region name="US" rule="0x0bf2:0x00" />
+	<region name="JP" rule="0x0bf2:0xea" />
+    <region name="EU" rule="0x0bf2:0xff" />
+  </regions>
+
   <rom_metadata>
   	<!-- US/JP ROM specific -->
     <offset_mirror_rate_table region="US,JP" offset="0x5c10" />
