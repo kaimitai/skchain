@@ -29,10 +29,13 @@ The [ROM map document](./docs/solomon's_key_rom_map.md) contains all information
 
 ### Development Roadmap
 * Support saving NES-file using a different ROM mapper, to make space for more items/enemies in the ROM than the original developers had available (SKEdit-compatibility)
-* Automatically deduce the region of the loaded ROM file, and use the corresponsing configuration
 
 <hr>
 
 ### Version History
 
-2022-01-24: Released v0.1
+2022-01-23: v0.2
+* The application will now automatically deduce the ROM region (US/EU/JP) based on the input ROM-file, and load the corresponding configuration
+
+2022-01-24: v0.1
+* Initial release, v0.1

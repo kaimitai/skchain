@@ -298,3 +298,73 @@ skc::Game_metadata skc::xml::load_metadata_xml(const std::string p_folder, const
 
 	return result;
 }
+
+std::string skc::xml::get_region_code(const pugi::xml_node p_node, const std::vector<byte> p_rom_bytes) {
+
+	const auto is_region_rule_adhered = [](const std::string& p_rule, const std::vector<byte>& p_rom_bytes) -> bool {
+		auto l_rules = klib::util::string_split_strings(p_rule, ',');
+
+		for (const auto& l_rule : l_rules) {
+			auto l_kv_pair{ klib::util::string_split<std::size_t>(l_rule, ':') };
+
+			if (p_rom_bytes.at(l_kv_pair.at(0)) !=
+				static_cast<byte>(l_kv_pair.at(1)))
+				return false;
+		}
+
+		return true;
+	};
+
+	for (auto n_region = p_node.child(c::XML_ATTR_REGION);
+		n_region; n_region = n_region.next_sibling(c::XML_ATTR_REGION)) {
+
+		if (is_region_rule_adhered(n_region.attribute(c::XML_ATTR_RULE).as_string(),
+			p_rom_bytes))
+			return n_region.attribute(c::XML_ATTR_NAME).as_string();
+	}
+
+	// no region rule found, use hard-coded rules
+	constexpr std::size_t OFFSET_REGION_DIFF{ 0x0bf2 };
+	constexpr byte REGION_EU_VALUE{ 0xff };
+	constexpr byte REGION_JP_VALUE{ 0xea };
+	constexpr byte REGION_US_VALUE{ 0x00 };
+
+	byte l_chk{ p_rom_bytes.at(OFFSET_REGION_DIFF) };
+
+	if (l_chk == REGION_EU_VALUE)
+		return c::REGION_EU;
+	else if (l_chk == REGION_JP_VALUE)
+		return c::REGION_JP;
+	else
+		return c::REGION_US;
+}
+
+bool skc::xml::node_has_region_attribute(const pugi::xml_node p_node) {
+	std::string l_code = p_node.attribute(c::XML_ATTR_REGION).as_string();
+	return !l_code.empty();
+}
+
+bool skc::xml::node_has_region_code(const pugi::xml_node p_node, const std::string& p_region_code) {
+	std::string l_codes_str = p_node.attribute(c::XML_ATTR_REGION).as_string();
+	auto l_codes = klib::util::string_split_strings(l_codes_str, ',');
+	for (const auto& l_code : l_codes)
+		if (l_code == p_region_code)
+			return true;
+
+	return false;
+}
+
+std::string skc::xml::node_region_best_match(const pugi::xml_node p_node,
+	const std::string& p_region_code,
+	const std::string& p_xml_tag, const std::string p_value_attr) {
+	std::string result;
+
+	for (auto n_child = p_node.child(p_xml_tag.c_str());
+		n_child; n_child = n_child.next_sibling(p_xml_tag.c_str())) {
+		if ((result.empty() && !node_has_region_code(n_child, p_region_code)) ||
+			node_has_region_code(n_child, p_region_code))
+			result = n_child.attribute(p_value_attr.c_str()).as_string();
+	}
+
+	return result;
+}

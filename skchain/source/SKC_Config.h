@@ -38,13 +38,14 @@ namespace skc {
 		skc::Enemy_editor m_enemy_editor;
 		std::deque<std::pair<std::string, int>> m_messages;
 
-		std::string m_base_dir, m_file_dir, m_file_name;
+		std::string m_base_dir, m_file_dir, m_file_name, m_region_code;
 
 	public:
 		SKC_Config(const std::string& p_base_dir,
 			const std::string& p_filename);
 		const std::vector<byte>& get_rom_data(void) const;
 
+		std::string get_region_code(void) const;
 		std::size_t get_offset_gfx(void) const;
 		std::size_t get_offset_block_data(std::size_t p_level_no = 0) const;
 		std::size_t get_offset_enemy_table_lo(void) const;
