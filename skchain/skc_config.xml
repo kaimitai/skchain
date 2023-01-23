@@ -4,135 +4,135 @@
 
   <regions>
     <region name="US" rule="0x0bf2:0x00" />
-	<region name="JP" rule="0x0bf2:0xea" />
+    <region name="JP" rule="0x0bf2:0xea" />
     <region name="EU" rule="0x0bf2:0xff" />
   </regions>
 
   <rom_metadata>
-  	<!-- US/JP ROM specific -->
+    <!-- US/JP ROM specific -->
     <offset_mirror_rate_table region="US,JP" offset="0x5c10" />
-	<offset_mirror_enemy_table region="US,JP" offset="0x5c30" />
+    <offset_mirror_enemy_table region="US,JP" offset="0x5c30" />
     <offset_enemy_table region="US,JP" offset="0x5cfc" />
-	<offset_block_data region="US,JP" offset="0x603c" />
-	<offset_item_table region="US,JP" offset="0x6a2c" />
-  
-    <!-- EU ROM specific -->
-	<offset_mirror_rate_table region="EU" offset="0x5b90" />
-	<offset_mirror_enemy_table region="EU" offset="0x5bb0" />
-	<offset_enemy_table region="EU" offset="0x5c7c" />
-	<offset_block_data region="EU" offset="0x5fbc" />
-	<offset_item_table region="EU" offset="0x69ac" />
+    <offset_block_data region="US,JP" offset="0x603c" />
+    <offset_item_table region="US,JP" offset="0x6a2c" />
 
-	<length_mirror_rate_data value="128" />
-	<length_mirror_enemy_data value="42" />
-	<length_enemy_data value="726" />
-	<length_item_data value="1402" />
-	<offset_gfx offset="0x8010" />
-	<rom_ram_diff value="0x7ff0" />
-	<level_count value="53" />
-	<mirror_rate_count value="16" />
-	<mirror_enemy_count value="17" />
-	<nes_tile_count value="2048" />
-	<!-- bitmasks which indicate a certain item overlay on a certain level; in the original game this is the bat symbols in level 20 and blue opals in level 30 -->
+    <!-- EU ROM specific -->
+    <offset_mirror_rate_table region="EU" offset="0x5b90" />
+    <offset_mirror_enemy_table region="EU" offset="0x5bb0" />
+    <offset_enemy_table region="EU" offset="0x5c7c" />
+    <offset_block_data region="EU" offset="0x5fbc" />
+    <offset_item_table region="EU" offset="0x69ac" />
+
+    <length_mirror_rate_data value="128" />
+    <length_mirror_enemy_data value="42" />
+    <length_enemy_data value="726" />
+    <length_item_data value="1402" />
+    <offset_gfx offset="0x8010" />
+    <rom_ram_diff value="0x7ff0" />
+    <level_count value="53" />
+    <mirror_rate_count value="16" />
+    <mirror_enemy_count value="17" />
+    <nes_tile_count value="2048" />
+    <!-- bitmasks which indicate a certain item overlay on a certain level; in the original game this is the bat symbols in level 20 and blue opals in level 30 -->
     <!-- this configuration will be used both when loading and saving data, to perform the necessary conversions -->
-	<item_bitmasks>
-	  <!-- US/EU bitmasks -->
-	  <item_bitmask level_no="19" item_no="0x04" region="US,EU" offset="0x3ff2" />
-	  <item_bitmask level_no="29" item_no="0x27" region="US,EU" offset="0x400a" />
-	  
-	  <!-- JP bitmasks -->
-	  <item_bitmask level_no="19" item_no="0x04" region="JP" offset="0x3bc2" />
-	  <item_bitmask level_no="29" item_no="0x27" region="JP" offset="0x3bda" />
-	</item_bitmasks>
-	<!-- meta items are solomon's seals, mighty bomb jack and tecmo bunny (position offset unknown) -->
-	<!-- in the future we hope to find out how to move these between levels -->
-	<!-- the tecmo bunny and page offsets are unknown at this point, so its position is static -->
-	<!-- TODO: Add overlay to breakable white blocks, and see if we can find the offsets -->
-	<level_meta_items>
-	  <!-- US/EU specific: Seals and Bomb Jacks -->
-	  <level_meta_item no="0" description="Solomon's seal (meta)" level_no="8" animation="29" transparent="true" region="US,EU" offset="0x3fd6" />
-	  <level_meta_item no="1" description="Solomon's seal (meta)" level_no="12" animation="29" transparent="true" region="US,EU" offset="0x3fd7" />
-	  <level_meta_item no="2" description="Solomon's seal (meta)" level_no="16" animation="29" transparent="true" region="US,EU" offset="0x3fd8" />
-	  <level_meta_item no="3" description="Solomon's seal (meta)" level_no="18" animation="29" transparent="true" region="US,EU" offset="0x3fd9" />
-	  <level_meta_item no="4" description="Solomon's seal (meta)" level_no="20" animation="29" transparent="true" region="US,EU" offset="0x3fda" />
-	  <level_meta_item no="5" description="Solomon's seal (meta)" level_no="28" animation="29" transparent="true" region="US,EU" offset="0x3fdb" />
-	  <level_meta_item no="6" description="Solomon's seal (meta)" level_no="45" animation="29" transparent="true" region="US,EU" offset="0x3fdc" />
-	  <level_meta_item no="7" description="Solomon's seal (meta)" level_no="46" animation="29" transparent="true" region="US,EU" offset="0x3fdd" />
-	  <level_meta_item no="8" description="Bomb Jack (meta)" level_no="16" animation="67" region="US,EU" offset="0x389f" />
-	  <level_meta_item no="9" description="Bomb Jack (meta)" level_no="38" animation="67" region="US,EU" offset="0x3994" />
-	
-	  <!-- JP specific: Seals and Bomb Jacks -->
-	  <level_meta_item no="0" description="Solomon's seal (meta)" level_no="8" animation="29" transparent="true" region="JP" offset="0x3ba6" />
-	  <level_meta_item no="1" description="Solomon's seal (meta)" level_no="12" animation="29" transparent="true" region="JP" offset="0x3ba7" />
-	  <level_meta_item no="2" description="Solomon's seal (meta)" level_no="16" animation="29" transparent="true" region="JP" offset="0x3ba8" />
-	  <level_meta_item no="3" description="Solomon's seal (meta)" level_no="18" animation="29" transparent="true" region="JP" offset="0x3ba9" />
-	  <level_meta_item no="4" description="Solomon's seal (meta)" level_no="20" animation="29" transparent="true" region="JP" offset="0x3baa" />
-	  <level_meta_item no="5" description="Solomon's seal (meta)" level_no="28" animation="29" transparent="true" region="JP" offset="0x3bab" />
-	  <level_meta_item no="6" description="Solomon's seal (meta)" level_no="45" animation="29" transparent="true" region="JP" offset="0x3bac" />
-	  <level_meta_item no="7" description="Solomon's seal (meta)" level_no="46" animation="29" transparent="true" region="JP" offset="0x3bad" />
-	  <level_meta_item no="8" description="Bomb Jack (meta)" level_no="16" animation="67" region="JP" offset="0x346f" />
-	  <level_meta_item no="9" description="Bomb Jack (meta)" level_no="38" animation="67" region="JP" offset="0x3564" />
-	  
-	  <level_meta_item no="10" description="Tecmo bunny (meta)" level_no="19" animation="69" transparent="true" position="0,1" />
-	  <level_meta_item no="11" description="Tecmo bunny (meta)" level_no="37" animation="69" transparent="true" position="14,8" />
-	  <level_meta_item no="12" description="Page of Time (meta)" level_no="51" animation="30" position="7,2" />
-	  <level_meta_item no="13" description="Page of Space (meta)" level_no="52" animation="30" position="7,9" />
-	</level_meta_items>
-	<!-- values that could theoretically be read from the ROM data -->
-	<!-- as we learn more about the ROM data, the following values will be removed -->
-	<level_palettes value="0,0,0,0, 1,1,1,1, 2,2,2,2, 3,3,3,3, 2,2,2,2, 0,0,0,0, 2,2,2,2, 0,0,0,0, 3,3,3,3, 2,2,2,2, 0,0,0,0, 2,2,2,2, 4,4,0,4,4" />
+    <item_bitmasks>
+      <!-- US/EU bitmasks -->
+      <item_bitmask level_no="19" item_no="0x04" region="US,EU" offset="0x3ff2" />
+      <item_bitmask level_no="29" item_no="0x27" region="US,EU" offset="0x400a" />
+
+      <!-- JP bitmasks -->
+      <item_bitmask level_no="19" item_no="0x04" region="JP" offset="0x3bc2" />
+      <item_bitmask level_no="29" item_no="0x27" region="JP" offset="0x3bda" />
+    </item_bitmasks>
+    <!-- meta items are solomon's seals, mighty bomb jack and tecmo bunny (position offset unknown) -->
+    <!-- in the future we hope to find out how to move these between levels -->
+    <!-- the tecmo bunny and page offsets are unknown at this point, so its position is static -->
+    <!-- TODO: Add overlay to breakable white blocks, and see if we can find the offsets -->
+    <level_meta_items>
+      <!-- US/EU specific: Seals and Bomb Jacks -->
+      <level_meta_item no="0" description="Solomon's seal (meta)" level_no="8" animation="29" transparent="true" region="US,EU" offset="0x3fd6" />
+      <level_meta_item no="1" description="Solomon's seal (meta)" level_no="12" animation="29" transparent="true" region="US,EU" offset="0x3fd7" />
+      <level_meta_item no="2" description="Solomon's seal (meta)" level_no="16" animation="29" transparent="true" region="US,EU" offset="0x3fd8" />
+      <level_meta_item no="3" description="Solomon's seal (meta)" level_no="18" animation="29" transparent="true" region="US,EU" offset="0x3fd9" />
+      <level_meta_item no="4" description="Solomon's seal (meta)" level_no="20" animation="29" transparent="true" region="US,EU" offset="0x3fda" />
+      <level_meta_item no="5" description="Solomon's seal (meta)" level_no="28" animation="29" transparent="true" region="US,EU" offset="0x3fdb" />
+      <level_meta_item no="6" description="Solomon's seal (meta)" level_no="45" animation="29" transparent="true" region="US,EU" offset="0x3fdc" />
+      <level_meta_item no="7" description="Solomon's seal (meta)" level_no="46" animation="29" transparent="true" region="US,EU" offset="0x3fdd" />
+      <level_meta_item no="8" description="Bomb Jack (meta)" level_no="16" animation="67" region="US,EU" offset="0x389f" />
+      <level_meta_item no="9" description="Bomb Jack (meta)" level_no="38" animation="67" region="US,EU" offset="0x3994" />
+
+      <!-- JP specific: Seals and Bomb Jacks -->
+      <level_meta_item no="0" description="Solomon's seal (meta)" level_no="8" animation="29" transparent="true" region="JP" offset="0x3ba6" />
+      <level_meta_item no="1" description="Solomon's seal (meta)" level_no="12" animation="29" transparent="true" region="JP" offset="0x3ba7" />
+      <level_meta_item no="2" description="Solomon's seal (meta)" level_no="16" animation="29" transparent="true" region="JP" offset="0x3ba8" />
+      <level_meta_item no="3" description="Solomon's seal (meta)" level_no="18" animation="29" transparent="true" region="JP" offset="0x3ba9" />
+      <level_meta_item no="4" description="Solomon's seal (meta)" level_no="20" animation="29" transparent="true" region="JP" offset="0x3baa" />
+      <level_meta_item no="5" description="Solomon's seal (meta)" level_no="28" animation="29" transparent="true" region="JP" offset="0x3bab" />
+      <level_meta_item no="6" description="Solomon's seal (meta)" level_no="45" animation="29" transparent="true" region="JP" offset="0x3bac" />
+      <level_meta_item no="7" description="Solomon's seal (meta)" level_no="46" animation="29" transparent="true" region="JP" offset="0x3bad" />
+      <level_meta_item no="8" description="Bomb Jack (meta)" level_no="16" animation="67" region="JP" offset="0x346f" />
+      <level_meta_item no="9" description="Bomb Jack (meta)" level_no="38" animation="67" region="JP" offset="0x3564" />
+
+      <level_meta_item no="10" description="Tecmo bunny (meta)" level_no="19" animation="69" transparent="true" position="0,1" />
+      <level_meta_item no="11" description="Tecmo bunny (meta)" level_no="37" animation="69" transparent="true" position="14,8" />
+      <level_meta_item no="12" description="Page of Time (meta)" level_no="51" animation="30" position="7,2" />
+      <level_meta_item no="13" description="Page of Space (meta)" level_no="52" animation="30" position="7,9" />
+    </level_meta_items>
+    <!-- values that could theoretically be read from the ROM data -->
+    <!-- as we learn more about the ROM data, the following values will be removed -->
+    <level_palettes value="0,0,0,0, 1,1,1,1, 2,2,2,2, 3,3,3,3, 2,2,2,2, 0,0,0,0, 2,2,2,2, 0,0,0,0, 3,3,3,3, 2,2,2,2, 0,0,0,0, 2,2,2,2, 4,4,0,4,4" />
   </rom_metadata>
 
   <!-- virtual metadata tiles mapped from byte value (0-255) to description and tile graphics indexes (do not add new items to this list, but descriptions and graphics can be changed for existing ones) -->
   <metadata_definitions>
     <metadata no="0x00" description="Key" animation="5" />
-	<metadata no="0x01" description="Door" animation="4" />
-	<metadata no="0x02" description="Player Start" animation="3" />
-	<metadata no="0x03" description="Enemy Spawn 1" animation="57" />
-	<metadata no="0x04" description="Enemy Spawn 2" animation="57" />
-	<metadata no="0x05" description="Empty Tile" animation="0" />
-	<metadata no="0x06" description="Block (brown)" animation="1" />
-	<metadata no="0x07" description="Block (white)" animation="2" />
-	<metadata no="0x08" description="Block (brown and white)" animation="2" />
-	<!-- Overrides for rendering purposes -->
-	<metadata no="0x09" description="Player Start (left)" animation="70" />
-	<metadata no="0x10" description="Solomon's Key" animation="16" />
-	<!-- 0x11 and up to 0xef (theoretically) will represent meta-tiles, and will be generated
+    <metadata no="0x01" description="Door" animation="4" />
+    <metadata no="0x02" description="Player Start" animation="3" />
+    <metadata no="0x03" description="Enemy Spawn 1" animation="57" />
+    <metadata no="0x04" description="Enemy Spawn 2" animation="57" />
+    <metadata no="0x05" description="Empty Tile" animation="0" />
+    <metadata no="0x06" description="Block (brown)" animation="1" />
+    <metadata no="0x07" description="Block (white)" animation="2" />
+    <metadata no="0x08" description="Block (brown and white)" animation="2" />
+    <!-- Overrides for rendering purposes -->
+    <metadata no="0x09" description="Player Start (left)" animation="70" />
+    <metadata no="0x10" description="Solomon's Key" animation="16" />
+    <!-- 0x11 and up to 0xef (theoretically) will represent meta-tiles, and will be generated
          automatically by the application	-->
-	<!-- Keep the constellation bytes the same as their actual item values -->
+    <!-- Keep the constellation bytes the same as their actual item values -->
     <metadata no="0xf0" description="Aries" animation="53" />
-	<metadata no="0xf1" description="Gemini" animation="54" />
-	<metadata no="0xf2" description="Virgo" animation="55" />
-	<metadata no="0xf3" description="Aquarius" animation="56" />
-	<metadata no="0xf4" description="Cancer" animation="53" />
-	<metadata no="0xf5" description="Scorpio" animation="54" />
-	<metadata no="0xf6" description="Capricorn" animation="55" />
-	<metadata no="0xf7" description="Pisces" animation="56" />
-	<metadata no="0xf8" description="Taurus" animation="53" />
-	<metadata no="0xf9" description="Leo" animation="54" />
-	<metadata no="0xfa" description="Libra" animation="55" />
-	<metadata no="0xfb" description="Sagittarius" animation="56" />
+    <metadata no="0xf1" description="Gemini" animation="54" />
+    <metadata no="0xf2" description="Virgo" animation="55" />
+    <metadata no="0xf3" description="Aquarius" animation="56" />
+    <metadata no="0xf4" description="Cancer" animation="53" />
+    <metadata no="0xf5" description="Scorpio" animation="54" />
+    <metadata no="0xf6" description="Capricorn" animation="55" />
+    <metadata no="0xf7" description="Pisces" animation="56" />
+    <metadata no="0xf8" description="Taurus" animation="53" />
+    <metadata no="0xf9" description="Leo" animation="54" />
+    <metadata no="0xfa" description="Libra" animation="55" />
+    <metadata no="0xfb" description="Sagittarius" animation="56" />
   </metadata_definitions>
 
   <!-- each item mapped from byte value (0x01-0x39) to description and tile graphics indexes. the higher bits determine properties "hidden" and "in block" -->
   <item_definitions>
     <!-- 0x01-0x03: glitch broken block, glitch door, glitch white block -->
-	<!-- 0x06: glitch key -->
-	<!-- 0x07: glitch open door -->
-  
+    <!-- 0x06: glitch key -->
+    <!-- 0x07: glitch open door -->
+
     <item no="0x04" description="Bat Symbol" animation="6" />
-	<item no="0x05" description="Demon Mirror" animation="57" />
-	
+    <item no="0x05" description="Demon Mirror" animation="57" />
+
     <item no="0x08" description="Diamond (blue, modifiable)" animation="10" />
-	<item no="0x09" description="Firejar (blue, modifiable)" animation="77" />
-	<item no="0x0a" description="Double Coin (gold, modifiable)" animation="79" />
+    <item no="0x09" description="Firejar (blue, modifiable)" animation="77" />
+    <item no="0x0a" description="Double Coin (gold, modifiable)" animation="79" />
     <item no="0x0b" description="Jewels (orange, modifiable)" animation="18" />
     <item no="0x0c" description="Diamond (orange, modifiable)" animation="11" />
-	<item no="0x0d" description="Firejar (orange, modifiable)" animation="78" />
+    <item no="0x0d" description="Firejar (orange, modifiable)" animation="78" />
     <item no="0x0e" description="Scroll (modifiable)" animation="80" />
-	<item no="0x0f" description="Bell (modifiable)" animation="76" />
-	
-	<!-- 0x10 nothing -->
+    <item no="0x0f" description="Bell (modifiable)" animation="76" />
+
+    <!-- 0x10 nothing -->
     <item no="0x11" description="Timebottle (half)" animation="37" />
     <item no="0x12" description="Timebottle (full)" animation="23" />
     <item no="0x13" description="Hourglass (blue)" animation="14" />
@@ -142,17 +142,17 @@
     <item no="0x17" description="Scroll" animation="33" />
     <item no="0x18" description="Bell" animation="8" />
     <item no="0x19" description="Explosion Jar" animation="24" />
-	<item no="0x1a" description="Key (blue)" animation="68" />
+    <item no="0x1a" description="Key (blue)" animation="68" />
     <item no="0x1b" description="Jewels (blue)" animation="17" />
     <item no="0x1c" description="Shrine #1" animation="25" />
     <item no="0x1d" description="Shrine #2" animation="26" />
     <item no="0x1e" description="Shrine #3" animation="27" />
     <item no="0x1f" description="Shrine #4" animation="28" />
-	
+
     <item no="0x20" description="Solomon's Seal" animation="29" />
     <item no="0x21" description="Egyptian Head" animation="30" />
     <item no="0x22" description="Warp Item" animation="16" />
-	<!-- 0x23, 0x24: glitch open door -->
+    <!-- 0x23, 0x24: glitch open door -->
     <item no="0x25" description="Coin (silver)" animation="21" />
     <item no="0x26" description="Double Coin (silver)" animation="34" />
     <item no="0x27" description="Opal (blue)" animation="19" />
@@ -168,18 +168,18 @@
     <item no="0x31" description="Egyptian Head" animation="30" />
     <item no="0x32" description="Magic Lamp" animation="39" />
     <item no="0x33" description="E-bottle" animation="7" />
-	<!-- 0x33-0x36: glitch 1-ups -->
-	<!-- 0x37-0x3f: garbage gfx -->
+    <!-- 0x33-0x36: glitch 1-ups -->
+    <!-- 0x37-0x3f: garbage gfx -->
   </item_definitions>
 
   <!-- each enemy mapped from byte value (0x01-0x83) to description and tile graphics indexes -->
   <enemy_definitions>
-  
+
     <!-- 0x0c-0x0f and 0x10-0x13 are strange stationary fireballs -->
-	<!-- 0x14-0x17 are glitchy gravity fairies and princesses -->
-	<!-- 0x18-0x1a are mighty bomb jacks -->
-	<enemy no="0x18" description="Mighty Bomb Jack" animation="67" />
-	
+    <!-- 0x14-0x17 are glitchy gravity fairies and princesses -->
+    <!-- 0x18-0x1a are mighty bomb jacks -->
+    <enemy no="0x18" description="Mighty Bomb Jack" animation="67" />
+
     <enemy no="0x1c" description="Fairy" animation="42" />
     <enemy no="0x1d" description="Fairy Princess" animation="49" />
 
@@ -187,17 +187,17 @@
     <enemy no="0x21" description="Bullet (left)" animation="58" />
     <enemy no="0x22" description="Bullet (up)" animation="60" />
     <enemy no="0x23" description="Bullet (down)" animation="61" />
-	
-	<enemy no="0x24" description="Panel Monster (right)" animation="50" />
+
+    <enemy no="0x24" description="Panel Monster (right)" animation="50" />
     <enemy no="0x25" description="Panel Monster (left)" animation="45" />
     <enemy no="0x26" description="Panel Monster (up)" animation="51" />
     <enemy no="0x27" description="Panel Monster (down)" animation="52" />
-	
-	<enemy no="0x28" description="Fireball (right, ccw, speed 1)" animation="44" />
+
+    <enemy no="0x28" description="Fireball (right, ccw, speed 1)" animation="44" />
     <enemy no="0x29" description="Fireball (left, cw, speed 1)" animation="44" />
     <enemy no="0x2a" description="Fireball (up, cw, speed 1)" animation="44" />
     <enemy no="0x2b" description="Fireball (down, ccw, speed 1)" animation="44" />
-	
+
     <enemy no="0x2c" description="Fireball (right, ccw, speed 2)" animation="44" />
     <enemy no="0x2d" description="Fireball (left, cw, speed 2)" animation="44" />
     <enemy no="0x2e" description="Fireball (up, cw, speed 2)" animation="44" />
@@ -207,228 +207,228 @@
     <enemy no="0x31" description="Neul (up, speed 1) #2" animation="43" />
     <enemy no="0x32" description="Neul (down, speed 1)" animation="43" />
     <enemy no="0x33" description="Neul (down, speed 1) #2" animation="43" />
-	
+
     <enemy no="0x34" description="Ghost (right, speed 1)" animation="63" />
     <enemy no="0x35" description="Ghost (right, speed 1) #2" animation="63" />
     <enemy no="0x36" description="Ghost (left, speed 1)" animation="62" />
     <enemy no="0x37" description="Ghost (left, speed 1) #2" animation="62" />
-	
+
     <enemy no="0x38" description="Neul (up, speed 2)" animation="43" />
     <enemy no="0x39" description="Neul (up, speed 2) #2" animation="43" />
     <enemy no="0x3a" description="Neul (down, speed 2)" animation="43" />
     <enemy no="0x3b" description="Neul (down, speed 2) #2" animation="43" />
-	
+
     <enemy no="0x3c" description="Ghost (right, speed 2)" animation="63" />
     <enemy no="0x3d" description="Ghost (right, speed 2) #2" animation="63" />
     <enemy no="0x3e" description="Ghost (left, speed 2)" animation="62" />
     <enemy no="0x3f" description="Ghost (left, speed 2) #2" animation="62" />
-	
+
     <enemy no="0x40" description="Neul (up, speed 1, noslow)" animation="43" />
     <enemy no="0x41" description="Neul (up, speed 1, noslow) #2" animation="43" />
     <enemy no="0x42" description="Neul (down, speed 1, noslow)" animation="43" />
     <enemy no="0x43" description="Neul (down, speed 1, noslow) #2" animation="43" />
-	
+
     <enemy no="0x44" description="Ghost (right, speed 1, noslow)" animation="63" />
     <enemy no="0x45" description="Ghost (right, speed 1, noslow) #2" animation="63" />
     <enemy no="0x46" description="Ghost (left, speed 1, noslow)" animation="62" />
     <enemy no="0x47" description="Ghost (left, speed 1, noslow) #2" animation="62" />
-	
+
     <enemy no="0x48" description="Neul (up, speed 2, noslow)" animation="43" />
     <enemy no="0x49" description="Neul (up, speed 2, noslow) #2" animation="43" />
     <enemy no="0x4a" description="Neul (down, speed 2, noslow)" animation="43" />
     <enemy no="0x4b" description="Neul (down, speed 2, noslow) #2" animation="43" />
-	
+
     <enemy no="0x4c" description="Ghost (right, speed 2, noslow)" animation="63" />
     <enemy no="0x4d" description="Ghost (right, speed 2, noslow) #2" animation="63" />
     <enemy no="0x4e" description="Ghost (left, speed 2, noslow)" animation="62" />
     <enemy no="0x4f" description="Ghost (left, speed 2, noslow) #2" animation="62" />
-	
+
     <enemy no="0x50" description="Demonhead (right, speed 1)" animation="71" />
-	<enemy no="0x51" description="Demonhead (left, speed 1)" animation="75" />
-	<enemy no="0x52" description="Demonhead (right, speed 1) #2" animation="71" />
-	<enemy no="0x53" description="Demonhead (left, speed 1) #2" animation="75" />
-	<enemy no="0x54" description="Demonhead (right, speed 2)" animation="71" />
-	<enemy no="0x55" description="Demonhead (left, speed 2)" animation="75" />
-	<enemy no="0x56" description="Demonhead (right, speed 2) #2" animation="71" />
-	<enemy no="0x57" description="Demonhead (left, speed 2) #2" animation="75" />	
-	<enemy no="0x58" description="Demonhead (right, speed 3)" animation="71" />
-	<enemy no="0x59" description="Demonhead (left, speed 3)" animation="75" />
-	<enemy no="0x5a" description="Demonhead (right, speed 3) #2" animation="71" />
-	<enemy no="0x5b" description="Demonhead (left, speed 3) #2" animation="75" />
-	
-	<enemy no="0x5c" description="Saramandor (right, speed 1)" animation="73" />
-	<enemy no="0x5d" description="Saramandor (left, speed 1)" animation="72" />
-	<enemy no="0x5e" description="Saramandor (right, speed 1) #2" animation="73" />
-	<enemy no="0x5f" description="Saramandor (left, speed 1) #2" animation="72" />
-	<enemy no="0x60" description="Saramandor (right, speed 2)" animation="73" />
-	<enemy no="0x61" description="Saramandor (left, speed 2)" animation="72" />
-	<enemy no="0x62" description="Saramandor (right, speed 2) #2" animation="73" />
-	<enemy no="0x63" description="Saramandor (left, speed 2) #2" animation="72" />
-	<enemy no="0x64" description="Saramandor (right, speed 3)" animation="73" />
-	<enemy no="0x65" description="Saramandor (left, speed 3)" animation="72" />
-	<enemy no="0x66" description="Saramandor (right, speed 3) #2" animation="73" />
-	<enemy no="0x67" description="Saramandor (left, speed 3) #2" animation="72" />
-	
+    <enemy no="0x51" description="Demonhead (left, speed 1)" animation="75" />
+    <enemy no="0x52" description="Demonhead (right, speed 1) #2" animation="71" />
+    <enemy no="0x53" description="Demonhead (left, speed 1) #2" animation="75" />
+    <enemy no="0x54" description="Demonhead (right, speed 2)" animation="71" />
+    <enemy no="0x55" description="Demonhead (left, speed 2)" animation="75" />
+    <enemy no="0x56" description="Demonhead (right, speed 2) #2" animation="71" />
+    <enemy no="0x57" description="Demonhead (left, speed 2) #2" animation="75" />
+    <enemy no="0x58" description="Demonhead (right, speed 3)" animation="71" />
+    <enemy no="0x59" description="Demonhead (left, speed 3)" animation="75" />
+    <enemy no="0x5a" description="Demonhead (right, speed 3) #2" animation="71" />
+    <enemy no="0x5b" description="Demonhead (left, speed 3) #2" animation="75" />
+
+    <enemy no="0x5c" description="Saramandor (right, speed 1)" animation="73" />
+    <enemy no="0x5d" description="Saramandor (left, speed 1)" animation="72" />
+    <enemy no="0x5e" description="Saramandor (right, speed 1) #2" animation="73" />
+    <enemy no="0x5f" description="Saramandor (left, speed 1) #2" animation="72" />
+    <enemy no="0x60" description="Saramandor (right, speed 2)" animation="73" />
+    <enemy no="0x61" description="Saramandor (left, speed 2)" animation="72" />
+    <enemy no="0x62" description="Saramandor (right, speed 2) #2" animation="73" />
+    <enemy no="0x63" description="Saramandor (left, speed 2) #2" animation="72" />
+    <enemy no="0x64" description="Saramandor (right, speed 3)" animation="73" />
+    <enemy no="0x65" description="Saramandor (left, speed 3)" animation="72" />
+    <enemy no="0x66" description="Saramandor (right, speed 3) #2" animation="73" />
+    <enemy no="0x67" description="Saramandor (left, speed 3) #2" animation="72" />
+
     <enemy no="0x68" description="Dragon (right, speed 1)" animation="64" />
     <enemy no="0x69" description="Dragon (left, speed 1)" animation="41" />
-	<enemy no="0x6a" description="Dragon (right, speed 1) #2" animation="64" />
-	<enemy no="0x6b" description="Dragon (left, speed 1) #2" animation="41" />
+    <enemy no="0x6a" description="Dragon (right, speed 1) #2" animation="64" />
+    <enemy no="0x6b" description="Dragon (left, speed 1) #2" animation="41" />
     <enemy no="0x6c" description="Dragon (right, speed 2)" animation="64" />
     <enemy no="0x6d" description="Dragon (left, speed 2)" animation="41" />
-	<enemy no="0x6e" description="Dragon (right, speed 2) #2" animation="64" />
-	<enemy no="0x6f" description="Dragon (left, speed 2) #2" animation="41" />
-	
+    <enemy no="0x6e" description="Dragon (right, speed 2) #2" animation="64" />
+    <enemy no="0x6f" description="Dragon (left, speed 2) #2" animation="41" />
+
     <enemy no="0x70" description="Golem (right, speed 1)" animation="65" />
     <enemy no="0x71" description="Golem (left, speed 1)" animation="40" />
     <enemy no="0x72" description="Golem (right, speed 1) #2" animation="65" />
     <enemy no="0x73" description="Golem (left, speed 1) #2" animation="40" />
     <enemy no="0x74" description="Golem (right, speed 2)" animation="65" />
     <enemy no="0x75" description="Golem (left, speed 2)" animation="40" />
-	<enemy no="0x76" description="Golem (right, speed 2) #2" animation="65" />
-	<enemy no="0x77" description="Golem (left, speed 2) #2" animation="40" />
+    <enemy no="0x76" description="Golem (right, speed 2) #2" animation="65" />
+    <enemy no="0x77" description="Golem (left, speed 2) #2" animation="40" />
 
     <enemy no="0x78" description="Gargoyle (right, speed 1)" animation="66" />
     <enemy no="0x79" description="Gargoyle (left, speed 1)" animation="46" />
-	<enemy no="0x7a" description="Gargoyle (right, speed 1) #2" animation="66" />
-	<enemy no="0x7b" description="Gargoyle (left, speed 1) #2" animation="46" />
-	<enemy no="0x7c" description="Gargoyle (right, speed 2)" animation="66" />
+    <enemy no="0x7a" description="Gargoyle (right, speed 1) #2" animation="66" />
+    <enemy no="0x7b" description="Gargoyle (left, speed 1) #2" animation="46" />
+    <enemy no="0x7c" description="Gargoyle (right, speed 2)" animation="66" />
     <enemy no="0x7d" description="Gargoyle (left, speed 2)" animation="46" />
-	<enemy no="0x7e" description="Gargoyle (right, speed 2) #2" animation="66" />
-	<enemy no="0x7f" description="Gargoyle (left, speed 2) #2" animation="46" />
+    <enemy no="0x7e" description="Gargoyle (right, speed 2) #2" animation="66" />
+    <enemy no="0x7f" description="Gargoyle (left, speed 2) #2" animation="46" />
 
     <enemy no="0x80" description="Red Flame" animation="48" />
     <enemy no="0x81" description="White Flame" animation="47" />
     <enemy no="0x82" description="Red Flame #2" animation="48" />
     <enemy no="0x83" description="White Flame #2" animation="47" />
-	
-	<!-- 0x84 and up are glitchy tiles, probably all undefined enemies -->
+
+    <!-- 0x84 and up are glitchy tiles, probably all undefined enemies -->
   </enemy_definitions>
 
   <enemy_editor>
     <enemy_speeds>
-	    <!-- fireball sets -->
-		<bundle no="0" enemies="0x28,0x2c" />
-		<bundle no="1" enemies="0x29,0x2d" />
-		<bundle no="2" enemies="0x2a,0x2e" />
-		<bundle no="3" enemies="0x2b,0x2f" />
-		<!-- neul sets -->
-		<bundle no="4" enemies="0x32,0x42,0x3a,0x4a" />
-		<bundle no="5" enemies="0x33,0x43,0x3b,0x4b" />
-		<bundle no="6" enemies="0x30,0x40,0x38,0x48" />
-		<bundle no="7" enemies="0x31,0x41,0x39,0x49" />
-		<!-- ghost sets -->
-		<bundle no="8" enemies="0x34,0x44,0x3c,0x4c" />
-		<bundle no="9" enemies="0x35,0x45,0x3d,0x4d" />
-		<bundle no="10" enemies="0x36,0x46,0x3e,0x4e" />
-		<bundle no="11" enemies="0x37,0x47,0x3f,0x4f" />
-		<!-- demonhead sets -->
-		<bundle no="12" enemies="0x50,0x54,0x58" />
-		<bundle no="13" enemies="0x52,0x56,0x5a" />
-		<bundle no="14" enemies="0x51,0x55,0x59" />
-		<bundle no="15" enemies="0x53,0x57,0x5b" />
-		<!-- saramandor sets -->
-		<bundle no="16" enemies="0x5c,0x60,0x64" />
-		<bundle no="17" enemies="0x5e,0x62,0x66" />
-		<bundle no="18" enemies="0x5d,0x61,0x65" />
-		<bundle no="19" enemies="0x5f,0x63,0x67" />
-		<!-- dragon sets -->
-		<bundle no="20" enemies="0x69,0x6d" />
-		<bundle no="21" enemies="0x6b,0x6f" />
-		<bundle no="22" enemies="0x68,0x6c" />
-		<bundle no="23" enemies="0x6a,0x6e" />
-		<!-- golem sets -->
-		<bundle no="24" enemies="0x71,0x75" />
-		<bundle no="25" enemies="0x73,0x77" />
-		<bundle no="26" enemies="0x70,0x74" />
-		<bundle no="27" enemies="0x72,0x76" />
-		<!-- gargoyle sets -->
-		<bundle no="28" enemies="0x79,0x7d" />
-		<bundle no="29" enemies="0x7b,0x7f" />
-		<bundle no="30" enemies="0x78,0x7c" />
-		<bundle no="31" enemies="0x7a,0x7e" />
-	</enemy_speeds>
-	<enemy_directions>
-		<!-- bullets -->
-		<bundle no="0" enemies="0x20,0x21,0x22,0x23" />
-		<!-- panel monsters -->
-		<bundle no="1" enemies="0x24,0x25,0x26,0x27" />
-		<!-- fireball sets -->
-		<bundle no="2" enemies="0x28,0x29,0x2a,0x2b" />
-		<bundle no="3" enemies="0x2c,0x2d,0x2e,0x2f" />
-		<!-- neul sets -->
-		<bundle no="4" enemies="0x30,0x32" />
-		<bundle no="5" enemies="0x31,0x33" />
-		<bundle no="6" enemies="0x38,0x3a" />
-		<bundle no="7" enemies="0x39,0x3b" />
-		<bundle no="8" enemies="0x40,0x42" />
-		<bundle no="9" enemies="0x41,0x43" />
-		<bundle no="10" enemies="0x48,0x4a" />
-		<bundle no="11" enemies="0x49,0x4b" />
-		<!-- ghost sets -->
-		<bundle no="12" enemies="0x34,0x36" />
-		<bundle no="13" enemies="0x35,0x37" />
-		<bundle no="14" enemies="0x3c,0x3e" />
-		<bundle no="15" enemies="0x3d,0x3f" />
-		<bundle no="16" enemies="0x44,0x46" />
-		<bundle no="17" enemies="0x45,0x47" />
-		<bundle no="18" enemies="0x4c,0x4e" />
-		<bundle no="19" enemies="0x4d,0x4f" />
-		<!-- demonhead sets -->
-		<bundle no="20" enemies="0x50,0x51" />
-		<bundle no="21" enemies="0x52,0x53" />
-		<bundle no="22" enemies="0x54,0x55" />
-		<bundle no="23" enemies="0x56,0x57" />
-		<bundle no="24" enemies="0x58,0x59" />
-		<bundle no="25" enemies="0x5a,0x5b" />
-		<!-- saramandor sets -->
-		<bundle no="26" enemies="0x5c,0x5d" />
-		<bundle no="27" enemies="0x5e,0x5f" />
-		<bundle no="28" enemies="0x60,0x61" />
-		<bundle no="29" enemies="0x62,0x63" />
-		<bundle no="30" enemies="0x64,0x65" />
-		<bundle no="31" enemies="0x66,0x67" />
-		<!-- dragon sets -->
-		<bundle no="32" enemies="0x69,0x68" />
-		<bundle no="33" enemies="0x6b,0x6a" />
-		<bundle no="34" enemies="0x6d,0x6c" />
-		<bundle no="35" enemies="0x6f,0x6e" />
-		<!-- golem sets -->
-		<bundle no="36" enemies="0x71,0x70" />
-		<bundle no="37" enemies="0x73,0x72" />
-		<bundle no="38" enemies="0x75,0x74" />
-		<bundle no="39" enemies="0x77,0x76" />
-		<!-- gargoyle sets -->
-		<bundle no="40" enemies="0x79,0x78" />
-		<bundle no="41" enemies="0x7b,0x7a" />
-		<bundle no="42" enemies="0x7d,0x7c" />
-		<bundle no="43" enemies="0x7f,0x7e" />
-	</enemy_directions>
+      <!-- fireball sets -->
+      <bundle no="0" enemies="0x28,0x2c" />
+      <bundle no="1" enemies="0x29,0x2d" />
+      <bundle no="2" enemies="0x2a,0x2e" />
+      <bundle no="3" enemies="0x2b,0x2f" />
+      <!-- neul sets -->
+      <bundle no="4" enemies="0x32,0x42,0x3a,0x4a" />
+      <bundle no="5" enemies="0x33,0x43,0x3b,0x4b" />
+      <bundle no="6" enemies="0x30,0x40,0x38,0x48" />
+      <bundle no="7" enemies="0x31,0x41,0x39,0x49" />
+      <!-- ghost sets -->
+      <bundle no="8" enemies="0x34,0x44,0x3c,0x4c" />
+      <bundle no="9" enemies="0x35,0x45,0x3d,0x4d" />
+      <bundle no="10" enemies="0x36,0x46,0x3e,0x4e" />
+      <bundle no="11" enemies="0x37,0x47,0x3f,0x4f" />
+      <!-- demonhead sets -->
+      <bundle no="12" enemies="0x50,0x54,0x58" />
+      <bundle no="13" enemies="0x52,0x56,0x5a" />
+      <bundle no="14" enemies="0x51,0x55,0x59" />
+      <bundle no="15" enemies="0x53,0x57,0x5b" />
+      <!-- saramandor sets -->
+      <bundle no="16" enemies="0x5c,0x60,0x64" />
+      <bundle no="17" enemies="0x5e,0x62,0x66" />
+      <bundle no="18" enemies="0x5d,0x61,0x65" />
+      <bundle no="19" enemies="0x5f,0x63,0x67" />
+      <!-- dragon sets -->
+      <bundle no="20" enemies="0x69,0x6d" />
+      <bundle no="21" enemies="0x6b,0x6f" />
+      <bundle no="22" enemies="0x68,0x6c" />
+      <bundle no="23" enemies="0x6a,0x6e" />
+      <!-- golem sets -->
+      <bundle no="24" enemies="0x71,0x75" />
+      <bundle no="25" enemies="0x73,0x77" />
+      <bundle no="26" enemies="0x70,0x74" />
+      <bundle no="27" enemies="0x72,0x76" />
+      <!-- gargoyle sets -->
+      <bundle no="28" enemies="0x79,0x7d" />
+      <bundle no="29" enemies="0x7b,0x7f" />
+      <bundle no="30" enemies="0x78,0x7c" />
+      <bundle no="31" enemies="0x7a,0x7e" />
+    </enemy_speeds>
+    <enemy_directions>
+      <!-- bullets -->
+      <bundle no="0" enemies="0x20,0x21,0x22,0x23" />
+      <!-- panel monsters -->
+      <bundle no="1" enemies="0x24,0x25,0x26,0x27" />
+      <!-- fireball sets -->
+      <bundle no="2" enemies="0x28,0x29,0x2a,0x2b" />
+      <bundle no="3" enemies="0x2c,0x2d,0x2e,0x2f" />
+      <!-- neul sets -->
+      <bundle no="4" enemies="0x30,0x32" />
+      <bundle no="5" enemies="0x31,0x33" />
+      <bundle no="6" enemies="0x38,0x3a" />
+      <bundle no="7" enemies="0x39,0x3b" />
+      <bundle no="8" enemies="0x40,0x42" />
+      <bundle no="9" enemies="0x41,0x43" />
+      <bundle no="10" enemies="0x48,0x4a" />
+      <bundle no="11" enemies="0x49,0x4b" />
+      <!-- ghost sets -->
+      <bundle no="12" enemies="0x34,0x36" />
+      <bundle no="13" enemies="0x35,0x37" />
+      <bundle no="14" enemies="0x3c,0x3e" />
+      <bundle no="15" enemies="0x3d,0x3f" />
+      <bundle no="16" enemies="0x44,0x46" />
+      <bundle no="17" enemies="0x45,0x47" />
+      <bundle no="18" enemies="0x4c,0x4e" />
+      <bundle no="19" enemies="0x4d,0x4f" />
+      <!-- demonhead sets -->
+      <bundle no="20" enemies="0x50,0x51" />
+      <bundle no="21" enemies="0x52,0x53" />
+      <bundle no="22" enemies="0x54,0x55" />
+      <bundle no="23" enemies="0x56,0x57" />
+      <bundle no="24" enemies="0x58,0x59" />
+      <bundle no="25" enemies="0x5a,0x5b" />
+      <!-- saramandor sets -->
+      <bundle no="26" enemies="0x5c,0x5d" />
+      <bundle no="27" enemies="0x5e,0x5f" />
+      <bundle no="28" enemies="0x60,0x61" />
+      <bundle no="29" enemies="0x62,0x63" />
+      <bundle no="30" enemies="0x64,0x65" />
+      <bundle no="31" enemies="0x66,0x67" />
+      <!-- dragon sets -->
+      <bundle no="32" enemies="0x69,0x68" />
+      <bundle no="33" enemies="0x6b,0x6a" />
+      <bundle no="34" enemies="0x6d,0x6c" />
+      <bundle no="35" enemies="0x6f,0x6e" />
+      <!-- golem sets -->
+      <bundle no="36" enemies="0x71,0x70" />
+      <bundle no="37" enemies="0x73,0x72" />
+      <bundle no="38" enemies="0x75,0x74" />
+      <bundle no="39" enemies="0x77,0x76" />
+      <!-- gargoyle sets -->
+      <bundle no="40" enemies="0x79,0x78" />
+      <bundle no="41" enemies="0x7b,0x7a" />
+      <bundle no="42" enemies="0x7d,0x7c" />
+      <bundle no="43" enemies="0x7f,0x7e" />
+    </enemy_directions>
   </enemy_editor>
 
   <tile_pickers>
     <!-- metadata tile picker -->
     <tile_picker no="0">
-	  <section no="0" description="Blocks" value="0x05,0x06,0x07" />
-	  <section no="1" description="Items" value="0x00,0x01,0x02,0x03,0x04" />
-	  <!-- constellations will be filtered in the application as they depend on the level's tileset -->
-	  <section no="2" description="Constellations" value="0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,0xf8,0xf9,0xfa,0xfb" />
-	</tile_picker>
-	<!-- item tile picker -->
-	<tile_picker no="1">
-	  <section no="0" description="Modifiable" value="0x09,0x0a,0x0b,0x0d,0x0e,0x0f,0x08,0x0c" />
-	  <section no="1" description="Static" value="0x15,0x29,0x1b,0x16,0x17,0x18,0x33,0x19" />
-	  <section no="2" value="0x25,0x26,0x28,0x27,0x2a,0x2d,0x2b,0x2c" />
-	  <section no="3" description="Time and Shrines" value="0x11,0x12,0x13,0x14,0x1c,0x1d,0x1e,0x1f" />
-	  <section no="4" description="Special" value="0x22,0x2e,0x2f,0x30,0x31,0x32,0x20,0x1a" />
-	  <section no="5" description="Decoration" value="0x04,0x05" />
-	</tile_picker>
-	<!-- enemy tile picker -->
-	<tile_picker no="2">
-	  <section no="0" description="Ground" value="0x70,0x78,0x68,0x80,0x81" />
-	  <section no="1" desctiption="" value="0x28,0x50,0x5c" />
-	  <section no="2" description="Air" value="0x34,0x30,0x24,0x20" />
-	  <section no="3" description="Friends" value="0x1c,0x1d,0x18" />
-	</tile_picker>
+      <section no="0" description="Blocks" value="0x05,0x06,0x07" />
+      <section no="1" description="Items" value="0x00,0x01,0x02,0x03,0x04" />
+      <!-- constellations will be filtered in the application as they depend on the level's tileset -->
+      <section no="2" description="Constellations" value="0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,0xf8,0xf9,0xfa,0xfb" />
+    </tile_picker>
+    <!-- item tile picker -->
+    <tile_picker no="1">
+      <section no="0" description="Modifiable" value="0x09,0x0a,0x0b,0x0d,0x0e,0x0f,0x08,0x0c" />
+      <section no="1" description="Static" value="0x15,0x29,0x1b,0x16,0x17,0x18,0x33,0x19" />
+      <section no="2" value="0x25,0x26,0x28,0x27,0x2a,0x2d,0x2b,0x2c" />
+      <section no="3" description="Time and Shrines" value="0x11,0x12,0x13,0x14,0x1c,0x1d,0x1e,0x1f" />
+      <section no="4" description="Special" value="0x22,0x2e,0x2f,0x30,0x31,0x32,0x20,0x1a" />
+      <section no="5" description="Decoration" value="0x04,0x05" />
+    </tile_picker>
+    <!-- enemy tile picker -->
+    <tile_picker no="2">
+      <section no="0" description="Ground" value="0x70,0x78,0x68,0x80,0x81" />
+      <section no="1" desctiption="" value="0x28,0x50,0x5c" />
+      <section no="2" description="Air" value="0x34,0x30,0x24,0x20" />
+      <section no="3" description="Friends" value="0x1c,0x1d,0x18" />
+    </tile_picker>
   </tile_pickers>
 
   <!-- gfx metadata - do not edit unless you know what you are doing -->
@@ -444,8 +444,8 @@
       <palette no="5" offset="0x30,0x16,0x27" />
       <palette no="6" offset="0x16,0x10,0x30" />
       <palette no="7" offset="0x2c,0x26,0x30" />
-	  <!-- background palettes cyan -->
-	  <palette no="8" offset="0x1c,0x10,0x30" />
+      <!-- background palettes cyan -->
+      <palette no="8" offset="0x1c,0x10,0x30" />
       <palette no="9" offset="0x1c,0x27,0x30" />
       <palette no="10" offset="0x1c,0x2c,0x30" />
       <palette no="11" offset="0x1c,0x27,0x38" />
@@ -454,8 +454,8 @@
       <palette no="13" offset="0x30,0x16,0x27" />
       <palette no="14" offset="0x16,0x10,0x30" />
       <palette no="15" offset="0x2c,0x26,0x30" />
-	  <!-- background palettes purple -->
-	  <palette no="16" offset="0x04,0x10,0x30" />
+      <!-- background palettes purple -->
+      <palette no="16" offset="0x04,0x10,0x30" />
       <palette no="17" offset="0x04,0x27,0x30" />
       <palette no="18" offset="0x04,0x2c,0x30" />
       <palette no="19" offset="0x04,0x27,0x38" />
@@ -464,8 +464,8 @@
       <palette no="21" offset="0x30,0x16,0x27" />
       <palette no="22" offset="0x16,0x10,0x30" />
       <palette no="23" offset="0x2c,0x26,0x30" />
-	  <!-- background palettes dark green -->
-	  <palette no="24" offset="0x09,0x10,0x30" />
+      <!-- background palettes dark green -->
+      <palette no="24" offset="0x09,0x10,0x30" />
       <palette no="25" offset="0x09,0x27,0x30" />
       <palette no="26" offset="0x09,0x2c,0x30" />
       <palette no="27" offset="0x09,0x27,0x38" />
@@ -474,8 +474,8 @@
       <palette no="29" offset="0x30,0x16,0x27" />
       <palette no="30" offset="0x16,0x10,0x30" />
       <palette no="31" offset="0x2c,0x26,0x30" />
-	  <!-- background palettes gray -->
-	  <palette no="32" offset="0x00,0x10,0x30" />
+      <!-- background palettes gray -->
+      <palette no="32" offset="0x00,0x10,0x30" />
       <palette no="33" offset="0x00,0x27,0x30" />
       <palette no="34" offset="0x00,0x2c,0x30" />
       <palette no="35" offset="0x00,0x27,0x38" />
@@ -484,7 +484,7 @@
       <palette no="37" offset="0x30,0x16,0x27" />
       <palette no="38" offset="0x16,0x10,0x30" />
       <palette no="39" offset="0x2c,0x26,0x30" />
-	  
+
     </palettes>
 
     <tile_definitions>
@@ -590,90 +590,90 @@
       <!-- panel monster down -->
       <tile no="52" palette_no="6" nes_tiles="69:h,71:h,68:h,70:h" transparent="true" />
 
-	  <!-- constellations -->
+      <!-- constellations -->
       <tile no="53" palette_no="3" w="6" nes_tiles="296,449,448,453,452,297, 298,451,450,455,454,299, 296,457,456,461,460,297, 298,459,458,463,462,299" />
-	  <tile no="54" palette_no="3" w="6" nes_tiles="296,465,464,469,468,297, 298,467,466,471,470,299, 296,473,472,477,476,297, 298,475,474,479,478,299" />
-	  <tile no="55" palette_no="3" w="6" nes_tiles="296,481,480,485,484,297, 298,483,482,487,486,299, 296,489,488,493,492,297, 298,491,490,495,494,299" />
+      <tile no="54" palette_no="3" w="6" nes_tiles="296,465,464,469,468,297, 298,467,466,471,470,299, 296,473,472,477,476,297, 298,475,474,479,478,299" />
+      <tile no="55" palette_no="3" w="6" nes_tiles="296,481,480,485,484,297, 298,483,482,487,486,299, 296,489,488,493,492,297, 298,491,490,495,494,299" />
       <tile no="56" palette_no="3" w="6" nes_tiles="296,497,496,501,500,297, 298,499,498,503,502,299, 296,505,504,509,508,297, 298,507,506,511,510,299" />
 
-	  <!-- demon mirror -->
+      <!-- demon mirror -->
       <tile no="57" palette_no="1" nes_tiles="344,345,346,347" />
-	  
-	  <!-- fire bullets: left, right, up, down -->
-	  <tile no="58" palette_no="1" nes_tiles="140,142,141,143" transparent="true" />
-	  <tile no="59" palette_no="1" nes_tiles="142:v,140:v,143:v,141:v" transparent="true" />
-	  <tile no="60" palette_no="1" nes_tiles="144,146,145,147" transparent="true" />
-	  <tile no="61" palette_no="1" nes_tiles="145:h,147:h,144:h,146:h" transparent="true" />
-	  
-	  <!-- ghosts: left, right -->
-	  <tile no="62" palette_no="6" nes_tiles="116,118,117,119" transparent="true" />
-	  <tile no="63" palette_no="6" nes_tiles="118:v,116:v,119:v,117:v" transparent="true" />
-	  
-	  <!-- dragon right -->
-	  <tile no="64" palette_no="7" nes_tiles="74:v,72:v,75:v,73:v" transparent="true" />
-	  <!-- golem/mage right -->
-	  <tile no="65" palette_no="7" nes_tiles="86:v,84:v,87:v,85:v" transparent="true" />
-	  <!-- gargoyle (right) -->
-	  <tile no="66" palette_no="6" nes_tiles="106:v,104:v,107:v,105:v" transparent="true" />
-	  <!-- mighty bomb jack -->
-	  <tile no="67" palette_no="7" nes_tiles="252,252:v,253,253:v" transparent="true" />
-	  
-	  <!-- blue key -->
-	  <tile no="68" palette_no="2" nes_tiles="300,397,398,399" />
-	  <!-- tecmo bunny -->
+
+      <!-- fire bullets: left, right, up, down -->
+      <tile no="58" palette_no="1" nes_tiles="140,142,141,143" transparent="true" />
+      <tile no="59" palette_no="1" nes_tiles="142:v,140:v,143:v,141:v" transparent="true" />
+      <tile no="60" palette_no="1" nes_tiles="144,146,145,147" transparent="true" />
+      <tile no="61" palette_no="1" nes_tiles="145:h,147:h,144:h,146:h" transparent="true" />
+
+      <!-- ghosts: left, right -->
+      <tile no="62" palette_no="6" nes_tiles="116,118,117,119" transparent="true" />
+      <tile no="63" palette_no="6" nes_tiles="118:v,116:v,119:v,117:v" transparent="true" />
+
+      <!-- dragon right -->
+      <tile no="64" palette_no="7" nes_tiles="74:v,72:v,75:v,73:v" transparent="true" />
+      <!-- golem/mage right -->
+      <tile no="65" palette_no="7" nes_tiles="86:v,84:v,87:v,85:v" transparent="true" />
+      <!-- gargoyle (right) -->
+      <tile no="66" palette_no="6" nes_tiles="106:v,104:v,107:v,105:v" transparent="true" />
+      <!-- mighty bomb jack -->
+      <tile no="67" palette_no="7" nes_tiles="252,252:v,253,253:v" transparent="true" />
+
+      <!-- blue key -->
+      <tile no="68" palette_no="2" nes_tiles="300,397,398,399" />
+      <!-- tecmo bunny -->
       <tile no="69" palette_no="1" nes_tiles="440,441,442,443" />
-	  
-	  <!-- dana (facing left) -->
+
+      <!-- dana (facing left) -->
       <tile no="70" palette_no="4" nes_tiles="0,2,1,3" transparent="true" />
-	  
-	  <!-- demonhead  right -->
-	  <tile no="71" palette_no="7" nes_tiles="50:v,48:v,51:v,49:v" transparent="true" />
-	  <!-- saramandor left, right -->
-	  <tile no="72" palette_no="5" nes_tiles="52,54,53,55" transparent="true" />
-	  <tile no="73" palette_no="5" nes_tiles="54:v,52:v,55:v,53:v" transparent="true" />
+
+      <!-- demonhead  right -->
+      <tile no="71" palette_no="7" nes_tiles="50:v,48:v,51:v,49:v" transparent="true" />
+      <!-- saramandor left, right -->
+      <tile no="72" palette_no="5" nes_tiles="52,54,53,55" transparent="true" />
+      <tile no="73" palette_no="5" nes_tiles="54:v,52:v,55:v,53:v" transparent="true" />
 
       <!-- opal (dark orange) -->
-	  <tile no="74" palette_no="3" nes_tiles="304,305,306,307" />
-	  
-	  <!-- demonhead (left) -->
-	  <tile no="75" palette_no="7" nes_tiles="48,50,49,51" transparent="true" />
+      <tile no="74" palette_no="3" nes_tiles="304,305,306,307" />
 
-	  <!-- modifiable indicators -->
-	  <!-- bell -->
+      <!-- demonhead (left) -->
+      <tile no="75" palette_no="7" nes_tiles="48,50,49,51" transparent="true" />
+
+      <!-- modifiable indicators -->
+      <!-- bell -->
       <tile no="76" palette_no="3" nes_tiles="278,413,414,415" />
-	  <!-- firejars, blue and orange -->
+      <!-- firejars, blue and orange -->
       <tile no="77" palette_no="2" nes_tiles="278,357,358,359" />
       <tile no="78" palette_no="3" nes_tiles="278,357,358,359" />
-	  <!-- double coins, gold -->
-	  <tile no="79" palette_no="3" nes_tiles="278,384,310,386" />
-	  <!-- fire scroll -->
+      <!-- double coins, gold -->
+      <tile no="79" palette_no="3" nes_tiles="278,384,310,386" />
+      <!-- fire scroll -->
       <tile no="80" palette_no="3" nes_tiles="278,409,410,411" />
 
     </tile_definitions>
-	
-	<tilesets>
-	  <!-- for each palette, generate all 3 tilesets -->
-	  <!-- red -->
-	  <tileset palette_offset="0" tile_offset="0" />
-	  <tileset palette_offset="0" tile_offset="512" />
-	  <tileset palette_offset="0" tile_offset="1024" />
-	  <!-- cyan -->
-	  <tileset palette_offset="8" tile_offset="0" />
-	  <tileset palette_offset="8" tile_offset="512" />
-	  <tileset palette_offset="8" tile_offset="1024" />
-	  <!-- purple -->
-	  <tileset palette_offset="16" tile_offset="0" />
-	  <tileset palette_offset="16" tile_offset="512" />
-	  <tileset palette_offset="16" tile_offset="1024" />
-	  <!-- dark green -->
-	  <tileset palette_offset="24" tile_offset="0" />
-	  <tileset palette_offset="24" tile_offset="512" />
-	  <tileset palette_offset="24" tile_offset="1024" />
-	  <!-- gray -->
-	  <tileset palette_offset="32" tile_offset="0" />
-	  <tileset palette_offset="32" tile_offset="512" />
-	  <tileset palette_offset="32" tile_offset="1024" />
-	</tilesets>
+
+    <tilesets>
+      <!-- for each palette, generate all 3 tilesets -->
+      <!-- red -->
+      <tileset palette_offset="0" tile_offset="0" />
+      <tileset palette_offset="0" tile_offset="512" />
+      <tileset palette_offset="0" tile_offset="1024" />
+      <!-- cyan -->
+      <tileset palette_offset="8" tile_offset="0" />
+      <tileset palette_offset="8" tile_offset="512" />
+      <tileset palette_offset="8" tile_offset="1024" />
+      <!-- purple -->
+      <tileset palette_offset="16" tile_offset="0" />
+      <tileset palette_offset="16" tile_offset="512" />
+      <tileset palette_offset="16" tile_offset="1024" />
+      <!-- dark green -->
+      <tileset palette_offset="24" tile_offset="0" />
+      <tileset palette_offset="24" tile_offset="512" />
+      <tileset palette_offset="24" tile_offset="1024" />
+      <!-- gray -->
+      <tileset palette_offset="32" tile_offset="0" />
+      <tileset palette_offset="32" tile_offset="512" />
+      <tileset palette_offset="32" tile_offset="1024" />
+    </tilesets>
 
   </gfx_metadata>
 
