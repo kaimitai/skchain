@@ -65,6 +65,17 @@ namespace skc {
 			std::vector<byte>& l_io_rom_data,
 			const std::vector<skc::Level>& p_levels
 		);
+
+		// utility functions
+		std::vector<byte> change_mapper(const std::vector<byte>& p_rom3_data);
+		std::vector<std::vector<byte>> expand_enemy_sets(
+			const std::vector<std::vector<byte>>& p_enemy_sets,
+			const std::vector<skc::Level>& p_levels
+		);
+		std::vector<std::vector<bool>> expand_drop_schedules(
+			const std::vector<std::vector<bool>>& p_drop_scheds,
+			const std::vector<skc::Level>& p_levels
+		);
 	}
 
 }

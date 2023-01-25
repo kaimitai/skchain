@@ -1,6 +1,7 @@
 #include <utility>
 #include "Rom_expander.h"
 #include "./../common/klib/klib_util.h"
+#include "./../skc_constants/Constants_application.h"
 #include "./../skc_constants/Constants_level.h"
 
 skc::Level skc::m66::parse_level(const std::vector<byte>& p_rom_data,
@@ -174,4 +175,93 @@ void skc::m66::patch_item_data_bytes(
 		}
 	}
 
+}
+
+// utility functions
+
+// change the ROM mapper from 03 to 66 - expand
+std::vector<byte> skc::m66::change_mapper(const std::vector<byte>& p_rom3_data) {
+	std::vector<byte> result(c::ROM_M66_FILE_SIZE, 0x0);
+
+	for (std::size_t i{ 0 }; i < 32784; ++i)
+		result[i] = p_rom3_data[i];
+	for (std::size_t i{ 0 }; i < 16; ++i)
+		result[65536 + i] = p_rom3_data[32768 + i];
+	for (std::size_t i{ 0 }; i < 32768; ++i)
+		result[65552 + i] = p_rom3_data[32784 + i];
+
+	result[4] = 4;
+	result[6] = 32;
+	result[7] = 64;
+	result[255] = 0;
+	result[256] = 1;
+	result[257] = 2;
+	result[258] = 3;
+	result[3376] = 0;
+	result[6287] = 234;
+	result[6288] = 234;
+	result[6289] = 234;
+
+	for (std::size_t i{ 0 }; i < c::COUNT_M66_LEVELS; ++i) {
+		result[23804 + i] = 160;
+		result[23857 + i] = 7;
+		result[27180 + i] = 144;
+		result[27233 + i] = 7;
+	}
+
+	std::vector<byte> l_a1{ 16,189,0,154,157,207,7,202,208,247,76,208,7,96,169,19,157,17,128,32,1,128,169,3,157,17,128,76,0,154,0,154 };
+	for (std::size_t i{ 0 }; i < l_a1.size(); ++i)
+		result[6659 + i] = l_a1[i];
+
+	std::vector<byte> l_a2{ 64,173,40,4,24,105,191,133,1,169,255,133,0,160,192,173,40,4,201,48,240,34,165,124,106,144,29,177,0,201,248,240,23,41,63,201,46,144,17,177,0,41,128,42,144,5,169,144,24,144,7,169,16,24,144,2,177,0,153,19,3,136,208,207,160,16,169,248,153,3,3,153,211,3,136,208,247,173,40,4,24,105,192,133,1,169,191,133,0,160,64,177,0,153,143,7,136,208,248,173,40,4,10,10,10,10,24,105,0,133,0,173,40,4,74,74,74,74,24,105,245,133,1,56,165,0,233,1,133,0,165,1,233,0,133,1,160,16,177,0,153,127,7,136,208,248,96 };
+	for (std::size_t i{ 0 }; i < l_a2.size(); ++i)
+		result[32784 + i] = l_a2[i];
+
+	result[23568] = 128;
+	result[23569] = 136;
+	result[23584] = 7;
+	result[23585] = 7;
+	result[23600] = 192;
+	result[23601] = 200;
+	result[23617] = 7;
+	result[23618] = 7;
+
+	for (std::size_t i{ 0 }; i < 48; ++i)
+		result[16370 + i] = 0;
+
+	return result;
+}
+
+std::vector<std::vector<byte>> skc::m66::expand_enemy_sets(
+	const std::vector<std::vector<byte>>& p_enemy_sets,
+	const std::vector<skc::Level>& p_levels
+) {
+	std::vector<std::vector<byte>> result;
+
+	for (std::size_t i{ 0 }; i < p_levels.size(); ++i) {
+		for (std::size_t l_nmi_set_no{ 0 }; l_nmi_set_no < 2; ++l_nmi_set_no) {
+			result.push_back(p_enemy_sets.at(
+				p_levels[i].get_spawn_enemies(l_nmi_set_no)
+			));
+		}
+	}
+
+	return result;
+}
+
+std::vector<std::vector<bool>> skc::m66::expand_drop_schedules(
+	const std::vector<std::vector<bool>>& p_drop_scheds,
+	const std::vector<skc::Level>& p_levels
+) {
+	std::vector<std::vector<bool>> result;
+
+	for (std::size_t i{ 0 }; i < p_levels.size(); ++i) {
+		for (std::size_t l_nmi_set_no{ 0 }; l_nmi_set_no < 2; ++l_nmi_set_no) {
+			result.push_back(p_drop_scheds.at(
+				p_levels[i].get_spawn_schedule(l_nmi_set_no)
+			));
+		}
+	}
+
+	return result;
 }

@@ -464,26 +464,19 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, SKC_Config& p_config,
 	const klib::User_input& p_input, int p_w, int p_h) {
 	this->generate_texture(p_rnd, p_config);
 
-	//int l_tile_w{ get_tile_w(p_h) };
-	//int l_screen_w = c::LEVEL_W * l_tile_w;
-	//int l_screen_h = c::LEVEL_H * l_tile_w;
-
 	SDL_SetRenderDrawColor(p_rnd, 126, 126, 255, 0);
 	SDL_RenderClear(p_rnd);
 
-	/*
-	klib::gfx::blit_full_spec(p_rnd, m_texture,
-		0, 0, l_screen_w, l_screen_h,
-		0, 0, c::LEVEL_W * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE);
-		*/
 	this->draw_ui(p_config, p_input);
 }
 
 std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(SKC_Config& p_config) const {
-	if (p_config.get_rom_data().size() == c::ROM_FILE_SIZE)
-		return generate_patch_bytes_rom03(p_config);
-	else
+	if (p_config.get_rom_data().size() == c::ROM_M66_FILE_SIZE ||
+		m_drop_schedules.size() == 106)
 		return generate_patch_bytes_rom66(p_config);
+	else
+		return generate_patch_bytes_rom03(p_config);
+
 }
 
 // generate regular ROM ("vanilla" hack)
@@ -618,6 +611,9 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes_rom03(SKC_Config& p
 // generate expanded ROM
 std::vector<byte> skc::SKC_Main_window::generate_patch_bytes_rom66(SKC_Config& p_config) const {
 	std::vector<byte> l_output{ p_config.get_rom_data() };
+
+	if (p_config.get_region_code() == c::REGION_US)
+		l_output = m66::change_mapper(l_output);
 
 	skc::m66::patch_mirror_drop_schedule_bytes(l_output, m_drop_schedules, m_levels);
 	skc::m66::patch_mirror_enemy_set_bytes(l_output, m_drop_enemies, m_levels);

@@ -3,6 +3,7 @@
 #include "./../common/klib/klib_file.h"
 #include "./../common/klib/klib_util.h"
 #include "./../common/klib/IPS_Patch.h"
+#include "./../skc_util/Rom_expander.h"
 #include "./../skc_util/Xml_helper.h"
 #include "./../skc_util/Imgui_helper.h"
 #include "./../skc_constants/Constants_level.h"
@@ -116,6 +117,7 @@ void skc::SKC_Main_window::draw_ui_level_board(SKC_Config& p_config, const klib:
 }
 
 void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config, const klib::User_input& p_input) {
+	bool l_ctrl = ImGui::GetIO().KeyCtrl;
 
 	imgui::window("Main", c::WIN_MAIN_X, c::WIN_MAIN_Y, c::WIN_MAIN_W, c::WIN_MAIN_H);
 
@@ -128,7 +130,20 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config, const klib:
 	if (ImGui::Button("Save NES"))
 		save_nes_file(p_config, p_input.is_shift_pressed());
 
-	bool l_ctrl = ImGui::GetIO().KeyCtrl;
+	if (p_config.get_region_code() == c::REGION_US && m_drop_enemies.size() != 106) {
+		ImGui::SameLine();
+		if (imgui::button("Expand ROM", 1, "Change ROM mapper. Holdt Ctrl to use") && l_ctrl) {
+			m_drop_enemies = m66::expand_enemy_sets(m_drop_enemies, m_levels);
+			m_drop_schedules = m66::expand_drop_schedules(m_drop_schedules, m_levels);
+
+			for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
+				m_levels[i].set_spawn_enemies(0, static_cast<byte>(2 * i));
+				m_levels[i].set_spawn_enemies(1, static_cast<byte>(2 * i + 1));
+				m_levels[i].set_spawn_schedule(0, static_cast<byte>(2 * i));
+				m_levels[i].set_spawn_schedule(1, static_cast<byte>(2 * i + 1));
+			}
+		}
+	}
 
 	if (imgui::button("Load xml", c::COLOR_STYLE_NORMAL, "Hold ctrl to use this button")
 		&& l_ctrl)
@@ -208,11 +223,11 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 	byte l_spawn_nmi_index = l_level.get_spawn_enemies(p_mirror_no);
 
 	auto l_schedule_no = skc::imgui::slider<int>("Schedule",
-		l_spawn_index + 1, 1, p_config.get_mirror_rate_count());
+		l_spawn_index + 1, 1, static_cast<int>(m_drop_schedules.size()));
 	if (l_schedule_no)
 		l_level.set_spawn_schedule(p_mirror_no, l_schedule_no.value() - 1);
 	auto l_nmi_set_no = skc::imgui::slider<int>("Enemy Set",
-		l_spawn_nmi_index + 1, 1, p_config.get_mirror_enemy_count());
+		l_spawn_nmi_index + 1, 1, static_cast<int>(m_drop_enemies.size()));
 	if (l_nmi_set_no)
 		l_level.set_spawn_enemies(p_mirror_no, l_nmi_set_no.value() - 1);
 
