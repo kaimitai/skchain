@@ -307,8 +307,8 @@ std::string skc::xml::get_region_code(const pugi::xml_node p_node, const std::ve
 		for (const auto& l_rule : l_rules) {
 			auto l_kv_pair{ klib::util::string_split<std::size_t>(l_rule, ':') };
 
-			if (p_rom_bytes.at(l_kv_pair.at(0)) !=
-				static_cast<byte>(l_kv_pair.at(1)))
+			if (l_kv_pair.at(0) >= p_rom_bytes.size() ||
+				p_rom_bytes[l_kv_pair.at(0)] != static_cast<byte>(l_kv_pair.at(1)))
 				return false;
 		}
 

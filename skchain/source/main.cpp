@@ -18,8 +18,6 @@
 
 using byte = unsigned char;
 
-constexpr std::size_t ROM_FILE_SIZE{ 65552 };
-
 // try to return path to the executable folder
 std::string get_base_directory(void) {
 	auto l_sdl_base_dir_ptr{ SDL_GetBasePath() };
@@ -41,7 +39,8 @@ std::string get_file_full_path(int argc, char* args[], const std::string& p_fold
 
 		for (const auto& ll_file :
 			std::filesystem::directory_iterator(p_folder)) {
-			if (ll_file.is_regular_file() && std::filesystem::file_size(ll_file) == ROM_FILE_SIZE) {
+			if (ll_file.is_regular_file() && (std::filesystem::file_size(ll_file) == skc::c::ROM_FILE_SIZE ||
+				std::filesystem::file_size(ll_file) == skc::c::ROM_M66_FILE_SIZE)) {
 				try {
 					std::filesystem::path l_file{ ll_file.path() };
 					std::string l_name{ l_file.filename().string() };

@@ -93,15 +93,18 @@ void skc::Level::load_enemy_data(const std::vector<byte>& p_bytes, std::size_t p
 	}
 }
 
-void skc::Level::load_item_data(const std::vector<byte>& p_bytes, std::size_t p_offset) {
-	byte l_item_header = p_bytes.at(p_offset + c::ITEM_OFFSET_KEY_STATUS);
-	if (l_item_header >= c::KEY_STATUS_HIDDEN)
+void skc::Level::set_key_status_and_time_dr(byte p_value) {
+	if (p_value >= c::KEY_STATUS_HIDDEN)
 		m_key_status = c::KEY_STATUS_HIDDEN;
-	else if (l_item_header >= c::KEY_STATUS_IN_BLOCK)
+	else if (p_value >= c::KEY_STATUS_IN_BLOCK)
 		m_key_status = c::KEY_STATUS_IN_BLOCK;
 	else
 		m_key_status = c::KEY_STATUS_NORMAL;
-	m_time_decrease_rate = l_item_header - m_key_status;
+	m_time_decrease_rate = p_value - m_key_status;
+}
+
+void skc::Level::load_item_data(const std::vector<byte>& p_bytes, std::size_t p_offset) {
+	set_key_status_and_time_dr(p_bytes.at(p_offset + c::ITEM_OFFSET_KEY_STATUS));
 
 	m_fixed_door_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_DOOR_POS));
 	m_fixed_key_pos = get_position_from_byte(p_bytes.at(p_offset + c::ITEM_OFFSET_KEY_POS));

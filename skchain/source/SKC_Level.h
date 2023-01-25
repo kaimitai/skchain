@@ -77,6 +77,7 @@ namespace skc {
 
 		void set_spawn_enemy_lifetime(byte p_value);
 		void set_time_decrease_rate(byte p_value);
+		void set_key_status_and_time_dr(byte p_value);
 
 		const std::vector<skc::Level_element>& get_enemies(void) const;
 		const std::vector<skc::Level_element>& get_items(void) const;
