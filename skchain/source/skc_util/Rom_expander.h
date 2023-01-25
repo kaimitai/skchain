@@ -40,11 +40,31 @@ namespace skc {
 	// ROM mapper 66 functions and procedures
 	namespace m66 {
 
+		// parsing
 		skc::Level parse_level(const std::vector<byte>& p_rom_data,
 			std::size_t p_level_no);
 		std::vector<std::vector<byte>> parse_mirror_enemy_sets(const std::vector<byte>& p_rom_data);
 		std::vector<std::vector<bool>> parse_mirror_drop_schedules(const std::vector<byte>& p_rom_data);
 
+		// encoding
+		void patch_mirror_drop_schedule_bytes(
+			std::vector<byte>& l_io_rom_data,
+			const std::vector<std::vector<bool>>& p_drop_schedules,
+			const std::vector<skc::Level>& p_levels
+		);
+		void patch_enemy_data_bytes(
+			std::vector<byte>& l_io_rom_data,
+			const std::vector<skc::Level>& p_levels
+		);
+		void patch_mirror_enemy_set_bytes(
+			std::vector<byte>& l_io_rom_data,
+			const std::vector<std::vector<byte>>& p_enemy_sets,
+			const std::vector<skc::Level>& p_levels
+		);
+		void patch_item_data_bytes(
+			std::vector<byte>& l_io_rom_data,
+			const std::vector<skc::Level>& p_levels
+		);
 	}
 
 }

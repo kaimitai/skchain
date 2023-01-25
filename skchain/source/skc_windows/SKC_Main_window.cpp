@@ -480,6 +480,14 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, SKC_Config& p_config,
 }
 
 std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(SKC_Config& p_config) const {
+	if (p_config.get_rom_data().size() == c::ROM_FILE_SIZE)
+		return generate_patch_bytes_rom03(p_config);
+	else
+		return generate_patch_bytes_rom66(p_config);
+}
+
+// generate regular ROM ("vanilla" hack)
+std::vector<byte> skc::SKC_Main_window::generate_patch_bytes_rom03(SKC_Config& p_config) const {
 	std::vector<byte> l_output{ p_config.get_rom_data() };
 	std::vector<std::size_t> l_item_offsets, l_enemy_offsets, l_enemy_sets_offsets;
 	std::size_t l_item_offset{ 0 }, lenemy_offset{ 0 };
@@ -603,6 +611,18 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(SKC_Config& p_confi
 	check_data_section_size("Enemy Set", l_enemy_sets_data.size(), p_config.get_length_mirror_enemy_data());
 	check_data_section_size("Enemy", l_enemy_data.size(), p_config.get_length_enemy_data());
 	check_data_section_size("Item", l_item_data.size(), p_config.get_length_item_data());
+
+	return l_output;
+}
+
+// generate expanded ROM
+std::vector<byte> skc::SKC_Main_window::generate_patch_bytes_rom66(SKC_Config& p_config) const {
+	std::vector<byte> l_output{ p_config.get_rom_data() };
+
+	skc::m66::patch_mirror_drop_schedule_bytes(l_output, m_drop_schedules, m_levels);
+	skc::m66::patch_mirror_enemy_set_bytes(l_output, m_drop_enemies, m_levels);
+	skc::m66::patch_enemy_data_bytes(l_output, m_levels);
+	skc::m66::patch_item_data_bytes(l_output, m_levels);
 
 	return l_output;
 }

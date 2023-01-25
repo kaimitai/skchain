@@ -90,6 +90,8 @@ namespace skc {
 
 		// file
 		std::vector<byte> generate_patch_bytes(SKC_Config& p_config) const;
+		std::vector<byte> generate_patch_bytes_rom03(SKC_Config& p_config) const;
+		std::vector<byte> generate_patch_bytes_rom66(SKC_Config& p_config) const;
 		void save_nes_file(SKC_Config& p_config, bool p_overwrite) const;
 		void save_xml_files(SKC_Config& p_config) const;
 		void save_ips_file(SKC_Config& p_config) const;
