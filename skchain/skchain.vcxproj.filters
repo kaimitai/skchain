@@ -162,6 +162,9 @@
     <ClInclude Include="source\Enemy_set_editor.h">
       <Filter>Header Files\levels</Filter>
     </ClInclude>
+    <ClInclude Include="source\skc_util\Rom_expander.h">
+      <Filter>Header Files\skc_util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\common\klib\klib_file.cpp">
@@ -250,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="source\skc_windows\SKC_Main_window_file.cpp">
       <Filter>Source Files\skc_windows</Filter>
+    </ClCompile>
+    <ClCompile Include="source\skc_util\Rom_expander.cpp">
+      <Filter>Source Files\skc_util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

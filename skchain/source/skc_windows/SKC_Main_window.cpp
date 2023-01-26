@@ -6,6 +6,7 @@
 #include "./../common/klib/IPS_Patch.h"
 #include "./../skc_util/Xml_helper.h"
 #include "./../skc_util/Imgui_helper.h"
+#include "./../skc_util/Rom_expander.h"
 #include "./../skc_constants/Constants_application.h"
 #include "./../skc_constants/Constants_level.h"
 #include "./../skc_constants/Constants_color.h"
@@ -28,10 +29,46 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config)
 		m_selected_picker_tile.push_back(p_config.get_tile_picker(i).at(0).second.front());
 	m_levels = std::vector<skc::Level>(p_config.get_level_count(), skc::Level());
 
-	for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
-		m_levels.at(i).load_block_data(lr_rom_data, p_config.get_offset_block_data(i));
-		m_levels.at(i).load_item_data(lr_rom_data, p_config.get_offset_item_data(i));
-		m_levels.at(i).load_enemy_data(lr_rom_data, p_config.get_offset_enemy_data(i));
+	if (lr_rom_data.size() == c::ROM_FILE_SIZE) {
+
+		// extract level data
+		for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
+			m_levels.at(i).load_block_data(lr_rom_data, p_config.get_offset_block_data(i));
+			m_levels.at(i).load_item_data(lr_rom_data, p_config.get_offset_item_data(i));
+			m_levels.at(i).load_enemy_data(lr_rom_data, p_config.get_offset_enemy_data(i));
+		}
+
+		// extract drop rate metadata
+		for (std::size_t i{ 0 }; i < p_config.get_mirror_rate_count(); ++i)
+			m_drop_schedules.push_back(
+				klib::util::bytes_to_bitmask_1d(lr_rom_data,
+					64,
+					p_config.get_offset_mirror_rate_data(i))
+			);
+
+		// extract drop enemies metadata
+		for (std::size_t i{ 0 }; i < p_config.get_mirror_enemy_count(); ++i) {
+			std::vector<byte> l_drop_enemy;
+			std::size_t emem_offset{ p_config.get_offset_mirror_enemy_data(i) };
+			for (std::size_t i{ 0 }; lr_rom_data.at(emem_offset + i) != c::MIRROR_ENEMY_SET_DELIMITER; ++i)
+				l_drop_enemy.push_back(lr_rom_data.at(emem_offset + i));
+			m_drop_enemies.push_back(l_drop_enemy);
+		}
+	}
+	else {
+
+		// extract level data for expanded ROM
+		for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
+			m_levels.at(i) = skc::m66::parse_level(lr_rom_data, i);
+			m_levels.at(i).set_spawn_schedule(0, static_cast<byte>(2 * i));
+			m_levels.at(i).set_spawn_enemies(0, static_cast<byte>(2 * i));
+			m_levels.at(i).set_spawn_schedule(1, static_cast<byte>(2 * i + 1));
+			m_levels.at(i).set_spawn_enemies(1, static_cast<byte>(2 * i + 1));
+		}
+		// extract drop rate metadata
+		m_drop_schedules = skc::m66::parse_mirror_drop_schedules(lr_rom_data);
+		// extract drop enemies metadata
+		m_drop_enemies = skc::m66::parse_mirror_enemy_sets(lr_rom_data);
 	}
 
 	m_board_selection = std::vector<std::vector<int>>(
@@ -57,23 +94,6 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config)
 			p_config.get_meta_tile_position(i) :
 			skc::Level::get_position_from_byte(lr_rom_data.at(p_config.get_meta_tile_rom_offset(i))) };
 		m_meta_tiles[l_level_no].push_back(std::make_pair(i, l_pos));
-	}
-
-	// extract drop rate metadata
-	for (std::size_t i{ 0 }; i < p_config.get_mirror_rate_count(); ++i)
-		m_drop_schedules.push_back(
-			klib::util::bytes_to_bitmask_1d(lr_rom_data,
-				64,
-				p_config.get_offset_mirror_rate_data(i))
-		);
-
-	// extract drop enemies metadata
-	for (std::size_t i{ 0 }; i < p_config.get_mirror_enemy_count(); ++i) {
-		std::vector<byte> l_drop_enemy;
-		std::size_t emem_offset{ p_config.get_offset_mirror_enemy_data(i) };
-		for (std::size_t i{ 0 }; lr_rom_data.at(emem_offset + i) != c::MIRROR_ENEMY_SET_DELIMITER; ++i)
-			l_drop_enemy.push_back(lr_rom_data.at(emem_offset + i));
-		m_drop_enemies.push_back(l_drop_enemy);
 	}
 
 	p_config.add_message("Executable folder: " + p_config.get_base_path());
@@ -444,22 +464,23 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, SKC_Config& p_config,
 	const klib::User_input& p_input, int p_w, int p_h) {
 	this->generate_texture(p_rnd, p_config);
 
-	//int l_tile_w{ get_tile_w(p_h) };
-	//int l_screen_w = c::LEVEL_W * l_tile_w;
-	//int l_screen_h = c::LEVEL_H * l_tile_w;
-
 	SDL_SetRenderDrawColor(p_rnd, 126, 126, 255, 0);
 	SDL_RenderClear(p_rnd);
 
-	/*
-	klib::gfx::blit_full_spec(p_rnd, m_texture,
-		0, 0, l_screen_w, l_screen_h,
-		0, 0, c::LEVEL_W * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE);
-		*/
 	this->draw_ui(p_config, p_input);
 }
 
 std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(SKC_Config& p_config) const {
+	if (p_config.get_rom_data().size() == c::ROM_M66_FILE_SIZE ||
+		m_drop_schedules.size() == 106)
+		return generate_patch_bytes_rom66(p_config);
+	else
+		return generate_patch_bytes_rom03(p_config);
+
+}
+
+// generate regular ROM ("vanilla" hack)
+std::vector<byte> skc::SKC_Main_window::generate_patch_bytes_rom03(SKC_Config& p_config) const {
 	std::vector<byte> l_output{ p_config.get_rom_data() };
 	std::vector<std::size_t> l_item_offsets, l_enemy_offsets, l_enemy_sets_offsets;
 	std::size_t l_item_offset{ 0 }, lenemy_offset{ 0 };
@@ -583,6 +604,21 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(SKC_Config& p_confi
 	check_data_section_size("Enemy Set", l_enemy_sets_data.size(), p_config.get_length_mirror_enemy_data());
 	check_data_section_size("Enemy", l_enemy_data.size(), p_config.get_length_enemy_data());
 	check_data_section_size("Item", l_item_data.size(), p_config.get_length_item_data());
+
+	return l_output;
+}
+
+// generate expanded ROM
+std::vector<byte> skc::SKC_Main_window::generate_patch_bytes_rom66(SKC_Config& p_config) const {
+	std::vector<byte> l_output{ p_config.get_rom_data() };
+
+	if (p_config.get_region_code() == c::REGION_US)
+		l_output = m66::change_mapper(l_output);
+
+	skc::m66::patch_mirror_drop_schedule_bytes(l_output, m_drop_schedules, m_levels);
+	skc::m66::patch_mirror_enemy_set_bytes(l_output, m_drop_enemies, m_levels);
+	skc::m66::patch_enemy_data_bytes(l_output, m_levels);
+	skc::m66::patch_item_data_bytes(l_output, m_levels);
 
 	return l_output;
 }

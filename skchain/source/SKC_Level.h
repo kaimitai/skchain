@@ -77,6 +77,7 @@ namespace skc {
 
 		void set_spawn_enemy_lifetime(byte p_value);
 		void set_time_decrease_rate(byte p_value);
+		void set_key_status_and_time_dr(byte p_value);
 
 		const std::vector<skc::Level_element>& get_enemies(void) const;
 		const std::vector<skc::Level_element>& get_items(void) const;
@@ -109,6 +110,7 @@ namespace skc {
 		void set_enemy_no(int p_index, byte p_new_enemy_no);
 		void set_enemy_position(int p_index, const position& l_pos);
 
+		static bool is_position_visible(const position& p_pos);
 		static bool is_item_constellation(byte p_item_no);
 		static bool is_item_in_block(byte p_item_no);
 		static bool is_item_hidden(byte p_item_no);

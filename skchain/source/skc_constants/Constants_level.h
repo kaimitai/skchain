@@ -77,6 +77,9 @@ namespace skc {
 		constexpr std::size_t ELM_TYPE_METADATA{ 0 };
 		constexpr std::size_t ELM_TYPE_ITEM{ 1 };
 		constexpr std::size_t ELM_TYPE_ENEMY{ 2 };
+
+		// various item codes used by the application
+		constexpr byte ITEM_NO_DEMON_MIRROR{ 0x05 };
 	}
 
 }

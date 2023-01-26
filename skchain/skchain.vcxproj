@@ -169,6 +169,7 @@
     <ClInclude Include="source\SKC_Level.h" />
     <ClInclude Include="source\SKC_Tile_metadata.h" />
     <ClInclude Include="source\skc_util\Imgui_helper.h" />
+    <ClInclude Include="source\skc_util\Rom_expander.h" />
     <ClInclude Include="source\skc_util\Xml_helper.h" />
     <ClInclude Include="source\skc_windows\SKC_Main_window.h" />
   </ItemGroup>
@@ -198,6 +199,7 @@
     <ClCompile Include="source\SKC_Level_elements.cpp" />
     <ClCompile Include="source\SKC_Tile_metadata.cpp" />
     <ClCompile Include="source\skc_util\Imgui_helper.cpp" />
+    <ClCompile Include="source\skc_util\Rom_expander.cpp" />
     <ClCompile Include="source\skc_util\Xml_helper.cpp" />
     <ClCompile Include="source\skc_windows\SKC_Main_window.cpp" />
     <ClCompile Include="source\skc_windows\SKC_Main_window_file.cpp" />
