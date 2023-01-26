@@ -303,18 +303,11 @@ bool skc::m66::is_mirror_visible(const skc::Level& p_level, std::size_t p_mirror
 // remove the demon mirror from the item list
 // it will be added back automatically when saving the expanded ROM
 void skc::m66::mirror_item_cleanup(skc::Level& p_level) {
-	auto l_pos_01{ p_level.get_spawn_position(0) };
-	auto l_pos_02{ p_level.get_spawn_position(1) };
+	int l_index{ p_level.get_item_index(p_level.get_spawn_position(0)) };
+	if (l_index != -1 && p_level.get_items().at(l_index).get_element_no() == c::ITEM_NO_DEMON_MIRROR)
+		p_level.delete_item(l_index);
 
-	int l_ind_01{ p_level.get_item_index(l_pos_01) };
-	int l_ind_02{ p_level.get_item_index(l_pos_02) };
-
-	int l_max_ind = std::max(l_ind_01, l_ind_02);
-	int l_min_ind = std::min(l_ind_01, l_ind_02);
-
-	// delete items in the right order!
-	if (l_max_ind != -1 && p_level.get_items().at(l_max_ind).get_element_no() == c::ITEM_NO_DEMON_MIRROR)
-		p_level.delete_item(l_max_ind);
-	if (l_min_ind != -1 && p_level.get_items().at(l_min_ind).get_element_no() == c::ITEM_NO_DEMON_MIRROR)
-		p_level.delete_item(l_min_ind);
+	l_index = p_level.get_item_index(p_level.get_spawn_position(1));
+	if (l_index != -1 && p_level.get_items().at(l_index).get_element_no() == c::ITEM_NO_DEMON_MIRROR)
+		p_level.delete_item(l_index);
 }
