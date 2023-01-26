@@ -80,7 +80,7 @@ void skc::m66::patch_mirror_drop_schedule_bytes(std::vector<byte>& l_io_rom_data
 	}
 
 	auto l_result = klib::util::bitmask_to_bytes(l_result_bits);
-	for (std::size_t i{ 0 }; i < l_result_bits.size(); ++i)
+	for (std::size_t i{ 0 }; i < l_result.size(); ++i)
 		l_io_rom_data.at(c::OFFSET_M66_DROP_SCHED_DATA + i) = l_result[i];
 }
 
@@ -128,21 +128,38 @@ void skc::m66::patch_item_data_bytes(
 			}
 	};
 
+	const auto is_mirror_visible = [](const skc::Level& p_level, std::size_t p_mirror_no) -> bool {
+		auto l_pos = p_level.get_spawn_position(p_mirror_no);
+		if (skc::Level::is_position_visible(l_pos)) {
+			for (const auto& l_item : p_level.get_items())
+				if (l_pos == l_item.get_position() && l_item.get_element_no() != 0x05)
+					return false;
+			return true;
+		}
+		else
+			return false;
+	};
+
 	for (std::size_t i{ 0 }; i < p_levels.size(); ++i) {
 		const auto& l_level{ p_levels[i] };
 		std::size_t l_offset{ c::OFFSET_M66_LVL_DATA + c::LENGTH_M66_LVL_DATA * i };
 
 		// patch map data
-		for (int j{ 0 }; j < c::LEVEL_H; ++j)
-			for (int i{ 0 }; i < c::LEVEL_W; ++i) {
+		for (int y{ 0 }; y < c::LEVEL_H; ++y)
+			for (int x{ 0 }; x < c::LEVEL_W; ++x) {
 				byte l_value{ 0xf8 };
-				auto l_wall = l_level.get_wall_type(i, j);
+				auto l_wall = l_level.get_wall_type(x, y);
 				if (l_wall == skc::Wall::Brown)
 					l_value = 0x90;
 				else if (l_wall == skc::Wall::None)
 					l_value = 0x10;
-				set_block(l_io_rom_data, l_offset, std::make_pair(i, j), l_value);
+				set_block(l_io_rom_data, l_offset, std::make_pair(x, y), l_value);
 			}
+
+		// make mirrors visible if they should be, by adding item 0x05 at the mirror locations
+		for (std::size_t m{ 0 }; m < 2; ++m)
+			if (is_mirror_visible(l_level, m))
+				set_block(l_io_rom_data, l_offset, l_level.get_spawn_position(m), 0x05);
 
 		// patch items
 		const auto& l_items = l_level.get_items();
@@ -150,6 +167,10 @@ void skc::m66::patch_item_data_bytes(
 			set_block(l_io_rom_data, l_offset, l_item.get_position(), l_item.get_element_no());
 
 		// patch metadata
+		l_io_rom_data.at(l_offset + c::OFFSET_M66_LOCAL_META) = 0;
+		l_io_rom_data.at(l_offset + c::OFFSET_M66_LOCAL_META + 1) = 1;
+		l_io_rom_data.at(l_offset + c::OFFSET_M66_LOCAL_META + 2) = 0;
+		l_io_rom_data.at(l_offset + c::OFFSET_M66_LOCAL_META + 3) = 1;
 		l_io_rom_data.at(l_offset + c::OFFSET_M66_KEY_STATUS) = l_level.get_key_status() +
 			l_level.get_time_decrease_rate();
 		l_io_rom_data.at(l_offset + c::OFFSET_M66_DOOR_POS) = skc::Level::get_byte_from_position(

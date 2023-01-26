@@ -293,6 +293,10 @@ void skc::Level::set_enemy_position(int p_index, const position& l_pos) {
 }
 
 // static functions
+bool skc::Level::is_position_visible(const position& p_pos) {
+	return p_pos.first >= 0 && p_pos.second >= 0 && p_pos.first < c::LEVEL_W&& p_pos.second < c::LEVEL_H;
+}
+
 bool skc::Level::is_item_constellation(byte p_item_no) {
 	return p_item_no >= c::ITEM_CONSTELLATION_MIN &&
 		p_item_no <= c::ITEM_CONSTELLATION_MAX;

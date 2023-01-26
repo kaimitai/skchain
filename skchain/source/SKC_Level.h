@@ -110,6 +110,7 @@ namespace skc {
 		void set_enemy_no(int p_index, byte p_new_enemy_no);
 		void set_enemy_position(int p_index, const position& l_pos);
 
+		static bool is_position_visible(const position& p_pos);
 		static bool is_item_constellation(byte p_item_no);
 		static bool is_item_in_block(byte p_item_no);
 		static bool is_item_hidden(byte p_item_no);
