@@ -157,8 +157,14 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 
 }
 
-void skc::SKC_Main_window::right_click(const std::pair<int, int>& p_tile_pos, const skc::SKC_Config& p_config) {
-	if (m_selected_type == c::ELM_TYPE_METADATA)
+void skc::SKC_Main_window::right_click(const std::pair<int, int>& p_tile_pos, const skc::SKC_Config& p_config, const klib::User_input& p_input) {
+	if (p_input.is_pressed(SDL_SCANCODE_1))
+		block_click(skc::Wall::None, p_tile_pos);
+	else if (p_input.is_pressed(SDL_SCANCODE_2))
+		block_click(skc::Wall::Brown, p_tile_pos);
+	else if (p_input.is_pressed(SDL_SCANCODE_3))
+		block_click(skc::Wall::White, p_tile_pos);
+	else if (m_selected_type == c::ELM_TYPE_METADATA)
 		right_click_md(p_tile_pos, p_config);
 	else if (m_selected_type == c::ELM_TYPE_ITEM)
 		right_click_item(p_tile_pos);
@@ -251,6 +257,10 @@ void skc::SKC_Main_window::set_meta_tile_position(std::size_t p_index, const pos
 	m_meta_tiles.at(m_current_level).at(p_index).second = p_pos;
 }
 
+void skc::SKC_Main_window::block_click(skc::Wall p_wall_type, const position& p_pos) {
+	get_level().set_block(p_wall_type, p_pos);
+}
+
 bool skc::SKC_Main_window::left_click_item(const std::pair<int, int>& tile_pos) {
 	auto& l_level{ get_level() };
 
@@ -330,7 +340,7 @@ void skc::SKC_Main_window::draw_tile(SDL_Renderer* p_rnd, SDL_Texture* p_texture
 		SDL_SetTextureAlphaMod(p_texture, 255);
 }
 
-void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Config& p_config) {
+void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Config& p_config, bool p_draw_bg_only) {
 	SDL_SetRenderTarget(p_rnd, m_texture);
 
 	const auto& l_level{ get_level() };
@@ -363,78 +373,82 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 				draw_tile(p_rnd, m_gfx.get_meta_tile(l_tile_no, l_tileset_no), i, j);
 		}
 
-	// draw mirrors
-	auto l_m1_pos{ l_level.get_spawn_position(0) };
-	auto l_m2_pos{ l_level.get_spawn_position(1) };
-	draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN01, l_tileset_no), l_m1_pos.first, l_m1_pos.second);
-	draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN02, l_tileset_no), l_m2_pos.first, l_m2_pos.second);
+	if (!p_draw_bg_only) {
 
-	// draw meta-items
-	auto iter = m_meta_tiles.find(m_current_level);
-	if (iter != end(m_meta_tiles))
-		for (const auto& l_mtile : iter->second) {
-			std::size_t l_index{ l_mtile.first };
-			auto l_pos{ l_mtile.second };
-			draw_tile(p_rnd, m_gfx.get_absolute_tile(p_config.get_meta_tile_tile_no(l_index), l_tileset_no),
-				l_pos.first, l_pos.second, p_config.get_meta_tile_transparent(l_index));
+		// draw mirrors
+		auto l_m1_pos{ l_level.get_spawn_position(0) };
+		auto l_m2_pos{ l_level.get_spawn_position(1) };
+		draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN01, l_tileset_no), l_m1_pos.first, l_m1_pos.second);
+		draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN02, l_tileset_no), l_m2_pos.first, l_m2_pos.second);
+
+		// draw meta-items
+		auto iter = m_meta_tiles.find(m_current_level);
+		if (iter != end(m_meta_tiles))
+			for (const auto& l_mtile : iter->second) {
+				std::size_t l_index{ l_mtile.first };
+				auto l_pos{ l_mtile.second };
+				draw_tile(p_rnd, m_gfx.get_absolute_tile(p_config.get_meta_tile_tile_no(l_index), l_tileset_no),
+					l_pos.first, l_pos.second, p_config.get_meta_tile_transparent(l_index));
+			}
+
+		// draw door
+		auto l_door_pos = l_level.get_door_pos();
+		if (l_door_pos.second >= 0)
+			draw_tile(p_rnd, m_gfx.get_meta_tile(m_current_level == 49 ? c::MD_BYTE_NO_SOLOMONS_KEY : c::MD_BYTE_NO_DOOR, l_tileset_no),
+				l_door_pos.first, l_door_pos.second);
+
+		// draw key
+		if (!l_level.is_key_removed()) {
+			auto l_key_pos = m_levels.at(m_current_level).get_key_pos();
+
+			draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_KEY, l_tileset_no),
+				l_key_pos.first, l_key_pos.second, l_level.is_key_hidden());
+			if (l_level.is_key_in_block()) {
+				draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
+					l_tileset_no), l_key_pos.first, l_key_pos.second, true);
+			}
 		}
 
-	// draw door
-	auto l_door_pos = l_level.get_door_pos();
-	if (l_door_pos.second >= 0)
-		draw_tile(p_rnd, m_gfx.get_meta_tile(m_current_level == 49 ? c::MD_BYTE_NO_SOLOMONS_KEY : c::MD_BYTE_NO_DOOR, l_tileset_no),
-			l_door_pos.first, l_door_pos.second);
-
-	// draw key
-	if (!l_level.is_key_removed()) {
-		auto l_key_pos = m_levels.at(m_current_level).get_key_pos();
-
-		draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_KEY, l_tileset_no),
-			l_key_pos.first, l_key_pos.second, l_level.is_key_hidden());
-		if (l_level.is_key_in_block()) {
-			draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
-				l_tileset_no), l_key_pos.first, l_key_pos.second, true);
+		// draw items
+		const auto& l_items = l_level.get_items();
+		for (const auto& item : l_items) {
+			byte l_no = item.get_item_no();
+			auto l_pos = item.get_position();
+			draw_tile(p_rnd, m_gfx.get_item_tile(item.get_item_no(), l_tileset_no),
+				l_pos.first, l_pos.second,
+				skc::Level::is_item_hidden(item.get_element_no()));
+			if (skc::Level::is_item_in_block(item.get_element_no()))
+				draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
+					l_tileset_no), l_pos.first, l_pos.second, true);
 		}
-	}
 
-	// draw items
-	const auto& l_items = l_level.get_items();
-	for (const auto& item : l_items) {
-		byte l_no = item.get_item_no();
-		auto l_pos = item.get_position();
-		draw_tile(p_rnd, m_gfx.get_item_tile(item.get_item_no(), l_tileset_no),
-			l_pos.first, l_pos.second,
-			skc::Level::is_item_hidden(item.get_element_no()));
-		if (skc::Level::is_item_in_block(item.get_element_no()))
-			draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
-				l_tileset_no), l_pos.first, l_pos.second, true);
-	}
+		// draw enemies
+		const auto& l_enemies = l_level.get_enemies();
+		for (const auto& enemy : l_enemies) {
+			byte l_no = enemy.get_element_no();
+			auto l_pos = enemy.get_position();
+			draw_tile(p_rnd, m_gfx.get_enemy_tile(enemy.get_element_no(), l_tileset_no),
+				l_pos.first, l_pos.second);
+		}
 
-	// draw enemies
-	const auto& l_enemies = l_level.get_enemies();
-	for (const auto& enemy : l_enemies) {
-		byte l_no = enemy.get_element_no();
-		auto l_pos = enemy.get_position();
-		draw_tile(p_rnd, m_gfx.get_enemy_tile(enemy.get_element_no(), l_tileset_no),
-			l_pos.first, l_pos.second);
-	}
+		// draw player start
+		auto l_pstart = l_level.get_player_start_pos();
+		draw_tile(p_rnd, m_gfx.get_meta_tile(l_pstart.first >= c::LEVEL_W / 2 ? c::MD_BYTE_NO_PLAYER_START_LEFT : c::MD_BYTE_NO_PLAYER_START, l_tileset_no),
+			l_pstart.first, l_pstart.second);
 
-	// draw player start
-	auto l_pstart = l_level.get_player_start_pos();
-	draw_tile(p_rnd, m_gfx.get_meta_tile(l_pstart.first >= c::LEVEL_W / 2 ? c::MD_BYTE_NO_PLAYER_START_LEFT : c::MD_BYTE_NO_PLAYER_START, l_tileset_no),
-		l_pstart.first, l_pstart.second);
+		// draw gridlines
+		if (m_show_gridlines) {
+			auto l_pulse_color{ klib::gfx::pulse_color(c::COL_WHITE, c::COL_GOLD, m_timer.get_frame()) };
 
-	// draw gridlines
-	if (m_show_gridlines) {
-		auto l_pulse_color{ klib::gfx::pulse_color(c::COL_WHITE, c::COL_GOLD, m_timer.get_frame()) };
+			SDL_SetRenderDrawColor(p_rnd, l_pulse_color.r,
+				l_pulse_color.g, l_pulse_color.b, 0);
 
-		SDL_SetRenderDrawColor(p_rnd, l_pulse_color.r,
-			l_pulse_color.g, l_pulse_color.b, 0);
+			for (int i{ 1 }; i < c::LEVEL_W; ++i)
+				SDL_RenderDrawLine(p_rnd, i * c::TILE_GFX_SIZE, 0, i * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE);
+			for (int i{ 1 }; i < c::LEVEL_H; ++i)
+				SDL_RenderDrawLine(p_rnd, 0, i * c::TILE_GFX_SIZE, c::LEVEL_W * c::TILE_GFX_SIZE, i * c::TILE_GFX_SIZE);
+		}
 
-		for (int i{ 1 }; i < c::LEVEL_W; ++i)
-			SDL_RenderDrawLine(p_rnd, i * c::TILE_GFX_SIZE, 0, i * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE);
-		for (int i{ 1 }; i < c::LEVEL_H; ++i)
-			SDL_RenderDrawLine(p_rnd, 0, i * c::TILE_GFX_SIZE, c::LEVEL_W * c::TILE_GFX_SIZE, i * c::TILE_GFX_SIZE);
 	}
 
 	if (is_selected_index_valid()) {
@@ -462,7 +476,7 @@ int skc::SKC_Main_window::get_tile_w(int p_screen_h) const {
 
 void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, SKC_Config& p_config,
 	const klib::User_input& p_input, int p_w, int p_h) {
-	this->generate_texture(p_rnd, p_config);
+	this->generate_texture(p_rnd, p_config, p_input.is_pressed(SDL_SCANCODE_ESCAPE));
 
 	SDL_SetRenderDrawColor(p_rnd, 126, 126, 255, 0);
 	SDL_RenderClear(p_rnd);

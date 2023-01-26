@@ -83,7 +83,7 @@ void skc::SKC_Main_window::draw_ui_level_board(SKC_Config& p_config, const klib:
 			ty >= 0 && ty < c::LEVEL_H };
 
 		if (l_rclick && l_valid_tile)
-			right_click(l_tpos, p_config);
+			right_click(l_tpos, p_config, p_input);
 		else if (l_lclick && l_valid_tile && l_win_focused) {
 			if (l_shift)
 				shift_click(l_tpos, p_config);

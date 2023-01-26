@@ -136,8 +136,7 @@
     <item no="0x0d" description="Firejar (orange, modifiable)" animation="78" />
     <item no="0x0e" description="Scroll (modifiable)" animation="80" />
     <item no="0x0f" description="Bell (modifiable)" animation="76" />
-
-    <!-- 0x10 nothing -->
+    <item no="0x10" description="Nothing" animation="0" />
     <item no="0x11" description="Timebottle (half)" animation="37" />
     <item no="0x12" description="Timebottle (full)" animation="23" />
     <item no="0x13" description="Hourglass (blue)" animation="14" />
@@ -425,7 +424,7 @@
       <section no="2" value="0x25,0x26,0x28,0x27,0x2a,0x2d,0x2b,0x2c" />
       <section no="3" description="Time and Shrines" value="0x11,0x12,0x13,0x14,0x1c,0x1d,0x1e,0x1f" />
       <section no="4" description="Special" value="0x22,0x2e,0x2f,0x30,0x31,0x32,0x20,0x1a" />
-      <section no="5" description="Decoration" value="0x04,0x05" />
+      <section no="5" description="Decoration" value="0x04,0x05,0x10" />
     </tile_picker>
     <!-- enemy tile picker -->
     <tile_picker no="2">

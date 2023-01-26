@@ -45,7 +45,7 @@ namespace skc {
 
 		int get_tile_w(int p_screen_h) const;
 		void draw_tile(SDL_Renderer* p_rnd, SDL_Texture* p_texture, int p_x, int p_y, bool p_transp = false) const;
-		void generate_texture(SDL_Renderer* p_rnd, const SKC_Config& p_config);
+		void generate_texture(SDL_Renderer* p_rnd, const SKC_Config& p_config, bool p_draw_bg_only);
 
 		// ui stuff
 		void draw_ui(SKC_Config& p_config, const klib::User_input& p_input);
@@ -68,7 +68,7 @@ namespace skc {
 		void set_tile_selection(byte p_value);
 
 		std::pair<int, int> pixel_to_tile_pos(int p_screen_h, int p_x, int p_y) const;
-		void right_click(const std::pair<int, int>& tile_pos, const skc::SKC_Config& p_config);
+		void right_click(const std::pair<int, int>& tile_pos, const skc::SKC_Config& p_config, const klib::User_input& p_input);
 		void left_click(const std::pair<int, int>& tile_pos, const skc::SKC_Config& p_config);
 		void shift_click(const std::pair<int, int>& tile_pos, const skc::SKC_Config& p_config);
 
@@ -83,6 +83,8 @@ namespace skc {
 		void shift_click_metadata(const std::pair<int, int>& tile_pos, const SKC_Config& p_config);
 
 		void set_meta_tile_position(std::size_t p_index, const position& p_pos);
+
+		void block_click(skc::Wall p_wall_type, const position& p_pos);
 
 		// util
 		position get_metadata_tile_position(byte p_board_index_no) const;
