@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <utility>
 #include "Rom_expander.h"
 #include "./../common/klib/klib_util.h"
@@ -41,6 +42,10 @@ skc::Level skc::m66::parse_level(const std::vector<byte>& p_rom_data,
 	if (l_item_delimiter >= c::ITEM_CONSTELLATION_MIN)
 		result.set_constellation(l_item_delimiter,
 			skc::Level::get_position_from_byte(p_rom_data.at(l_offset + c::OFFSET_M66_CONSTELLATION_POS)));
+
+	// cleanup any demon mirrors which we do not need to see in the editor
+	// these are demon mirror items on top of a visible demon mirror metadata location
+	mirror_item_cleanup(result);
 
 	return result;
 }
@@ -128,18 +133,6 @@ void skc::m66::patch_item_data_bytes(
 			}
 	};
 
-	const auto is_mirror_visible = [](const skc::Level& p_level, std::size_t p_mirror_no) -> bool {
-		auto l_pos = p_level.get_spawn_position(p_mirror_no);
-		if (skc::Level::is_position_visible(l_pos)) {
-			for (const auto& l_item : p_level.get_items())
-				if (l_pos == l_item.get_position() && l_item.get_element_no() != 0x05)
-					return false;
-			return true;
-		}
-		else
-			return false;
-	};
-
 	for (std::size_t i{ 0 }; i < p_levels.size(); ++i) {
 		const auto& l_level{ p_levels[i] };
 		std::size_t l_offset{ c::OFFSET_M66_LVL_DATA + c::LENGTH_M66_LVL_DATA * i };
@@ -159,7 +152,7 @@ void skc::m66::patch_item_data_bytes(
 		// make mirrors visible if they should be, by adding item 0x05 at the mirror locations
 		for (std::size_t m{ 0 }; m < 2; ++m)
 			if (is_mirror_visible(l_level, m))
-				set_block(l_io_rom_data, l_offset, l_level.get_spawn_position(m), 0x05);
+				set_block(l_io_rom_data, l_offset, l_level.get_spawn_position(m), c::ITEM_NO_DEMON_MIRROR);
 
 		// patch items
 		const auto& l_items = l_level.get_items();
@@ -285,4 +278,37 @@ std::vector<std::vector<bool>> skc::m66::expand_drop_schedules(
 	}
 
 	return result;
+}
+
+// level utility functions
+bool skc::m66::is_mirror_visible(const skc::Level& p_level, std::size_t p_mirror_no) {
+	auto l_pos = p_level.get_spawn_position(p_mirror_no);
+	if (skc::Level::is_position_visible(l_pos)) {
+		for (const auto& l_item : p_level.get_items())
+			if (l_pos == l_item.get_position() && l_item.get_element_no() != c::ITEM_NO_DEMON_MIRROR)
+				return false;
+		return true;
+	}
+	else
+		return false;
+}
+
+// if a demon mirror item (0x05) is present on top of a mirror, and no other items are present there
+// remove the demon mirror from the item list
+// it will be added back automatically when saving the expanded ROM
+void skc::m66::mirror_item_cleanup(skc::Level& p_level) {
+	auto l_pos_01{ p_level.get_spawn_position(0) };
+	auto l_pos_02{ p_level.get_spawn_position(1) };
+
+	int l_ind_01{ p_level.get_item_index(l_pos_01) };
+	int l_ind_02{ p_level.get_item_index(l_pos_02) };
+
+	int l_max_ind = std::max(l_ind_01, l_ind_02);
+	int l_min_ind = std::min(l_ind_01, l_ind_02);
+
+	// delete items in the right order!
+	if (l_max_ind != -1 && p_level.get_items().at(l_max_ind).get_element_no() == c::ITEM_NO_DEMON_MIRROR)
+		p_level.delete_item(l_max_ind);
+	if (l_min_ind != -1 && p_level.get_items().at(l_min_ind).get_element_no() == c::ITEM_NO_DEMON_MIRROR)
+		p_level.delete_item(l_min_ind);
 }
