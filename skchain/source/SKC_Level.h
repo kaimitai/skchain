@@ -106,6 +106,7 @@ namespace skc {
 		void set_item_hidden(int p_index, bool p_value);
 		void set_item_in_block(int p_index, bool p_value);
 		void set_item_position(int p_index, const position& l_pos);
+		void set_item_element_no(int p_index, byte p_value);
 
 		void set_enemy_no(int p_index, byte p_new_enemy_no);
 		void set_enemy_position(int p_index, const position& l_pos);

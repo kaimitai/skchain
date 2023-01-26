@@ -63,7 +63,8 @@ void skc::SKC_Main_window::draw_ui_level_board(SKC_Config& p_config, const klib:
 	bool l_ctrl{ p_input.is_ctrl_pressed() };
 	bool l_shift{ p_input.is_shift_pressed() };
 	bool l_lclick{ p_input.mouse_held(true) };
-	bool l_rclick{ p_input.mouse_held(false) };
+	bool l_rclick{ p_input.mouse_held(false) || p_input.is_pressed(SDL_SCANCODE_1) ||
+	p_input.is_pressed(SDL_SCANCODE_2) || p_input.is_pressed(SDL_SCANCODE_3) };
 	bool l_click{ l_lclick || l_rclick };
 	ImGuiIO& io = ImGui::GetIO();
 
@@ -218,6 +219,7 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 	auto l_tileset = l_level.get_tileset_no();
 
 	ImGui::Separator();
+	ImGui::Text("Properties");
 
 	byte l_spawn_index = l_level.get_spawn_schedule(p_mirror_no);
 	byte l_spawn_nmi_index = l_level.get_spawn_enemies(p_mirror_no);
@@ -249,6 +251,8 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 
 		ImGui::SameLine();
 	}
+
+	ImGui::NewLine();
 
 	ImGui::EndDisabled();
 }
@@ -356,7 +360,20 @@ void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_conf
 			+ p_config.get_description(c::ELM_TYPE_ITEM, l_item_no) };
 
 			ImGui::Text(l_desc.c_str());
+
+			auto l_elm_slider_no{ imgui::slider<byte>("Code", l_elm_no, 1, c::ITEM_COPY_INDICATOR_MIN - 1) };
+			if (l_elm_slider_no)
+				l_level.set_item_element_no(l_index, l_elm_slider_no.value());
+
 			ImGui::Separator();
+			ImGui::Text("Position");
+
+			auto l_newpos{ imgui::position_sliders(l_items.at(l_index).get_position()) };
+			if (l_newpos)
+				l_level.set_item_position(l_index, l_newpos.value());
+
+			ImGui::Separator();
+			ImGui::Text("Properties");
 
 			bool l_hidden{ skc::Level::is_item_hidden(l_elm_no) };
 			bool l_in_block{ skc::Level::is_item_in_block(l_elm_no) };
@@ -369,11 +386,6 @@ void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_conf
 				l_level.set_item_in_block(l_index, l_in_block);
 			}
 
-			ImGui::Separator();
-
-			auto l_newpos{ imgui::position_sliders(l_items.at(l_index).get_position()) };
-			if (l_newpos)
-				l_level.set_item_position(l_index, l_newpos.value());
 		}
 		else if (m_selected_type == c::ELM_TYPE_ENEMY)
 			draw_ui_selected_enemy(p_config);
@@ -407,12 +419,18 @@ void skc::SKC_Main_window::draw_ui_selected_enemy(const SKC_Config& p_config) {
 			+ p_config.get_description(c::ELM_TYPE_ENEMY, l_enemy_no) };
 	ImGui::Text(l_desc.c_str());
 
+	auto l_elm_slider_no{ imgui::slider<byte>("Code", l_enemy_no, 1, 0x84) };
+	if (l_elm_slider_no)
+		l_level.set_enemy_no(l_index, l_elm_slider_no.value());
+
 	ImGui::Separator();
+	ImGui::Text("Position");
 	auto l_newpos{ imgui::position_sliders(l_enemies.at(l_index).get_position()) };
 	if (l_newpos)
 		l_level.set_enemy_position(l_index, l_newpos.value());
 
 	ImGui::Separator();
+	ImGui::Text("Properties");
 
 	auto l_new_enemy_no{ imgui::slider_enemy_properties(l_enemy_no, p_config.get_enemy_editor()) };
 	if (l_new_enemy_no)
@@ -440,8 +458,16 @@ void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config)
 
 	ImGui::Text(l_desc.c_str());
 	ImGui::Separator();
+	ImGui::Text("Position");
+
+	auto l_newpos{ imgui::position_sliders(get_metadata_tile_position(l_index), !l_meta_movable) };
+	if (l_newpos)
+		set_metadata_tile_position(l_index, l_newpos.value(), p_config);
 
 	if (l_index == c::MD_BYTE_NO_KEY) {
+		ImGui::Separator();
+		ImGui::Text("Properties");
+
 		auto l_khidden{ imgui::checkbox("Hidden", l_level.is_key_hidden()) };
 		ImGui::SameLine();
 		auto l_kcovered{ imgui::checkbox("In Block", l_level.is_key_in_block()) };
@@ -449,17 +475,17 @@ void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config)
 			l_level.set_key_hidden(l_khidden.value());
 		if (l_kcovered)
 			l_level.set_key_in_block(l_kcovered.value());
-		ImGui::Separator();
 	}
-
-	auto l_newpos{ imgui::position_sliders(get_metadata_tile_position(l_index), !l_meta_movable) };
-	if (l_newpos)
-		set_metadata_tile_position(l_index, l_newpos.value(), p_config);
 
 	if (l_index == c::MD_BYTE_NO_SPAWN01)
 		draw_ui_selected_mirror(0, p_config);
 	else if (l_index == c::MD_BYTE_NO_SPAWN02)
 		draw_ui_selected_mirror(1, p_config);
+
+	ImGui::Separator();
+	if (imgui::button("Hide", 2)) {
+		set_metadata_tile_position(l_index, std::make_pair(0, -1), p_config);
+	}
 }
 
 void skc::SKC_Main_window::draw_ui_metadata_drop_schedules(void) {

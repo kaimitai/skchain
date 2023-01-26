@@ -435,20 +435,19 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 		auto l_pstart = l_level.get_player_start_pos();
 		draw_tile(p_rnd, m_gfx.get_meta_tile(l_pstart.first >= c::LEVEL_W / 2 ? c::MD_BYTE_NO_PLAYER_START_LEFT : c::MD_BYTE_NO_PLAYER_START, l_tileset_no),
 			l_pstart.first, l_pstart.second);
+	}
 
-		// draw gridlines
-		if (m_show_gridlines) {
-			auto l_pulse_color{ klib::gfx::pulse_color(c::COL_WHITE, c::COL_GOLD, m_timer.get_frame()) };
+	// draw gridlines
+	if (m_show_gridlines) {
+		auto l_pulse_color{ klib::gfx::pulse_color(c::COL_WHITE, c::COL_GOLD, m_timer.get_frame()) };
 
-			SDL_SetRenderDrawColor(p_rnd, l_pulse_color.r,
-				l_pulse_color.g, l_pulse_color.b, 0);
+		SDL_SetRenderDrawColor(p_rnd, l_pulse_color.r,
+			l_pulse_color.g, l_pulse_color.b, 0);
 
-			for (int i{ 1 }; i < c::LEVEL_W; ++i)
-				SDL_RenderDrawLine(p_rnd, i * c::TILE_GFX_SIZE, 0, i * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE);
-			for (int i{ 1 }; i < c::LEVEL_H; ++i)
-				SDL_RenderDrawLine(p_rnd, 0, i * c::TILE_GFX_SIZE, c::LEVEL_W * c::TILE_GFX_SIZE, i * c::TILE_GFX_SIZE);
-		}
-
+		for (int i{ 1 }; i < c::LEVEL_W; ++i)
+			SDL_RenderDrawLine(p_rnd, i * c::TILE_GFX_SIZE, 0, i * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE);
+		for (int i{ 1 }; i < c::LEVEL_H; ++i)
+			SDL_RenderDrawLine(p_rnd, 0, i * c::TILE_GFX_SIZE, c::LEVEL_W * c::TILE_GFX_SIZE, i * c::TILE_GFX_SIZE);
 	}
 
 	if (is_selected_index_valid()) {
