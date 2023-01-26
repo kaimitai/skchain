@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <stdexcept>
 #include <utility>
 #include "Rom_expander.h"
 #include "./../common/klib/klib_util.h"
@@ -101,6 +102,9 @@ void skc::m66::patch_mirror_enemy_set_bytes(
 				(l_nmi_set_no == 0 ? c::OFFSET_M66_LOCAL_SCHED_ENEMY_1_DATA : c::OFFSET_M66_LOCAL_SCHED_ENEMY_2_DATA) };
 			std::size_t l_enemy_set = p_levels.at(i).get_spawn_enemies(l_nmi_set_no);
 
+			if (p_enemy_sets.at(l_enemy_set).size() >= c::LENGTH_M66_ENEMY_SET_DATA)
+				throw std::runtime_error("Too many enemies in enemy set " + std::to_string(l_enemy_set + 1));
+
 			for (std::size_t nmi{ 0 }; nmi < 7 && nmi < p_enemy_sets.at(l_enemy_set).size(); ++nmi)
 				l_io_rom_data.at(l_out_offset + nmi) = p_enemy_sets.at(l_enemy_set).at(nmi);
 
@@ -115,6 +119,8 @@ void skc::m66::patch_enemy_data_bytes(std::vector<byte>& l_io_rom_data,
 ) {
 	for (std::size_t lvl_i{ 0 }; lvl_i < p_levels.size(); ++lvl_i) {
 		auto l_enemy_data = p_levels[lvl_i].get_enemy_bytes();
+		if (l_enemy_data.size() > c::LENGTH_M66_ENEMY_DATA)
+			throw std::runtime_error("Too many enemies in level " + std::to_string(lvl_i + 1));
 		for (std::size_t i{ 0 }; i < l_enemy_data.size(); ++i)
 			l_io_rom_data.at(c::OFFSET_M66_LVL_DATA
 				+ lvl_i * c::LENGTH_M66_LVL_DATA + c::OFFSET_M66_LOCAL_ENEMY_DATA + i) = l_enemy_data[i];

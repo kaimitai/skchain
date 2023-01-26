@@ -31,10 +31,11 @@ namespace skc {
 		constexpr std::size_t OFFSET_M66_CONSTELLATION_POS{ OFFSET_M66_ITEM_DELIMITER + 1 };
 
 		constexpr std::size_t OFFSET_M66_LOCAL_ENEMY_DATA{ 208 };
-		constexpr std::size_t LENGTH_M66_ENEMY_DATA{ 1 + 13 * 2 + 2 };
+		constexpr std::size_t LENGTH_M66_ENEMY_DATA{ 1 + 15 * 2 + 1 };
 
+		constexpr std::size_t LENGTH_M66_ENEMY_SET_DATA{ 8 };
 		constexpr std::size_t OFFSET_M66_LOCAL_SCHED_ENEMY_1_DATA{ 240 };
-		constexpr std::size_t OFFSET_M66_LOCAL_SCHED_ENEMY_2_DATA{ OFFSET_M66_LOCAL_SCHED_ENEMY_1_DATA + 8 };
+		constexpr std::size_t OFFSET_M66_LOCAL_SCHED_ENEMY_2_DATA{ OFFSET_M66_LOCAL_SCHED_ENEMY_1_DATA + LENGTH_M66_ENEMY_SET_DATA };
 	}
 
 	// ROM mapper 66 functions and procedures
