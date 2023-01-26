@@ -181,8 +181,10 @@
 
     <!-- 0x0c-0x0f and 0x10-0x13 are strange stationary fireballs -->
     <!-- 0x14-0x17 are glitchy gravity fairies and princesses -->
-    <!-- 0x18-0x1a are mighty bomb jacks -->
     <enemy no="0x18" description="Mighty Bomb Jack" animation="67" />
+	<enemy no="0x19" description="Mighty Bomb Jack #2" animation="67" />
+	<enemy no="0x1a" description="Mighty Bomb Jack #3" animation="67" />
+	<enemy no="0x1b" description="Mighty Bomb Jack #4" animation="67" />
 
     <enemy no="0x1c" description="Fairy" animation="42" />
     <enemy no="0x1d" description="Fairy Princess" animation="49" />
