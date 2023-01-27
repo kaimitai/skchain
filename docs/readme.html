@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Solomon's Keychain v0.2 - Documentation</title>
+    <title>Solomon's Keychain v1.0 - Documentation</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -57,9 +57,11 @@
 
                 <hr>
 
-                <header>Solomon's Keychain v0.2 - Documentation</header>
+                <header>Solomon's Keychain v1.0 - Documentation</header>
 
-                <p>Thank you for checking out <a href="https://github.com/kaimitai/skchain/">Solomon's Keychain</a>. With this tool you will be able to alter the level data and game metadata for Solomon's Key (NES). We support altering the US, EU and JP versions of the game. Check out the various sections of this document for an explanation of the program's functionality.</p>
+                <p>Thank you for checking out <a href="https://github.com/kaimitai/skchain/">Solomon's Keychain</a>. With this tool you will be able to alter the level data and game metadata for Solomon's Key (NES). We support altering the US, EU and JP versions of the game. The application also supports expanding the ROM to vastly increase data size.</p>
+
+                <p>Check out the various sections of this document for an explanation of the program's functionality.</p>
 
                 <p>In order to use the level editor efficiently, it is recommended to read the documentation.</p>
 
@@ -76,6 +78,8 @@
                 <p>The application can also be started from the command-line with path to a NES-file as parameter. This means you can drag and drop a ROM file on the application to immediately load the file, at least on Windows.</p>
 
                 <p>When the editor starts successfully, it will tell you which NES-ROM file is loaded, which region the ROM belongs to, and which directory it uses as the working directory.</p>
+
+                <p>If the US-version of the ROM was loaded, it can be expanded to overcome data size limits.</p>
 
                 <p>There are three element types in the editor: Items, Monsters and Metadata. You can select elements from the element picker, and right-click on the gameboard to insert them. Metadata elements are blocks, constellation background, key position, door position, player start position and so on. The item elements are game items, which can be hidden or inside breakable blocks. The third type, enemies, represents game enemies and other sprites; fairies and Mighty Bomb Jack.</p>
 
@@ -108,7 +112,8 @@
                     <li><b>Save xml</b> button: Saves your work as a group of xmls, stored under a subfolder ./xml of the loaded ROM-file. This is the recommended file format to use for development.</li>
                     <li><b>Save IPS</b> button: Saves your work as an IPS-patch, which is the difference between your work and the initially loaded NES-file. This is the recommended format for patch distribution, as long as the base ROM loaded is the "official" version.</li>
                     <li><b>Save NES</b> button: Saves your work as an NES-file. This is the recommended format when testing your levels. If you loaded "SK.nes", the output filename will be "SK-out.nes" to avoid overwriting your base ROM which was loaded. If you want to overwrite the file instead, hold Shift when saving.</li>
-                    <li><b>Load xml</b> button: Will load xml-files from the xml-subfolder, if they exist.</li>
+                    <li><b>Expand ROM</b> button: Only available when the base US-version of the ROM is loaded. This button will increase the ROM-size, which removes a lot of restrictions. Each demon mirror will get its own drop schedule and enemy set (enemy sets can contain up to 7 enemies), the output ROMs will not have any item data restrictions, and 15 enemies can be added to each level.</li>
+                    <li><b>Load xml</b> button: Will load xml-files from the xml-subfolder, if they exist. If the metadata xml indicates that it comes from an expanded ROM (by checking if there are 53x2 demon mirror drop schedules), the ROM will be expanded automatically if the currently loaded ROM is the base US-version</li>
                     <li><b>Drop Schedules</b> button: Will open/close the Demon Mirror Drop Schedules-window. Button is yellow when the window is active. See separate section.</li>
                     <li><b>Enemy Sets</b> button: Will open/close the Demon Mirror Enemy Sets-window. Button is yellow when the window is active. See separate section.</li>
                     <li><b>Level</b>-slider. Use to select which level to edit.</li>
@@ -146,7 +151,9 @@
                     <li><b>Left Click</b>: Select item on the gameboard. Will change element mode to the type of the selected element. (if you are in items editing mode and click on a metadata item, the editing mode will change to metadata) The selected element will be outlined by a pulsating yellow square</li>
                     <li><b>Shift + Left Click</b>: Move the selected element to the clicked location</li>
                     <li><b>Delete</b> keyboard button: Delete selected board element. (if this element is a door or a key, it will be hidden instead - and other metadata items cannot be deleted)</li>
+                    <li><b>1,2,3</b> keyboard buttons: When held, will draw empty tiles, brown blocks and white blocks under the mouse cursor, respectively</li>
                     <li><b>Tab</b> keyboard button: Will cycle between items of the same type. Hold shift to browse backward.
+                    <li><b>Escape</b> keyboard button: When held, will prevent the foreground from being drawn</li>
                     <li><b>G</b> keyboard button: Toggle gridlines</li>
                     <li><b>Ctrl+S</b> keyboard buttons: Save NES-file. Hold Shift to overwrite the input file</li>
                     <li><b>Up</b> keyboard button: Go to next level</li>
@@ -169,16 +176,21 @@
 
                 <p>All elements have position-sliders, which lets you change its position. (an alternative to Shift+Click) For Demon Mirrors, you can also set the drop schedule and enemy set - and a read-only preview will show at the bottom.</p>
 
-                <p>For the key position, you can also set properties "hidden" and "in block". All other metadata items have no other property than "position"</p>
+                <p>For the key position, you can also set properties "hidden" and "in block".</p>
 
+                <p>The "hide"-button will move the metadata element to position (0, -1).</p>
 
                 <img src="./images/subwin04_02_selected_element_item.png" alt="Selected Element: Items" width="400" />
 
                 <p>For element type Item, the properties are positions, as well as making the item hidden or stored in a block. In addition there is a delete-button, which is an alternative to keyboard button Delete</p>
 
+                <p>The "code"-slider will let you cycle through item codes at will.</p>
+
                 <img src="./images/subwin04_03_selected_element_enemy.png" alt="Selected Element: Items" width="400" />
 
                 <p>For element type Enemy, the properties are positions, as well as speed and direction, depending on the enemy.</p>
+
+                <p>The "code"-slider will let you cycle through enemy codes at will.</p>
 
                 <hr>
 
@@ -259,11 +271,21 @@
                     <br><a href="https://www.libsdl.org/">SDL2 (2.24.0)</a>
                 </p>
 
+                <p>Thanks to the developers of <a href="https://www.romhacking.net/utilities/906/">skedit</a>, for figuring out a way to expand the ROM</p>
+
             </section>
 
             <hr>
 
             <section class="main-section" id="changelog">
+
+                <header>2023-01-xx: v1.0</header>
+                <ul>
+                    <li>Added support for ROM expansion, to exceed the original size limits! (adds compatibility with <a href="https://www.romhacking.net/utilities/906/">skedit</a>)</li>
+                    <li>Added support for drawing background blocks regardless of editing mode (using keyboard buttons 1-3)</li>
+                    <li>Made it possible to hide all metadata elements (placing them at position <b>(0, -1)</b>)</li>
+                    <li>Added support for setting item/enemy code directly - among all possible codes - from the "Selected Element"-window</li>
+                </ul>
 
                 <header>2023-01-23: v0.2</header>
                 <ul>
@@ -287,9 +309,8 @@
                 </p>
 
                 <ul>
-                    <li>Support changing ROM mapper in order to increase the data sections</li>
-                    <li>Clean up the code, and reduce wasted cycles :)</li>
                     <li>Allow bmp import/export to change the graphics with bmp-files</li>
+                    <li>Clean up the code, and reduce wasted cycles</li>
                 </ul>
 
             </section>

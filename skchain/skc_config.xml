@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- Configuration file for Solomon's Keychain (https://github.com/kaimitai/skchain) -->
-<skchain app_version="0.2">
+<skchain app_version="1.0">
 
   <regions>
     <!-- US66 is a virtual type; the expanded (mapper 66) version of the US-ROM -->
@@ -29,10 +29,10 @@
     <length_mirror_enemy_data value="42" />
     <length_enemy_data value="726" />
     <length_item_data value="1402" />
-	
+
     <offset_gfx region="US,JP,EU" offset="0x8010" />
-	<offset_gfx region="US66" offset="0x10010" />
-	
+    <offset_gfx region="US66" offset="0x10010" />
+
     <rom_ram_diff value="0x7ff0" />
     <level_count value="53" />
     <mirror_rate_count value="16" />
@@ -121,13 +121,13 @@
 
   <!-- each item mapped from byte value (0x01-0x39) to description and tile graphics indexes. the higher bits determine properties "hidden" and "in block" -->
   <item_definitions>
-    <!-- 0x01-0x03: glitch broken block, glitch door, glitch white block -->
-    <!-- 0x06: glitch key -->
-    <!-- 0x07: glitch open door -->
-
+    <item no="0x01" description="Broken Block (glitch)" animation="84" />
+    <item no="0x02" description="Door (glitch)" animation="4" />
+    <item no="0x03" description="White Block (glitch)" animation="2" />
     <item no="0x04" description="Bat Symbol" animation="6" />
     <item no="0x05" description="Demon Mirror" animation="57" />
-
+    <item no="0x06" description="Key (glitch)" animation="5" />
+    <item no="0x07" description="Open Door (glitch)" animation="81" />
     <item no="0x08" description="Diamond (blue, modifiable)" animation="10" />
     <item no="0x09" description="Firejar (blue, modifiable)" animation="77" />
     <item no="0x0a" description="Double Coin (gold, modifiable)" animation="79" />
@@ -152,11 +152,11 @@
     <item no="0x1d" description="Shrine #2" animation="26" />
     <item no="0x1e" description="Shrine #3" animation="27" />
     <item no="0x1f" description="Shrine #4" animation="28" />
-
     <item no="0x20" description="Solomon's Seal" animation="29" />
     <item no="0x21" description="Egyptian Head" animation="30" />
     <item no="0x22" description="Warp Item" animation="16" />
-    <!-- 0x23, 0x24: glitch open door -->
+    <item no="0x23" description="Open Door (glitch) #2" animation="81" />
+    <item no="0x24" description="Open Door (glitch) #3" animation="81" />
     <item no="0x25" description="Coin (silver)" animation="21" />
     <item no="0x26" description="Double Coin (silver)" animation="34" />
     <item no="0x27" description="Opal (blue)" animation="19" />
@@ -172,8 +172,13 @@
     <item no="0x31" description="Egyptian Head" animation="30" />
     <item no="0x32" description="Magic Lamp" animation="39" />
     <item no="0x33" description="E-bottle" animation="7" />
-    <!-- 0x33-0x36: glitch 1-ups -->
-    <!-- 0x37-0x3f: garbage gfx -->
+    <item no="0x34" description="Glitch 1-Up" animation="82" />
+    <item no="0x35" description="Glitch 1-Up #2" animation="16" />
+    <item no="0x36" description="Glitch 1-Up #3" animation="69" />
+    <item no="0x37" description="Mini-Dana" animation="85" />
+    <item no="0x38" description="Tecmo Bunny (white)" animation="83" />
+    <item no="0x39" description="Tecmo Bunny (orange)" animation="69" />
+    <!-- 0x3a-0x3f: garbage gfx -->
   </item_definitions>
 
   <!-- each enemy mapped from byte value (0x01-0x83) to description and tile graphics indexes -->
@@ -182,9 +187,9 @@
     <!-- 0x0c-0x0f and 0x10-0x13 are strange stationary fireballs -->
     <!-- 0x14-0x17 are glitchy gravity fairies and princesses -->
     <enemy no="0x18" description="Mighty Bomb Jack" animation="67" />
-	<enemy no="0x19" description="Mighty Bomb Jack #2" animation="67" />
-	<enemy no="0x1a" description="Mighty Bomb Jack #3" animation="67" />
-	<enemy no="0x1b" description="Mighty Bomb Jack #4" animation="67" />
+    <enemy no="0x19" description="Mighty Bomb Jack #2" animation="67" />
+    <enemy no="0x1a" description="Mighty Bomb Jack #3" animation="67" />
+    <enemy no="0x1b" description="Mighty Bomb Jack #4" animation="67" />
 
     <enemy no="0x1c" description="Fairy" animation="42" />
     <enemy no="0x1d" description="Fairy Princess" animation="49" />
@@ -426,7 +431,7 @@
       <section no="2" value="0x25,0x26,0x28,0x27,0x2a,0x2d,0x2b,0x2c" />
       <section no="3" description="Time and Shrines" value="0x11,0x12,0x13,0x14,0x1c,0x1d,0x1e,0x1f" />
       <section no="4" description="Special" value="0x22,0x2e,0x2f,0x30,0x31,0x32,0x20,0x1a" />
-      <section no="5" description="Decoration" value="0x04,0x05,0x10" />
+      <section no="5" description="Decoration" value="0x04,0x05,0x10,0x37" />
     </tile_picker>
     <!-- enemy tile picker -->
     <tile_picker no="2">
@@ -496,6 +501,7 @@
     <tile_definitions>
       <!-- background wall tile -->
       <tile no="0" palette_no="1" nes_tiles="300,301,302,303" />
+      <!-- brown block -->
       <tile no="1" palette_no="1" nes_tiles="400,401,402,403" />
       <tile no="2" palette_no="0" nes_tiles="388,389,390,391" />
       <!-- dana -->
@@ -557,17 +563,14 @@
       <!-- double coin (silver, gold) -->
       <tile no="34" palette_no="0" nes_tiles="308,384,310,386" />
       <tile no="35" palette_no="3" nes_tiles="308,384,310,386" />
-
       <!-- origami swan -->
       <tile no="36" palette_no="3" nes_tiles="424,425,329,331" />
       <!-- half bottle -->
       <tile no="37" palette_no="0" nes_tiles="356,356:v,334,335" />
-
       <!-- sphinx -->
       <tile no="38" palette_no="1" nes_tiles="272,275,281,396" />
       <!-- magic lamp -->
       <tile no="39" palette_no="3" nes_tiles="276,285,286,287" />
-
       <!-- monsters -->
       <!-- golem/mage -->
       <tile no="40" palette_no="7" nes_tiles="84,86,85,87" transparent="true" />
@@ -588,33 +591,27 @@
       <tile no="48" palette_no="7" nes_tiles="212,214,213,215" transparent="true" />
       <!-- fairy princess -->
       <tile no="49" palette_no="7" nes_tiles="216,202,217,203" transparent="true" />
-
       <!-- panel monster right -->
       <tile no="50" palette_no="6" nes_tiles="66:v,64:v,67:v,65:v" transparent="true" />
       <!-- panel monster up -->
       <tile no="51" palette_no="6" nes_tiles="68,70,69,71" transparent="true" />
       <!-- panel monster down -->
       <tile no="52" palette_no="6" nes_tiles="69:h,71:h,68:h,70:h" transparent="true" />
-
       <!-- constellations -->
       <tile no="53" palette_no="3" w="6" nes_tiles="296,449,448,453,452,297, 298,451,450,455,454,299, 296,457,456,461,460,297, 298,459,458,463,462,299" />
       <tile no="54" palette_no="3" w="6" nes_tiles="296,465,464,469,468,297, 298,467,466,471,470,299, 296,473,472,477,476,297, 298,475,474,479,478,299" />
       <tile no="55" palette_no="3" w="6" nes_tiles="296,481,480,485,484,297, 298,483,482,487,486,299, 296,489,488,493,492,297, 298,491,490,495,494,299" />
       <tile no="56" palette_no="3" w="6" nes_tiles="296,497,496,501,500,297, 298,499,498,503,502,299, 296,505,504,509,508,297, 298,507,506,511,510,299" />
-
       <!-- demon mirror -->
       <tile no="57" palette_no="1" nes_tiles="344,345,346,347" />
-
       <!-- fire bullets: left, right, up, down -->
       <tile no="58" palette_no="1" nes_tiles="140,142,141,143" transparent="true" />
       <tile no="59" palette_no="1" nes_tiles="142:v,140:v,143:v,141:v" transparent="true" />
       <tile no="60" palette_no="1" nes_tiles="144,146,145,147" transparent="true" />
       <tile no="61" palette_no="1" nes_tiles="145:h,147:h,144:h,146:h" transparent="true" />
-
       <!-- ghosts: left, right -->
       <tile no="62" palette_no="6" nes_tiles="116,118,117,119" transparent="true" />
       <tile no="63" palette_no="6" nes_tiles="118:v,116:v,119:v,117:v" transparent="true" />
-
       <!-- dragon right -->
       <tile no="64" palette_no="7" nes_tiles="74:v,72:v,75:v,73:v" transparent="true" />
       <!-- golem/mage right -->
@@ -623,27 +620,21 @@
       <tile no="66" palette_no="6" nes_tiles="106:v,104:v,107:v,105:v" transparent="true" />
       <!-- mighty bomb jack -->
       <tile no="67" palette_no="7" nes_tiles="252,252:v,253,253:v" transparent="true" />
-
       <!-- blue key -->
       <tile no="68" palette_no="2" nes_tiles="300,397,398,399" />
-      <!-- tecmo bunny -->
+      <!-- tecmo bunny (orange) -->
       <tile no="69" palette_no="1" nes_tiles="440,441,442,443" />
-
       <!-- dana (facing left) -->
       <tile no="70" palette_no="4" nes_tiles="0,2,1,3" transparent="true" />
-
       <!-- demonhead  right -->
       <tile no="71" palette_no="7" nes_tiles="50:v,48:v,51:v,49:v" transparent="true" />
       <!-- saramandor left, right -->
       <tile no="72" palette_no="5" nes_tiles="52,54,53,55" transparent="true" />
       <tile no="73" palette_no="5" nes_tiles="54:v,52:v,55:v,53:v" transparent="true" />
-
       <!-- opal (dark orange) -->
       <tile no="74" palette_no="3" nes_tiles="304,305,306,307" />
-
       <!-- demonhead (left) -->
       <tile no="75" palette_no="7" nes_tiles="48,50,49,51" transparent="true" />
-
       <!-- modifiable indicators -->
       <!-- bell -->
       <tile no="76" palette_no="3" nes_tiles="278,413,414,415" />
@@ -654,6 +645,16 @@
       <tile no="79" palette_no="3" nes_tiles="278,384,310,386" />
       <!-- fire scroll -->
       <tile no="80" palette_no="3" nes_tiles="278,409,410,411" />
+      <!-- open door -->
+      <tile no="81" palette_no="1" nes_tiles="324,325,326,327" />
+      <!-- half-open door -->
+      <tile no="82" palette_no="1" nes_tiles="328,325,330,327" />
+      <!-- tecmo bunny (white) -->
+      <tile no="83" palette_no="2" nes_tiles="440,441,442,443" />
+      <!-- broken brown block -->
+      <tile no="84" palette_no="1" nes_tiles="404,405,406,407" />
+      <!-- mini-Dana -->
+      <tile no="85" palette_no="1" nes_tiles="444,445,446,447" />
 
     </tile_definitions>
 

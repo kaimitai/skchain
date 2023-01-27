@@ -6,8 +6,8 @@
 namespace skc {
 	namespace c {
 
-		constexpr char APP_VERSION[]{ "0.2" };
-		constexpr char APP_TITLE[]{ "Solomon's Keychain v0.2" };
+		constexpr char APP_VERSION[]{ "1.0" };
+		constexpr char APP_TITLE[]{ "Solomon's Keychain v1.0" };
 		constexpr int APP_W{ 1024 + 435 }, APP_H{ 768 };
 
 		constexpr char FILENAME_CONFIG_XML[]{ "skc_config.xml" };
@@ -24,6 +24,8 @@ namespace skc {
 		constexpr int MSG_CODE_ERROR{ MSG_CODE_SUCCESS + 1 };
 
 		constexpr char TXT_UNKNOWN[]{ "Unknown" };
+		constexpr char TXT_POSITION[]{ "Position" };
+		constexpr char TXT_PROPERTIES[]{ "Properties" };
 		constexpr char TXT_X_POS[]{ "x-pos" };
 		constexpr char TXT_Y_POS[]{ "y-pos" };
 

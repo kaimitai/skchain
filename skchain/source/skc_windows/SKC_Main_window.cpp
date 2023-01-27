@@ -97,11 +97,13 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config)
 	}
 
 	p_config.add_message("Executable folder: " + p_config.get_base_path());
+	p_config.add_message("Escape: Hide foreground, G: Toggle gridlines");
+	p_config.add_message("Keyboard Buttons 1-3: Draw blocks under cursor");
 	p_config.add_message("Right Click: Insert Element Picker element");
 	p_config.add_message("Shift + Left Click: Move selected board element");
 	p_config.add_message("Left Click: Select board element");
 	p_config.add_message("Read the documentation for efficient usage tips!");
-	p_config.add_message("Build Date: " + std::string(__DATE__) + " " + std::string(__TIME__));
+	p_config.add_message("Build Date: " + std::string(__DATE__) + " " + std::string(__TIME__) + " CET");
 	p_config.add_message("Homepage: https://github.com/kaimitai/skchain");
 	p_config.add_message("Welcome to Solomon's Keychain by Kai E. Froeland", c::MSG_CODE_SUCCESS);
 

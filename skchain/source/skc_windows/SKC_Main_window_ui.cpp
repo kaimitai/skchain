@@ -219,7 +219,7 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 	auto l_tileset = l_level.get_tileset_no();
 
 	ImGui::Separator();
-	ImGui::Text("Properties");
+	ImGui::Text(c::TXT_PROPERTIES);
 
 	byte l_spawn_index = l_level.get_spawn_schedule(p_mirror_no);
 	byte l_spawn_nmi_index = l_level.get_spawn_enemies(p_mirror_no);
@@ -366,14 +366,14 @@ void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_conf
 				l_level.set_item_element_no(l_index, l_elm_slider_no.value());
 
 			ImGui::Separator();
-			ImGui::Text("Position");
+			ImGui::Text(c::TXT_POSITION);
 
 			auto l_newpos{ imgui::position_sliders(l_items.at(l_index).get_position()) };
 			if (l_newpos)
 				l_level.set_item_position(l_index, l_newpos.value());
 
 			ImGui::Separator();
-			ImGui::Text("Properties");
+			ImGui::Text(c::TXT_PROPERTIES);
 
 			bool l_hidden{ skc::Level::is_item_hidden(l_elm_no) };
 			bool l_in_block{ skc::Level::is_item_in_block(l_elm_no) };
@@ -419,18 +419,18 @@ void skc::SKC_Main_window::draw_ui_selected_enemy(const SKC_Config& p_config) {
 			+ p_config.get_description(c::ELM_TYPE_ENEMY, l_enemy_no) };
 	ImGui::Text(l_desc.c_str());
 
-	auto l_elm_slider_no{ imgui::slider<byte>("Code", l_enemy_no, 1, 0x84) };
+	auto l_elm_slider_no{ imgui::slider<byte>("Code", l_enemy_no, 1, 0x83) };
 	if (l_elm_slider_no)
 		l_level.set_enemy_no(l_index, l_elm_slider_no.value());
 
 	ImGui::Separator();
-	ImGui::Text("Position");
+	ImGui::Text(c::TXT_POSITION);
 	auto l_newpos{ imgui::position_sliders(l_enemies.at(l_index).get_position()) };
 	if (l_newpos)
 		l_level.set_enemy_position(l_index, l_newpos.value());
 
 	ImGui::Separator();
-	ImGui::Text("Properties");
+	ImGui::Text(c::TXT_PROPERTIES);
 
 	auto l_new_enemy_no{ imgui::slider_enemy_properties(l_enemy_no, p_config.get_enemy_editor()) };
 	if (l_new_enemy_no)
@@ -458,7 +458,7 @@ void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config)
 
 	ImGui::Text(l_desc.c_str());
 	ImGui::Separator();
-	ImGui::Text("Position");
+	ImGui::Text(c::TXT_POSITION);
 
 	auto l_newpos{ imgui::position_sliders(get_metadata_tile_position(l_index), !l_meta_movable) };
 	if (l_newpos)
@@ -466,7 +466,7 @@ void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config)
 
 	if (l_index == c::MD_BYTE_NO_KEY) {
 		ImGui::Separator();
-		ImGui::Text("Properties");
+		ImGui::Text(c::TXT_PROPERTIES);
 
 		auto l_khidden{ imgui::checkbox("Hidden", l_level.is_key_hidden()) };
 		ImGui::SameLine();
