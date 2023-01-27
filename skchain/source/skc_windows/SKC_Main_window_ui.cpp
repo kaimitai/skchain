@@ -131,7 +131,8 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config, const klib:
 	if (ImGui::Button("Save NES"))
 		save_nes_file(p_config, p_input.is_shift_pressed());
 
-	if (p_config.get_region_code() == c::REGION_US && m_drop_enemies.size() != 106) {
+	if (p_config.get_region_code() == c::REGION_US &&
+		!m66::is_rom_expanded(m_drop_enemies.size())) {
 		ImGui::SameLine();
 		if (imgui::button("Expand ROM", 1, "Change ROM mapper. Holdt Ctrl to use") && l_ctrl) {
 			m_drop_enemies = m66::expand_enemy_sets(m_drop_enemies, m_levels);

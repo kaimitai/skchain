@@ -286,6 +286,10 @@ std::vector<std::vector<bool>> skc::m66::expand_drop_schedules(
 	return result;
 }
 
+bool skc::m66::is_rom_expanded(std::size_t p_mirror_schedule_count) {
+	return p_mirror_schedule_count == 2 * c::COUNT_M66_LEVELS;
+}
+
 // level utility functions
 bool skc::m66::is_mirror_visible(const skc::Level& p_level, std::size_t p_mirror_no) {
 	auto l_pos = p_level.get_spawn_position(p_mirror_no);

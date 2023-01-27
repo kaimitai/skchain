@@ -487,7 +487,7 @@ void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, SKC_Config& p_config,
 
 std::vector<byte> skc::SKC_Main_window::generate_patch_bytes(SKC_Config& p_config) const {
 	if (p_config.get_rom_data().size() == c::ROM_M66_FILE_SIZE ||
-		m_drop_schedules.size() == 106)
+		m66::is_rom_expanded(m_drop_enemies.size()))
 		return generate_patch_bytes_rom66(p_config);
 	else
 		return generate_patch_bytes_rom03(p_config);
