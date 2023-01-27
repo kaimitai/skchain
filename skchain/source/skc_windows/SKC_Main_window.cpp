@@ -635,6 +635,16 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes_rom66(SKC_Config& p
 	skc::m66::patch_enemy_data_bytes(l_output, m_levels);
 	skc::m66::patch_item_data_bytes(l_output, m_levels);
 
+	// patch meta-tiles
+	for (const auto& kv : m_meta_tiles)
+		for (const auto& l_md_tile : kv.second) {
+			std::size_t l_md_index{ l_md_tile.first };
+			if (p_config.get_meta_tile_movable(l_md_index)) {
+				std::size_t l_offset{ p_config.get_meta_tile_rom_offset(l_md_index) };
+				l_output.at(l_offset) = skc::Level::get_byte_from_position(l_md_tile.second);
+			}
+		}
+
 	return l_output;
 }
 

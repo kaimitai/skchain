@@ -185,6 +185,15 @@
   <enemy_definitions>
 
     <!-- 0x0c-0x0f and 0x10-0x13 are strange stationary fireballs -->
+    <enemy no="0x0c" description="Fireball (red, right, glitch)" animation="86" />
+    <enemy no="0x0d" description="Fireball (red, left, glitch)" animation="87" />
+    <enemy no="0x0e" description="Fireball (red, up, glitch)" animation="88" />
+    <enemy no="0x0f" description="Fireball (red, down, glitch)" animation="89" />
+    <enemy no="0x10" description="Fireball (white, right, glitch)" animation="90" />
+    <enemy no="0x11" description="Fireball (white, left, glitch)" animation="91" />
+    <enemy no="0x12" description="Fireball (white, up, glitch)" animation="92" />
+    <enemy no="0x13" description="Fireball (white, down, glitch)" animation="93" />
+
     <!-- 0x14-0x17 are glitchy gravity fairies and princesses -->
     <enemy no="0x18" description="Mighty Bomb Jack" animation="67" />
     <enemy no="0x19" description="Mighty Bomb Jack #2" animation="67" />
@@ -413,6 +422,9 @@
       <bundle no="41" enemies="0x7b,0x7a" />
       <bundle no="42" enemies="0x7d,0x7c" />
       <bundle no="43" enemies="0x7f,0x7e" />
+      <!-- glitchy fireballs -->
+      <bundle no="44" enemies="0x0c,0x0d,0x0e,0x0f" />
+      <bundle no="45" enemies="0x10,0x11,0x12,0x13" />
     </enemy_directions>
   </enemy_editor>
 
@@ -430,8 +442,8 @@
       <section no="1" description="Static" value="0x15,0x29,0x1b,0x16,0x17,0x18,0x33,0x19" />
       <section no="2" value="0x25,0x26,0x28,0x27,0x2a,0x2d,0x2b,0x2c" />
       <section no="3" description="Time and Shrines" value="0x11,0x12,0x13,0x14,0x1c,0x1d,0x1e,0x1f" />
-      <section no="4" description="Special" value="0x22,0x2e,0x2f,0x30,0x31,0x32,0x20,0x1a" />
-      <section no="5" description="Decoration" value="0x04,0x05,0x10,0x37" />
+      <section no="4" description="Special" value="0x22,0x2e,0x2f,0x30,0x31,0x32,0x20,0x37" />
+      <section no="5" description="Decoration" value="0x04,0x05,0x10,0x1a" />
     </tile_picker>
     <!-- enemy tile picker -->
     <tile_picker no="2">
@@ -655,6 +667,16 @@
       <tile no="84" palette_no="1" nes_tiles="404,405,406,407" />
       <!-- mini-Dana -->
       <tile no="85" palette_no="1" nes_tiles="444,445,446,447" />
+      <!-- glitchy fire enemies (red): right, left, up, down -->
+      <tile no="86" palette_no="5" nes_tiles="134:v,132:v,135:v,133:v" transparent="true" />
+      <tile no="87" palette_no="5" nes_tiles="132,134,133,135" transparent="true" />
+      <tile no="88" palette_no="5" nes_tiles="136,138,137,139" transparent="true" />
+      <tile no="89" palette_no="5" nes_tiles="137:h,139:h,136:h,138:h" transparent="true" />
+      <!-- glitchy fire enemies (white): right, left, up, down -->
+      <tile no="90" palette_no="6" nes_tiles="134:v,132:v,135:v,133:v" transparent="true" />
+      <tile no="91" palette_no="6" nes_tiles="132,134,133,135" transparent="true" />
+      <tile no="92" palette_no="6" nes_tiles="136,138,137,139" transparent="true" />
+      <tile no="93" palette_no="6" nes_tiles="137:h,139:h,136:h,138:h" transparent="true" />
 
     </tile_definitions>
 
