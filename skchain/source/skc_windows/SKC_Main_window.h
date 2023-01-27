@@ -8,7 +8,6 @@
 #include "./../common/klib/User_input.h"
 #include "./../SKC_Config.h"
 #include "./../SKC_Level.h"
-#include "./../Enemy_set_editor.h"
 #include "./../SKC_Gfx.h"
 
 using byte = unsigned char;
@@ -32,7 +31,7 @@ namespace skc {
 		std::vector<std::vector<bool>> m_drop_schedules;
 		std::vector<std::vector<byte>> m_drop_enemies;
 		std::optional<std::size_t> m_schedule_win_index;
-		std::optional<Enemy_set_editor> m_enemy_set_win;
+		std::optional<std::pair<std::size_t, std::size_t>> m_enemy_sets_win_index;
 		klib::Timer m_timer;
 
 		bool is_selected_index_valid(void) const;
@@ -59,6 +58,7 @@ namespace skc {
 		void draw_ui_selected_mirror(std::size_t p_mirror_no, const SKC_Config& p_config);
 		void draw_ui_selected_metadata(const SKC_Config& p_config);
 		void draw_ui_metadata_drop_schedules(void);
+		void draw_ui_metadata_enemy_sets(const SKC_Config& p_config);
 
 		bool is_valid_constellation(byte p_constellation) const;
 

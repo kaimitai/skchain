@@ -28,11 +28,8 @@ void skc::SKC_Main_window::draw_ui(SKC_Config& p_config,
 	this->draw_ui_selected_tile_window(p_config);
 	if (m_schedule_win_index)
 		draw_ui_metadata_drop_schedules();
-
-	if (m_enemy_set_win)
-		m_enemy_set_win.value().draw_ui(m_drop_enemies, p_config, m_gfx,
-			m_selected_type == c::ELM_TYPE_ENEMY ? m_selected_picker_tile[c::ELM_TYPE_ENEMY] : 0,
-			p_config.get_enemy_editor());
+	if (m_enemy_sets_win_index)
+		draw_ui_metadata_enemy_sets(p_config);
 
 	this->draw_ui_level_board(p_config, p_input);
 
@@ -160,11 +157,11 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config, const klib:
 			m_schedule_win_index = 0;
 	}
 	ImGui::SameLine();
-	if (imgui::button("Enemy Sets", m_enemy_set_win ? c::COLOR_STYLE_ORANGE : c::COLOR_STYLE_NORMAL)) {
-		if (m_enemy_set_win)
-			m_enemy_set_win = std::nullopt;
+	if (imgui::button("Enemy Sets", m_enemy_sets_win_index ? c::COLOR_STYLE_ORANGE : c::COLOR_STYLE_NORMAL)) {
+		if (m_enemy_sets_win_index)
+			m_enemy_sets_win_index = std::nullopt;
 		else
-			m_enemy_set_win = Enemy_set_editor();
+			m_enemy_sets_win_index = std::make_pair(0, 0);
 	}
 
 	ImGui::Separator();
@@ -243,7 +240,7 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 
 	imgui::draw_enemy_set_interface(m_drop_enemies, p_config, m_gfx,
 		m_selected_picker_tile[c::ELM_TYPE_ENEMY],
-		p_config.get_enemy_editor(), l_spawn_nmi_index, m_sel_es_index);
+		p_config.get_enemy_editor(), l_spawn_nmi_index, m_sel_es_index, l_tileset);
 }
 
 void skc::SKC_Main_window::draw_tile_picker(const SKC_Config& p_config, std::size_t p_element_types) {
@@ -488,6 +485,23 @@ void skc::SKC_Main_window::draw_ui_metadata_drop_schedules(void) {
 		m_schedule_win_index = static_cast<std::size_t>(l_nv.value() - 1);
 
 	imgui::draw_drop_schedule_interface("md", m_drop_schedules, m_schedule_win_index.value());
+
+	ImGui::End();
+}
+
+void skc::SKC_Main_window::draw_ui_metadata_enemy_sets(const SKC_Config& p_config) {
+	imgui::window("Mirror Enemy Sets", c::WIN_ENEMYSET_X, c::WIN_ENEMYSET_Y,
+		c::WIN_ENEMYSET_W, c::WIN_ENEMYSET_H);
+
+	auto& l_params{ m_enemy_sets_win_index.value() };
+
+	auto l_set_no{ imgui::slider<std::size_t>("Enemy Set", l_params.first + 1, 1, m_drop_enemies.size()) };
+	if (l_set_no)
+		l_params.first = l_set_no.value() - 1;
+
+	imgui::draw_enemy_set_interface(m_drop_enemies, p_config, m_gfx,
+		m_selected_picker_tile[c::ELM_TYPE_ENEMY], p_config.get_enemy_editor(),
+		l_params.first, l_params.second, get_level().get_tileset_no());
 
 	ImGui::End();
 }

@@ -158,7 +158,6 @@
     <ClInclude Include="source\common\pugixml\pugiconfig.hpp" />
     <ClInclude Include="source\common\pugixml\pugixml.hpp" />
     <ClInclude Include="source\Enemy_editor.h" />
-    <ClInclude Include="source\Enemy_set_editor.h" />
     <ClInclude Include="source\SKC_Config.h" />
     <ClInclude Include="source\skc_constants\Constants_application.h" />
     <ClInclude Include="source\skc_constants\Constants_color.h" />
@@ -192,7 +191,6 @@
     <ClCompile Include="source\common\pugixml\pugixml.cpp" />
     <ClCompile Include="source\Enemy_editor.cpp" />
     <ClCompile Include="source\main.cpp" />
-    <ClCompile Include="source\Enemy_set_editor.cpp" />
     <ClCompile Include="source\SKC_Config.cpp" />
     <ClCompile Include="source\SKC_Gfx.cpp" />
     <ClCompile Include="source\SKC_Level.cpp" />

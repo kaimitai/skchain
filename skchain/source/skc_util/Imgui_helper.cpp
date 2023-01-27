@@ -133,7 +133,8 @@ void skc::imgui::draw_enemy_set_interface(std::vector<std::vector<byte>>& p_sets
 	byte p_available_monster_no,
 	const Enemy_editor& p_editor,
 	std::size_t p_enemy_set_no,
-	std::size_t& p_sel_enemy_no) {
+	std::size_t& p_sel_enemy_no,
+	std::size_t p_tileset_no) {
 
 	auto& l_set{ p_sets[p_enemy_set_no] };
 
@@ -146,7 +147,7 @@ void skc::imgui::draw_enemy_set_interface(std::vector<std::vector<byte>>& p_sets
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
 		ImGui::PushID(l_id.c_str());
 
-		if (ImGui::ImageButton(p_gfx.get_enemy_tile(l_enemy_no, 0), { c::TILE_GFX_SIZE, c::TILE_GFX_SIZE }))
+		if (ImGui::ImageButton(p_gfx.get_enemy_tile(l_enemy_no, p_tileset_no), { c::TILE_GFX_SIZE, c::TILE_GFX_SIZE }))
 			p_sel_enemy_no = i;
 
 		imgui::tooltip_text(p_config.get_description(c::ELM_TYPE_ENEMY, l_enemy_no));

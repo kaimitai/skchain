@@ -46,7 +46,8 @@ namespace skc {
 			byte p_available_monster_no,
 			const Enemy_editor& p_editor,
 			std::size_t p_enemy_set_no,
-			std::size_t& p_sel_enemy_no);
+			std::size_t& p_sel_enemy_no,
+			std::size_t p_tileset_no = 0);
 	}
 }
 
