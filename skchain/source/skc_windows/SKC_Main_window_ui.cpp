@@ -235,26 +235,14 @@ void skc::SKC_Main_window::draw_ui_selected_mirror(std::size_t p_mirror_no, cons
 
 	ImGui::Separator();
 
-	ImGui::BeginDisabled();
-
-	imgui::spawn_schedule(m_drop_schedules.at(l_spawn_index), "###ds");
+	imgui::draw_drop_schedule_interface("ds", m_drop_schedules, l_spawn_index);
 
 	ImGui::Separator();
 	ImGui::Text("Enemy Set");
 
-	for (byte l_enemy_no : m_drop_enemies.at(l_spawn_nmi_index)) {
-
-		ImGui::Image(m_gfx.get_tile(c::ELM_TYPE_ENEMY, l_enemy_no, l_tileset),
-			{ c::TILE_GFX_SIZE, c::TILE_GFX_SIZE });
-
-		imgui::tooltip_text(p_config.get_description(c::ELM_TYPE_ENEMY, l_enemy_no).c_str());
-
-		ImGui::SameLine();
-	}
-
-	ImGui::NewLine();
-
-	ImGui::EndDisabled();
+	imgui::draw_enemy_set_interface(m_drop_enemies, p_config, m_gfx,
+		m_selected_picker_tile[c::ELM_TYPE_ENEMY],
+		p_config.get_enemy_editor(), l_spawn_nmi_index, m_sel_es_index);
 }
 
 void skc::SKC_Main_window::draw_tile_picker(const SKC_Config& p_config, std::size_t p_element_types) {
@@ -498,11 +486,7 @@ void skc::SKC_Main_window::draw_ui_metadata_drop_schedules(void) {
 	if (l_nv)
 		m_schedule_win_index = static_cast<std::size_t>(l_nv.value() - 1);
 
-	std::size_t l_index{ m_schedule_win_index.value() };
-	auto l_ce{ imgui::spawn_schedule(m_drop_schedules.at(l_index), "md") };
-	if (l_ce) {
-		m_drop_schedules.at(l_index).at(l_ce.value()) = !m_drop_schedules.at(l_index).at(l_ce.value());
-	}
+	imgui::draw_drop_schedule_interface("md", m_drop_schedules, m_schedule_win_index.value());
 
 	ImGui::End();
 }

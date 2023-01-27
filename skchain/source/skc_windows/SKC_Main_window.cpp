@@ -19,7 +19,7 @@
 #include <vector>
 
 skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config) :
-	m_gfx{ p_rnd, p_config }, m_current_level{ 0 }, m_selected_type{ 0 },
+	m_gfx{ p_rnd, p_config }, m_current_level{ 0 }, m_selected_type{ 0 }, m_sel_es_index{ 0 },
 	m_texture{ SDL_CreateTexture(p_rnd, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, c::LEVEL_W * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE) },
 	m_timer(255, 1, true), m_show_gridlines{ false }
 {

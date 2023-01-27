@@ -24,6 +24,7 @@ namespace skc {
 		bool m_show_gridlines;
 
 		std::size_t m_selected_type; // 0 - metadata, 1 - items, 2 - enemies
+		std::size_t m_sel_es_index; // demon mirror enemy set, sub-index (used in the selected element window, for demon mirrors)
 		std::vector<byte> m_selected_picker_tile;	 // sub-selection
 		// selected board item - one entry per level, with one entry per type
 		std::vector<std::vector<int>> m_board_selection;

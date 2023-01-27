@@ -10,6 +10,8 @@
 #include "./../common/imgui/imgui.h"
 #include "./../common/imgui/imgui_impl_sdl.h"
 #include "./../common/imgui/imgui_impl_sdlrenderer.h"
+#include "./../SKC_Config.h"
+#include "./../SKC_Gfx.h"
 
 using position = std::pair<int, int>;
 
@@ -36,6 +38,15 @@ namespace skc {
 			const std::string& p_tooltip = std::string());
 		std::optional<std::size_t> spawn_schedule(const std::vector<bool>& p_schedule, const std::string& p_id_prefix);
 		std::optional<byte> slider_enemy_properties(byte p_enemy_no, const skc::Enemy_editor& p_editor);
+
+		void draw_drop_schedule_interface(const std::string& p_id, std::vector<std::vector<bool>>& p_schedule, std::size_t p_schedule_no);
+		void draw_enemy_set_interface(std::vector<std::vector<byte>>& p_sets,
+			const SKC_Config& p_config,
+			const SKC_Gfx& p_gfx,
+			byte p_available_monster_no,
+			const Enemy_editor& p_editor,
+			std::size_t p_enemy_set_no,
+			std::size_t& p_sel_enemy_no);
 	}
 }
 

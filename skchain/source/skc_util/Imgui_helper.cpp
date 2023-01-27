@@ -116,3 +116,96 @@ std::optional<byte> skc::imgui::slider_enemy_properties(byte p_enemy_no, const s
 
 	return result;
 }
+
+void skc::imgui::draw_drop_schedule_interface(const std::string& p_id, std::vector<std::vector<bool>>& p_schedules, std::size_t p_schedule_no) {
+
+	std::size_t l_index{ p_schedule_no };
+	auto l_ce{ imgui::spawn_schedule(p_schedules.at(p_schedule_no), "md") };
+	if (l_ce) {
+		p_schedules.at(p_schedule_no).at(l_ce.value()) = !p_schedules.at(p_schedule_no).at(l_ce.value());
+	}
+
+}
+
+void skc::imgui::draw_enemy_set_interface(std::vector<std::vector<byte>>& p_sets,
+	const SKC_Config& p_config,
+	const SKC_Gfx& p_gfx,
+	byte p_available_monster_no,
+	const Enemy_editor& p_editor,
+	std::size_t p_enemy_set_no,
+	std::size_t& p_sel_enemy_no) {
+
+	auto& l_set{ p_sets[p_enemy_set_no] };
+
+	for (std::size_t i{ 0 }; i < l_set.size(); ++i) {
+		std::string l_id{ "mse" + std::to_string(i) };
+		byte l_enemy_no{ l_set[i] };
+		bool l_is_selected{ p_sel_enemy_no == i };
+
+		if (l_is_selected)
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+		ImGui::PushID(l_id.c_str());
+
+		if (ImGui::ImageButton(p_gfx.get_enemy_tile(l_enemy_no, 0), { c::TILE_GFX_SIZE, c::TILE_GFX_SIZE }))
+			p_sel_enemy_no = i;
+
+		imgui::tooltip_text(p_config.get_description(c::ELM_TYPE_ENEMY, l_enemy_no));
+
+		ImGui::PopID();
+		if (l_is_selected)
+			ImGui::PopStyleColor();
+
+		ImGui::SameLine();
+	}
+
+	ImGui::NewLine();
+
+	ImGui::Separator();
+
+	if (p_sel_enemy_no < l_set.size()) {
+		byte l_enemy_no{ l_set[p_sel_enemy_no] };
+
+		std::string l_enemy_description{ "Selected enemy: " + p_config.get_description(c::ELM_TYPE_ENEMY, l_enemy_no) };
+		ImGui::Text(l_enemy_description.c_str());
+
+		ImGui::Separator();
+
+		auto l_elm_slider_no{ imgui::slider<byte>("Code", l_enemy_no, 1, 0x83) };
+		if (l_elm_slider_no)
+			l_set[p_sel_enemy_no] = l_elm_slider_no.value();
+
+		ImGui::Separator();
+
+		auto l_new_enemy_no{ imgui::slider_enemy_properties(l_enemy_no, p_editor) };
+		if (l_new_enemy_no)
+			l_set[p_sel_enemy_no] = l_new_enemy_no.value();
+
+		ImGui::Separator();
+
+		if (imgui::button("Move Left") && p_sel_enemy_no > 0) {
+			std::swap(l_set[p_sel_enemy_no - 1], l_set[p_sel_enemy_no]);
+			--p_sel_enemy_no;
+		}
+		ImGui::SameLine();
+		if (imgui::button("Move Right") && p_sel_enemy_no < l_set.size() - 1) {
+			std::swap(l_set[p_sel_enemy_no + 1], l_set[p_sel_enemy_no]);
+			++p_sel_enemy_no;
+		}
+		ImGui::SameLine();
+		if (imgui::button("Delete") && l_set.size() > 0) {
+			l_set.erase(begin(l_set) + p_sel_enemy_no);
+			if (p_sel_enemy_no > 0)
+				--p_sel_enemy_no;
+		}
+	}
+	else
+		ImGui::Text("No enemy selected");
+
+	if (p_available_monster_no == 0)
+		ImGui::Text("Select new enemies from the enemy element picker");
+	else if (imgui::button("Add from Element Picker", c::COLOR_STYLE_NORMAL,
+		p_config.get_description(c::ELM_TYPE_ENEMY, p_available_monster_no))) {
+		l_set.push_back(p_available_monster_no);
+	}
+
+}
