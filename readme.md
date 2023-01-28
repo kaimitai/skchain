@@ -49,4 +49,6 @@ The [ROM map document](./docs/solomon's_key_rom_map.md) contains all information
 
 * Support for clearing all level data for a given level, to quickly provide a "blank canvas" for editing
 * Support for giving ROM region code as a command-line parameter, to override the automatic region deduction
+* The Demon Mirror Enemy Set editor interfaces will use the tileset of the currently loaded level when presenting the enemy graphics
+* Added a new section in the readme; technical documentation of the data layout of expanded ROMs
 * ...and probably more.

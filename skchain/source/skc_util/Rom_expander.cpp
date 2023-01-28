@@ -290,6 +290,48 @@ bool skc::m66::is_rom_expanded(std::size_t p_mirror_schedule_count) {
 	return p_mirror_schedule_count == 2 * c::COUNT_M66_LEVELS;
 }
 
+// function for setting unused bytes to 0x00 in a ROM created by skedit
+// can be useful for testing purposes, when comparing NES-file outputs
+std::vector<byte> skc::m66::cleanup_skedit_rom(const std::vector<byte>& p_rom66_data) {
+	std::vector<byte> result{ p_rom66_data };
+
+	for (std::size_t i{ 0 }; i < c::COUNT_M66_LEVELS; ++i) {
+		// clean the 4 or 5 unused bytes at the end of the metadata stream
+		std::size_t l_offset{ c::OFFSET_M66_LVL_DATA + c::LENGTH_M66_LVL_DATA * i };
+		std::size_t l_from_offset{
+			p_rom66_data.at(l_offset + c::OFFSET_M66_ITEM_DELIMITER) < c::ITEM_CONSTELLATION_MIN ?
+			c::OFFSET_M66_CONSTELLATION_POS : c::OFFSET_M66_CONSTELLATION_POS + 1
+		};
+
+		for (std::size_t j{ l_from_offset }; j < c::OFFSET_M66_LOCAL_ENEMY_DATA; ++j)
+			result.at(l_offset + j) = 0;
+
+		// clean the end of the enemy data section
+		std::size_t j{ 1 };
+		for (; p_rom66_data.at(l_offset + c::OFFSET_M66_LOCAL_ENEMY_DATA + j) != 0; ++j);
+		for (std::size_t k{ j + 1 }; k < c::LENGTH_M66_ENEMY_DATA; ++k)
+			result.at(l_offset + c::OFFSET_M66_LOCAL_ENEMY_DATA + k) = 0;
+
+		// clean the end of the enemy set data sections
+		j = 0;
+		for (; p_rom66_data.at(l_offset + c::OFFSET_M66_LOCAL_SCHED_ENEMY_1_DATA + j) !=
+			c::MIRROR_ENEMY_SET_DELIMITER;
+			++j);
+		for (std::size_t k{ j + 1 }; k < c::LENGTH_M66_ENEMY_SET_DATA; ++k)
+			result.at(l_offset + c::OFFSET_M66_LOCAL_SCHED_ENEMY_1_DATA + k) = 0;
+
+		j = 0;
+		for (; p_rom66_data.at(l_offset + c::OFFSET_M66_LOCAL_SCHED_ENEMY_2_DATA + j) !=
+			c::MIRROR_ENEMY_SET_DELIMITER;
+			++j);
+		for (std::size_t k{ j + 1 }; k < c::LENGTH_M66_ENEMY_SET_DATA; ++k)
+			result.at(l_offset + c::OFFSET_M66_LOCAL_SCHED_ENEMY_2_DATA + k) = 0;
+
+	}
+
+	return result;
+}
+
 // level utility functions
 bool skc::m66::is_mirror_visible(const skc::Level& p_level, std::size_t p_mirror_no) {
 	auto l_pos = p_level.get_spawn_position(p_mirror_no);

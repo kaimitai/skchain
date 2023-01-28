@@ -78,6 +78,7 @@ namespace skc {
 			const std::vector<skc::Level>& p_levels
 		);
 		bool is_rom_expanded(std::size_t p_mirror_schedule_count);
+		std::vector<byte> cleanup_skedit_rom(const std::vector<byte>& p_rom66_data);
 
 		// level utility functions
 		bool is_mirror_visible(const skc::Level& p_level, std::size_t p_mirror_no);
