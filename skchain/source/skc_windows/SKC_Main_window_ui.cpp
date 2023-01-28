@@ -103,12 +103,20 @@ void skc::SKC_Main_window::draw_ui_level_board(SKC_Config& p_config, const klib:
 	if (l_spawn_life)
 		l_level.set_spawn_enemy_lifetime(l_spawn_life.value());
 
+	ImGui::Separator();
 	if (l_level.has_constellation()) {
-		ImGui::Separator();
 		if (imgui::button("Remove constellation"))
 			l_level.delete_constellation();
-		ImGui::Separator();
+		ImGui::SameLine();
 	}
+
+	if (imgui::button("Clear Level Data", 2, "Clears the level. Hold Ctrl to use.") && l_ctrl) {
+		get_level() = skc::Level();
+		reset_selections(m_current_level);
+	}
+
+	ImGui::Separator();
+
 	ImGui::PopAllowKeyboardFocus();
 
 	ImGui::End();
@@ -141,6 +149,8 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config, const klib:
 				m_levels[i].set_spawn_schedule(0, static_cast<byte>(2 * i));
 				m_levels[i].set_spawn_schedule(1, static_cast<byte>(2 * i + 1));
 			}
+
+			p_config.add_message("Expanded ROM size and gave Demon Mirrors separate data", c::MSG_CODE_SUCCESS);
 		}
 	}
 
