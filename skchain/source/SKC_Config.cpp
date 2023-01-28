@@ -10,9 +10,11 @@
 #include <filesystem>
 #include <stdexcept>
 
-skc::SKC_Config::SKC_Config(const std::string& p_base_dir, const std::string& p_filename) :
+skc::SKC_Config::SKC_Config(const std::string& p_base_dir, const std::string& p_filename,
+	const std::string& p_region_override) :
 	m_descriptions{ std::vector<std::vector<std::string>>(3, std::vector<std::string>(256, c::TXT_UNKNOWN)) },
-	m_base_dir{ p_base_dir }
+	m_base_dir{ p_base_dir },
+	m_region_code{ p_region_override }
 {
 	m_rom_data = klib::file::read_file_as_bytes(p_filename);
 	add_message("Loaded " + p_filename);
@@ -35,8 +37,9 @@ void skc::SKC_Config::load_config_xml(const std::string& p_config_file_path) {
 	auto n_meta = doc.child(skc::c::XML_TAG_META);
 	auto n_rom_meta = n_meta.child(c::XML_TAG_ROM_METADATA);
 
-	m_region_code = xml::get_region_code(n_meta.child(c::XML_TAG_REGIONS),
-		m_rom_data);
+	if (m_region_code.empty())
+		m_region_code = xml::get_region_code(n_meta.child(c::XML_TAG_REGIONS),
+			m_rom_data);
 
 	m_offset_gfx = klib::util::string_to_numeric<std::size_t>(
 		xml::node_region_best_match(n_rom_meta, m_region_code, c::XML_TAG_OFFSET_GFX, c::XML_ATTR_OFFSET)

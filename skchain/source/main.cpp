@@ -106,7 +106,9 @@ int main(int argc, char* args[]) try {
 			if (l_load_file.empty())
 				throw std::runtime_error("Could not find ROM file");
 
-			skc::SKC_Config l_config(l_base_dir, l_load_file);
+			// if the region code is given as a third parameter, use it
+			skc::SKC_Config l_config(l_base_dir, l_load_file,
+				argc > 2 ? args[2] : std::string());
 
 			// Setup Platform/Renderer backends
 			ImGui_ImplSDL2_InitForSDLRenderer(l_window, l_rnd);

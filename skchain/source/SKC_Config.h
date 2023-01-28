@@ -42,7 +42,8 @@ namespace skc {
 
 	public:
 		SKC_Config(const std::string& p_base_dir,
-			const std::string& p_filename);
+			const std::string& p_filename,
+			const std::string& p_region_override);
 		const std::vector<byte>& get_rom_data(void) const;
 
 		std::string get_region_code(void) const;
