@@ -351,9 +351,6 @@ void skc::SKC_Main_window::draw_ui_selected_tile_window(const SKC_Config& p_conf
 			if (l_elm_slider_no)
 				l_level.set_item_element_no(l_index, l_elm_slider_no.value());
 
-			ImGui::Separator();
-			ImGui::Text(c::TXT_POSITION);
-
 			auto l_newpos{ imgui::position_sliders(l_items.at(l_index).get_position()) };
 			if (l_newpos)
 				l_level.set_item_position(l_index, l_newpos.value());
@@ -409,8 +406,6 @@ void skc::SKC_Main_window::draw_ui_selected_enemy(const SKC_Config& p_config) {
 	if (l_elm_slider_no)
 		l_level.set_enemy_no(l_index, l_elm_slider_no.value());
 
-	ImGui::Separator();
-	ImGui::Text(c::TXT_POSITION);
 	auto l_newpos{ imgui::position_sliders(l_enemies.at(l_index).get_position()) };
 	if (l_newpos)
 		l_level.set_enemy_position(l_index, l_newpos.value());
@@ -443,9 +438,6 @@ void skc::SKC_Main_window::draw_ui_selected_metadata(const SKC_Config& p_config)
 		{ 2 * c::TILE_GFX_SIZE, 2 * c::TILE_GFX_SIZE });
 
 	ImGui::Text(l_desc.c_str());
-	ImGui::Separator();
-	ImGui::Text(c::TXT_POSITION);
-
 	auto l_newpos{ imgui::position_sliders(get_metadata_tile_position(l_index), !l_meta_movable) };
 	if (l_newpos)
 		set_metadata_tile_position(l_index, l_newpos.value(), p_config);
