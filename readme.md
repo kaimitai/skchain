@@ -42,3 +42,11 @@ The [ROM map document](./docs/solomon's_key_rom_map.md) contains all information
 
 2022-01-22: v0.1
 * Initial release, v0.1
+
+<hr>
+
+### Upcoming Changes in v1.1
+
+* Support for clearing all level data for a given level, to quickly provide a "blank canvas" for editing
+* Support for giving ROM region code as a command-line parameter, to override the automatic region deduction
+* ...and probably more.

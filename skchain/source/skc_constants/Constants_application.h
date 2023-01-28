@@ -6,8 +6,8 @@
 namespace skc {
 	namespace c {
 
-		constexpr char APP_VERSION[]{ "1.0" };
-		constexpr char APP_TITLE[]{ "Solomon's Keychain v1.0" };
+		constexpr char APP_VERSION[]{ "1.1-snapshot" };
+		constexpr char APP_TITLE[]{ "Solomon's Keychain v1.1-snapshot" };
 		constexpr int APP_W{ 1024 + 435 }, APP_H{ 768 };
 
 		constexpr char FILENAME_CONFIG_XML[]{ "skc_config.xml" };
