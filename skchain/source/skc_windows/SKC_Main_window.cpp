@@ -100,7 +100,7 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config)
 	m_render_toggles[c::TOGGLE_GRID_IDX] = false;
 
 	p_config.add_message("Executable folder: " + p_config.get_base_path());
-	p_config.add_message("Escape: Hide foreground, G: Toggle gridlines");
+	p_config.add_message("Escape: Toggle foreground, G: Toggle gridlines");
 	p_config.add_message("Keyboard Buttons 1-3: Draw blocks under cursor");
 	p_config.add_message("Tab/Shift+Tab: Cycle through elements of selected type");
 	p_config.add_message("Right Click: Insert Element Picker element");
@@ -125,8 +125,7 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config)
 
 	for (std::size_t i{ 0 }; i < lr_rom_data.size() - 245; ++i) {
 		if (lr_rom_data[i] == 0x20 && lr_rom_data[i + 245] == 0x9e) {
-			int x = 0;
-			int y = 0;
+			throw std::runtime_error("Found");
 		}
 	}
 	*/

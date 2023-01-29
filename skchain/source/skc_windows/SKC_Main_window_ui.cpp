@@ -104,15 +104,16 @@ void skc::SKC_Main_window::draw_ui_level_board(SKC_Config& p_config, const klib:
 		l_level.set_spawn_enemy_lifetime(l_spawn_life.value());
 
 	ImGui::Separator();
-	if (l_level.has_constellation()) {
-		if (imgui::button("Remove constellation"))
-			l_level.delete_constellation();
-		ImGui::SameLine();
-	}
 
 	if (imgui::button("Clear Level Data", 2, "Clears the level. Hold Ctrl to use.") && l_ctrl) {
 		get_level() = skc::Level();
 		reset_selections(m_current_level);
+	}
+
+	if (l_level.has_constellation()) {
+		ImGui::SameLine();
+		if (imgui::button("Remove constellation"))
+			l_level.delete_constellation();
 	}
 
 	ImGui::Separator();
@@ -218,13 +219,13 @@ void skc::SKC_Main_window::draw_ui_tile_picker_window(SKC_Config& p_config) {
 
 	std::size_t l_tmp_selected_type = m_selected_type;
 
-	if (imgui::button("Meta", l_tmp_selected_type == c::ELM_TYPE_METADATA ? c::COLOR_STYLE_ORANGE : c::COLOR_STYLE_NORMAL))
+	if (imgui::button(c::TXT_META, l_tmp_selected_type == c::ELM_TYPE_METADATA ? c::COLOR_STYLE_ORANGE : c::COLOR_STYLE_NORMAL))
 		m_selected_type = c::ELM_TYPE_METADATA;
 	ImGui::SameLine();
-	if (imgui::button("Items", l_tmp_selected_type == c::ELM_TYPE_ITEM ? c::COLOR_STYLE_ORANGE : c::COLOR_STYLE_NORMAL))
+	if (imgui::button(c::TXT_ITEMS, l_tmp_selected_type == c::ELM_TYPE_ITEM ? c::COLOR_STYLE_ORANGE : c::COLOR_STYLE_NORMAL))
 		m_selected_type = c::ELM_TYPE_ITEM;
 	ImGui::SameLine();
-	if (imgui::button("Enemies", l_tmp_selected_type == c::ELM_TYPE_ENEMY ? c::COLOR_STYLE_ORANGE : c::COLOR_STYLE_NORMAL))
+	if (imgui::button(c::TXT_ENEMIES, l_tmp_selected_type == c::ELM_TYPE_ENEMY ? c::COLOR_STYLE_ORANGE : c::COLOR_STYLE_NORMAL))
 		m_selected_type = c::ELM_TYPE_ENEMY;
 
 	ImGui::Separator();

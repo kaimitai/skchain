@@ -48,7 +48,7 @@ namespace skc {
 		constexpr int WIN_BOARD_X{ 5 };
 		constexpr int WIN_BOARD_Y{ 5 };
 		constexpr int WIN_BOARD_W{ 705 };
-		constexpr int WIN_BOARD_H{ 660 };
+		constexpr int WIN_BOARD_H{ 705 };
 
 		constexpr int WIN_EP_X{ 715 };
 		constexpr int WIN_EP_Y{ 5 };
