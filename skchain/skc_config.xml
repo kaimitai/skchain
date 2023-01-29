@@ -119,8 +119,10 @@
     <metadata no="0xfb" description="Sagittarius" animation="56" />
   </metadata_definitions>
 
-  <!-- each item mapped from byte value (0x01-0x39) to description and tile graphics indexes. the higher bits determine properties "hidden" and "in block" -->
+  <!-- each item mapped from byte value (0x00-0x39) to description and tile graphics indexes. the higher bits determine properties "hidden" and "in block" -->
+  <!-- 0x00 is only a valid item code if a property is set, otherwise it indicates end-of-stream -->
   <item_definitions>
+    <item no="0x00" description="Block (brown, glitch)" animation="1" />
     <item no="0x01" description="Broken Block (glitch)" animation="84" />
     <item no="0x02" description="Door (glitch)" animation="4" />
     <item no="0x03" description="White Block (glitch)" animation="2" />
@@ -178,7 +180,12 @@
     <item no="0x37" description="Mini-Dana" animation="85" />
     <item no="0x38" description="Tecmo Bunny (white)" animation="83" />
     <item no="0x39" description="Tecmo Bunny (orange)" animation="69" />
-    <!-- 0x3a-0x3f: garbage gfx -->
+    <item no="0x3a" description="Garbage gfx #1" animation="99" />
+    <item no="0x3b" description="Garbage gfx #2" animation="100" />
+    <item no="0x3c" description="Garbage gfx #3" animation="101" />
+    <item no="0x3d" description="Garbage gfx #4" animation="102" />
+    <item no="0x3e" description="Garbage gfx #5" animation="103" />
+    <item no="0x3f" description="Garbage gfx #6" animation="104" />
   </item_definitions>
 
   <!-- each enemy mapped from byte value (0x01-0x83) to description and tile graphics indexes -->
@@ -701,6 +708,13 @@
       <!-- glitch impact gfx: left, right -->
       <tile no="97" palette_no="5" nes_tiles="158,222:v,159,223:v" transparent="true" />
       <tile no="98" palette_no="5" nes_tiles="222,158:v,223,159:v" transparent="true" />
+      <!-- glitch broken gfx: items 0x3a to 0x3f -->
+      <tile no="99" palette_no="2" nes_tiles="296,465,442,465" />
+      <tile no="100" palette_no="2" nes_tiles="296,465,506,465" />
+      <tile no="101" palette_no="2" nes_tiles="256,466,314,466" />
+      <tile no="102" palette_no="2" nes_tiles="376,466,394,466" />
+      <tile no="103" palette_no="2" nes_tiles="264,467,314,467" />
+      <tile no="104" palette_no="2" nes_tiles="344,467,346,467" />
 
     </tile_definitions>
 
