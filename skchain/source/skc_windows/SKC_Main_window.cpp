@@ -21,7 +21,7 @@
 skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config) :
 	m_gfx{ p_rnd, p_config }, m_current_level{ 0 }, m_selected_type{ 0 }, m_sel_es_index{ 0 },
 	m_texture{ SDL_CreateTexture(p_rnd, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, c::LEVEL_W * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE) },
-	m_timer(255, 1, true), m_show_gridlines{ false }
+	m_timer(255, 1, true), m_show_gridlines{ false }, m_render_foreground{ true }
 {
 	const auto& lr_rom_data{ p_config.get_rom_data() };
 
@@ -116,6 +116,16 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config)
 				begin(lr_rom_data) + p_config.get_offset_item_data(i + 1));
 		klib::file::write_bytes_to_file(l_item_bytes, "items-" + klib::util::stringnum(i + 1, 2) + ".dat");
 	}
+
+	//auto l_outp = m66::cleanup_skedit_rom(klib::file::read_file_as_bytes("noname.nes"));
+	//klib::file::write_bytes_to_file(l_outp, "noname-cleaned.nes");
+
+	for (std::size_t i{ 0 }; i < lr_rom_data.size() - 245; ++i) {
+		if (lr_rom_data[i] == 0x20 && lr_rom_data[i + 245] == 0x9e) {
+			int x = 0;
+			int y = 0;
+		}
+	}
 	*/
 }
 
@@ -156,6 +166,8 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 			else
 				increase_selected_index();
 		}
+		else if (p_input.is_pressed(SDL_SCANCODE_ESCAPE))
+			m_render_foreground = !m_render_foreground;
 	}
 
 }
@@ -343,7 +355,7 @@ void skc::SKC_Main_window::draw_tile(SDL_Renderer* p_rnd, SDL_Texture* p_texture
 		SDL_SetTextureAlphaMod(p_texture, 255);
 }
 
-void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Config& p_config, bool p_draw_bg_only) {
+void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Config& p_config) {
 	SDL_SetRenderTarget(p_rnd, m_texture);
 
 	const auto& l_level{ get_level() };
@@ -376,7 +388,7 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 				draw_tile(p_rnd, m_gfx.get_meta_tile(l_tile_no, l_tileset_no), i, j);
 		}
 
-	if (!p_draw_bg_only) {
+	if (m_render_foreground) {
 
 		// draw mirrors
 		auto l_m1_pos{ l_level.get_spawn_position(0) };
@@ -478,7 +490,7 @@ int skc::SKC_Main_window::get_tile_w(int p_screen_h) const {
 
 void skc::SKC_Main_window::draw(SDL_Renderer* p_rnd, SKC_Config& p_config,
 	const klib::User_input& p_input, int p_w, int p_h) {
-	this->generate_texture(p_rnd, p_config, p_input.is_pressed(SDL_SCANCODE_ESCAPE));
+	this->generate_texture(p_rnd, p_config);
 
 	SDL_SetRenderDrawColor(p_rnd, 126, 126, 255, 0);
 	SDL_RenderClear(p_rnd);

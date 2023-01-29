@@ -20,7 +20,7 @@ namespace skc {
 		std::vector<skc::Level> m_levels;
 		std::size_t m_current_level;
 		SDL_Texture* m_texture;
-		bool m_show_gridlines;
+		bool m_show_gridlines, m_render_foreground;
 
 		std::size_t m_selected_type; // 0 - metadata, 1 - items, 2 - enemies
 		std::size_t m_sel_es_index; // demon mirror enemy set, sub-index (used in the selected element window, for demon mirrors)
@@ -45,7 +45,7 @@ namespace skc {
 
 		int get_tile_w(int p_screen_h) const;
 		void draw_tile(SDL_Renderer* p_rnd, SDL_Texture* p_texture, int p_x, int p_y, bool p_transp = false) const;
-		void generate_texture(SDL_Renderer* p_rnd, const SKC_Config& p_config, bool p_draw_bg_only);
+		void generate_texture(SDL_Renderer* p_rnd, const SKC_Config& p_config);
 
 		// ui stuff
 		void draw_ui(SKC_Config& p_config, const klib::User_input& p_input);
