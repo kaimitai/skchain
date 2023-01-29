@@ -183,8 +183,17 @@
 
   <!-- each enemy mapped from byte value (0x01-0x83) to description and tile graphics indexes -->
   <enemy_definitions>
-
-    <!-- 0x0c-0x0f and 0x10-0x13 are strange stationary fireballs -->
+    <enemy no="0x01" description="Falling Dana (left, glitch)" animation="94" />
+    <enemy no="0x02" description="Falling Dana (straight right, glitch)" animation="3" />
+    <enemy no="0x03" description="Falling Dana (straight left, glitch)" animation="70" />
+    <enemy no="0x04" description="Star (glitch)" animation="96" />
+    <enemy no="0x05" description="Star (glitch) #2" animation="96" />
+    <enemy no="0x06" description="Impact (left, glitch)" animation="98" />
+    <enemy no="0x07" description="Impact (right, glitch)" animation="97" />
+    <enemy no="0x08" description="Falling Dana (right, glitch)" animation="95" />
+    <enemy no="0x09" description="Falling Dana (left, glitch) #2" animation="94" />
+    <enemy no="0x0a" description="Falling Dana (straight right, glitch) #2" animation="3" />
+    <enemy no="0x0b" description="Falling Dana (straight left, glitch) #2" animation="70" />
     <enemy no="0x0c" description="Fireball (red, right, glitch)" animation="86" />
     <enemy no="0x0d" description="Fireball (red, left, glitch)" animation="87" />
     <enemy no="0x0e" description="Fireball (red, up, glitch)" animation="88" />
@@ -194,7 +203,11 @@
     <enemy no="0x12" description="Fireball (white, up, glitch)" animation="92" />
     <enemy no="0x13" description="Fireball (white, down, glitch)" animation="93" />
 
-    <!-- 0x14-0x17 are glitchy gravity fairies and princesses -->
+    <enemy no="0x14" description="Falling Fairy (glitch)" animation="42" />
+    <enemy no="0x15" description="Falling Fairy Princess (glitch)" animation="49" />
+    <enemy no="0x16" description="Falling Fairy (glitch) #2" animation="42" />
+    <enemy no="0x17" description="Falling Fairy Princess (glitch) #2" animation="49" />
+
     <enemy no="0x18" description="Mighty Bomb Jack" animation="67" />
     <enemy no="0x19" description="Mighty Bomb Jack #2" animation="67" />
     <enemy no="0x1a" description="Mighty Bomb Jack #3" animation="67" />
@@ -202,6 +215,9 @@
 
     <enemy no="0x1c" description="Fairy" animation="42" />
     <enemy no="0x1d" description="Fairy Princess" animation="49" />
+
+    <enemy no="0x1e" description="Erratic Fairy (glitch)" animation="42" />
+    <enemy no="0x1f" description="Erratic Fairy Princess (glitch)" animation="49" />
 
     <enemy no="0x20" description="Bullet (right)" animation="59" />
     <enemy no="0x21" description="Bullet (left)" animation="58" />
@@ -677,6 +693,14 @@
       <tile no="91" palette_no="6" nes_tiles="132,134,133,135" transparent="true" />
       <tile no="92" palette_no="6" nes_tiles="136,138,137,139" transparent="true" />
       <tile no="93" palette_no="6" nes_tiles="137:h,139:h,136:h,138:h" transparent="true" />
+      <!-- dana, for glitchy enemy graphics -->
+      <tile no="94" palette_no="4" nes_tiles="8,10,9,11" transparent="true" />
+      <tile no="95" palette_no="4" nes_tiles="10:v,8:v,11:v,9:v" transparent="true" />
+      <!-- glitch star -->
+      <tile no="96" palette_no="7" nes_tiles="176,176:v,177,177:v" transparent="true" />
+      <!-- glitch impact gfx: left, right -->
+      <tile no="97" palette_no="5" nes_tiles="158,222:v,159,223:v" transparent="true" />
+      <tile no="98" palette_no="5" nes_tiles="222,158:v,223,159:v" transparent="true" />
 
     </tile_definitions>
 
