@@ -51,5 +51,6 @@ The [ROM map document](./docs/solomon's_key_rom_map.md) contains all information
 * Support for giving ROM region code as a command-line parameter, to override the automatic region deduction
 * The Demon Mirror Enemy Set editor interfaces will use the tileset of the currently loaded level when presenting the enemy graphics
 * Foreground rendering can be toggled on/off
+* Associated all enemies (including glitchy ones) with graphics and description
 * Added a new section in the readme; technical documentation of the data layout of expanded ROMs
 * ...and probably more.
