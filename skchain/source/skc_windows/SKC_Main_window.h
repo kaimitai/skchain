@@ -20,7 +20,7 @@ namespace skc {
 		std::vector<skc::Level> m_levels;
 		std::size_t m_current_level;
 		SDL_Texture* m_texture;
-		bool m_show_gridlines, m_render_foreground;
+		std::vector<bool> m_render_toggles;
 
 		std::size_t m_selected_type; // 0 - metadata, 1 - items, 2 - enemies
 		std::size_t m_sel_es_index; // demon mirror enemy set, sub-index (used in the selected element window, for demon mirrors)
@@ -90,6 +90,7 @@ namespace skc {
 		// util
 		position get_metadata_tile_position(byte p_board_index_no) const;
 		void set_metadata_tile_position(byte p_board_index_no, const position& p_pos, const SKC_Config& p_config);
+		void toggle_render_all(void);
 
 		// file
 		std::vector<byte> generate_patch_bytes(SKC_Config& p_config) const;

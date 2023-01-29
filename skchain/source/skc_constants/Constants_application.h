@@ -29,6 +29,16 @@ namespace skc {
 		constexpr char TXT_X_POS[]{ "x-pos" };
 		constexpr char TXT_Y_POS[]{ "y-pos" };
 
+		// render toggle indexes
+		constexpr std::size_t TOGGLE_GRID_IDX{ 0 };
+		constexpr std::size_t TOGGLE_META_IDX{ TOGGLE_GRID_IDX + 1 };
+		constexpr std::size_t TOGGLE_ITEM_IDX{ TOGGLE_META_IDX + 1 };
+		constexpr std::size_t TOGGLE_ENEMY_IDX{ TOGGLE_ITEM_IDX + 1 };
+		constexpr char TXT_GRID[]{ "Grid" };
+		constexpr char TXT_META[]{ "Meta" };
+		constexpr char TXT_ITEMS[]{ "Items" };
+		constexpr char TXT_ENEMIES[]{ "Enemies" };
+
 		// initial window positions and sizes
 		constexpr int WIN_MAIN_X{ 715 };
 		constexpr int WIN_MAIN_Y{ 425 };

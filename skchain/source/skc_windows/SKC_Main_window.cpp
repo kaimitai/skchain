@@ -21,7 +21,7 @@
 skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config) :
 	m_gfx{ p_rnd, p_config }, m_current_level{ 0 }, m_selected_type{ 0 }, m_sel_es_index{ 0 },
 	m_texture{ SDL_CreateTexture(p_rnd, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, c::LEVEL_W * c::TILE_GFX_SIZE, c::LEVEL_H * c::TILE_GFX_SIZE) },
-	m_timer(255, 1, true), m_show_gridlines{ false }, m_render_foreground{ true }
+	m_timer(255, 1, true), m_render_toggles(std::vector<bool>(4, true))
 {
 	const auto& lr_rom_data{ p_config.get_rom_data() };
 
@@ -96,6 +96,9 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config)
 		m_meta_tiles[l_level_no].push_back(std::make_pair(i, l_pos));
 	}
 
+	// turn off gridlines by default
+	m_render_toggles[c::TOGGLE_GRID_IDX] = false;
+
 	p_config.add_message("Executable folder: " + p_config.get_base_path());
 	p_config.add_message("Escape: Hide foreground, G: Toggle gridlines");
 	p_config.add_message("Keyboard Buttons 1-3: Draw blocks under cursor");
@@ -151,7 +154,7 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 		else if (p_input.is_pressed(SDL_SCANCODE_DELETE) && is_selected_index_valid())
 			delete_selected_index();
 		else if (p_input.is_pressed(SDL_SCANCODE_G))
-			m_show_gridlines = !m_show_gridlines;
+			m_render_toggles[c::TOGGLE_GRID_IDX] = !m_render_toggles[c::TOGGLE_GRID_IDX];
 		else if (p_input.is_pressed(SDL_SCANCODE_UP) && m_current_level < m_levels.size() - 1)
 			++m_current_level;
 		else if (p_input.is_pressed(SDL_SCANCODE_DOWN) && m_current_level > 0)
@@ -167,7 +170,7 @@ void skc::SKC_Main_window::move(int p_delta_ms,
 				increase_selected_index();
 		}
 		else if (p_input.is_pressed(SDL_SCANCODE_ESCAPE))
-			m_render_foreground = !m_render_foreground;
+			this->toggle_render_all();
 	}
 
 }
@@ -388,8 +391,7 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 				draw_tile(p_rnd, m_gfx.get_meta_tile(l_tile_no, l_tileset_no), i, j);
 		}
 
-	if (m_render_foreground) {
-
+	if (m_render_toggles[c::TOGGLE_META_IDX]) {
 		// draw mirrors
 		auto l_m1_pos{ l_level.get_spawn_position(0) };
 		auto l_m2_pos{ l_level.get_spawn_position(1) };
@@ -424,6 +426,9 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 			}
 		}
 
+	}
+
+	if (m_render_toggles[c::TOGGLE_ITEM_IDX]) {
 		// draw items
 		const auto& l_items = l_level.get_items();
 		for (const auto& item : l_items) {
@@ -436,8 +441,10 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 				draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
 					l_tileset_no), l_pos.first, l_pos.second, true);
 		}
+	}
 
-		// draw enemies
+	// draw enemies
+	if (m_render_toggles[c::TOGGLE_ENEMY_IDX]) {
 		const auto& l_enemies = l_level.get_enemies();
 		for (const auto& enemy : l_enemies) {
 			byte l_no = enemy.get_element_no();
@@ -445,7 +452,9 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 			draw_tile(p_rnd, m_gfx.get_enemy_tile(enemy.get_element_no(), l_tileset_no),
 				l_pos.first, l_pos.second);
 		}
+	}
 
+	if (m_render_toggles[c::TOGGLE_META_IDX]) {
 		// draw player start
 		auto l_pstart = l_level.get_player_start_pos();
 		draw_tile(p_rnd, m_gfx.get_meta_tile(l_pstart.first >= c::LEVEL_W / 2 ? c::MD_BYTE_NO_PLAYER_START_LEFT : c::MD_BYTE_NO_PLAYER_START, l_tileset_no),
@@ -453,7 +462,7 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 	}
 
 	// draw gridlines
-	if (m_show_gridlines) {
+	if (m_render_toggles[c::TOGGLE_GRID_IDX]) {
 		auto l_pulse_color{ klib::gfx::pulse_color(c::COL_WHITE, c::COL_GOLD, m_timer.get_frame()) };
 
 		SDL_SetRenderDrawColor(p_rnd, l_pulse_color.r,
@@ -819,6 +828,13 @@ void skc::SKC_Main_window::set_metadata_tile_position(byte p_board_index_no, con
 			set_meta_tile_position(l_selected_meta_index, p_pos);
 		}
 	}
+}
+
+void skc::SKC_Main_window::toggle_render_all(void) {
+	bool l_new_value = !m_render_toggles[c::TOGGLE_META_IDX];
+
+	for (std::size_t i{ c::TOGGLE_GRID_IDX + 1 }; i <= c::TOGGLE_ENEMY_IDX; ++i)
+		m_render_toggles[i] = l_new_value;
 }
 
 void skc::SKC_Main_window::set_application_icon(SDL_Window* p_window) const {

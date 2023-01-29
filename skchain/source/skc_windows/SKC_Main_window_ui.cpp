@@ -117,6 +117,18 @@ void skc::SKC_Main_window::draw_ui_level_board(SKC_Config& p_config, const klib:
 
 	ImGui::Separator();
 
+	static std::vector<std::string> ls_toggles{
+	c::TXT_GRID, c::TXT_META, c::TXT_ITEMS, c::TXT_ENEMIES
+	};
+
+	ImGui::Text("Draw");
+	for (std::size_t i{ 0 }; i < ls_toggles.size(); ++i) {
+		auto l_toggled{ imgui::checkbox(ls_toggles[i], m_render_toggles[i]) };
+		if (l_toggled)
+			m_render_toggles[i] = !m_render_toggles[i];
+		ImGui::SameLine();
+	}
+
 	ImGui::PopAllowKeyboardFocus();
 
 	ImGui::End();
