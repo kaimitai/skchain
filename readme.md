@@ -29,7 +29,7 @@ The [ROM map document](./docs/solomon's_key_rom_map.md) contains all information
 
 ### Version History
 
-2022-01-27: v1.0
+2023-01-27: v1.0
 * Added support for ROM expansion, to exceed the original size limits! (adds compatibility with <a href="https://www.romhacking.net/utilities/906/">skedit</a>)
 * Added support for editing demon mirror drop rate schedules and enemy sets directly from the Selected Demon Mirror-window
 * Added support for drawing background blocks regardless of editing mode (using keyboard buttons 1-3)
@@ -37,10 +37,10 @@ The [ROM map document](./docs/solomon's_key_rom_map.md) contains all information
 * Added support for setting item/enemy code directly - among all possible codes - from the "Selected Element"-window
 * Can now turn off foreground rendering by holding keyboard button <b>Escape</b>
 
-2022-01-23: v0.2
+2023-01-23: v0.2
 * The application will now automatically deduce the ROM region (US/EU/JP) based on the input ROM-file, and load the corresponding configuration
 
-2022-01-22: v0.1
+2023-01-22: v0.1
 * Initial release, v0.1
 
 <hr>
