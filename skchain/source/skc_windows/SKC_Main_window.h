@@ -46,9 +46,16 @@ namespace skc {
 		int get_tile_w(int p_screen_h) const;
 		void draw_tile(SDL_Renderer* p_rnd, SDL_Texture* p_texture, int p_x, int p_y, bool p_transp = false) const;
 		void generate_texture(SDL_Renderer* p_rnd, const SKC_Config& p_config);
+		
 		void generate_texture_mirrors(SDL_Renderer* p_rnd, const SKC_Config& p_config,
 			const skc::Level& p_level, std::size_t p_tileset_no);
 		void generate_texture_blocks(SDL_Renderer* p_rnd, const SKC_Config& p_config,
+			const skc::Level& p_level, std::size_t p_tileset_no);
+		void generate_texture_door_and_key(SDL_Renderer* p_rnd, const SKC_Config& p_config,
+			const skc::Level& p_level, std::size_t p_tileset_no);
+		void generate_texture_meta_tiles(SDL_Renderer* p_rnd, const SKC_Config& p_config,
+			const skc::Level& p_level, std::size_t p_tileset_no);
+		void generate_texture_items(SDL_Renderer* p_rnd, const SKC_Config& p_config,
 			const skc::Level& p_level, std::size_t p_tileset_no);
 
 		// ui stuff

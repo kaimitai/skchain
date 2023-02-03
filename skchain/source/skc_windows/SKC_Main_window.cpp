@@ -360,7 +360,6 @@ void skc::SKC_Main_window::draw_tile(SDL_Renderer* p_rnd, SDL_Texture* p_texture
 void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Config& p_config) {
 	SDL_SetRenderTarget(p_rnd, m_texture);
 
-	bool l_expanded_rom{ is_rom_expanded() };
 	const auto& l_level{ get_level() };
 	std::size_t l_tileset_no{ p_config.get_level_tileset(m_current_level,
 		l_level.get_tileset_no()) };
@@ -377,59 +376,30 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 			l_pos.first, l_pos.second);
 	}
 
-	generate_texture_blocks(p_rnd, p_config, l_level, l_tileset_no);
-
-	if (m_render_toggles[c::TOGGLE_META_IDX]) {
-		// draw mirrors
-		generate_texture_mirrors(p_rnd, p_config, l_level, l_tileset_no);
-
-		if (l_expanded_rom)
-			generate_texture_blocks(p_rnd, p_config, l_level, l_tileset_no);
-
-		// draw meta-items
-		auto iter = m_meta_tiles.find(m_current_level);
-		if (iter != end(m_meta_tiles))
-			for (const auto& l_mtile : iter->second) {
-				std::size_t l_index{ l_mtile.first };
-				auto l_pos{ l_mtile.second };
-				draw_tile(p_rnd, m_gfx.get_absolute_tile(p_config.get_meta_tile_tile_no(l_index), l_tileset_no),
-					l_pos.first, l_pos.second, p_config.get_meta_tile_transparent(l_index));
-			}
-
-		// draw door
-		auto l_door_pos = l_level.get_door_pos();
-		if (l_door_pos.second >= 0)
-			draw_tile(p_rnd, m_gfx.get_meta_tile(m_current_level == 49 ? c::MD_BYTE_NO_SOLOMONS_KEY : c::MD_BYTE_NO_DOOR, l_tileset_no),
-				l_door_pos.first, l_door_pos.second);
-
-		// draw key
-		if (!l_level.is_key_removed()) {
-			auto l_key_pos = m_levels.at(m_current_level).get_key_pos();
-
-			draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_KEY, l_tileset_no),
-				l_key_pos.first, l_key_pos.second, l_level.is_key_hidden());
-			if (l_level.is_key_in_block()) {
-				draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
-					l_tileset_no), l_key_pos.first, l_key_pos.second, true);
-			}
-		}
-
-	}
-
-	if (m_render_toggles[c::TOGGLE_ITEM_IDX]) {
-		// draw items
-		const auto& l_items = l_level.get_items();
-		for (const auto& item : l_items) {
-			byte l_no = item.get_item_no();
-			auto l_pos = item.get_position();
-			draw_tile(p_rnd, m_gfx.get_item_tile(item.get_item_no(), l_tileset_no),
-				l_pos.first, l_pos.second,
-				skc::Level::is_item_hidden(item.get_element_no()));
-			if (skc::Level::is_item_in_block(item.get_element_no()))
-				draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
-					l_tileset_no), l_pos.first, l_pos.second, true);
+	// expanded rom draw order: mirrors, blocks, items, door, key, meta tiles
+	if (is_rom_expanded()) {
+		if (m_render_toggles[c::TOGGLE_META_IDX])
+			generate_texture_mirrors(p_rnd, p_config, l_level, l_tileset_no);
+		generate_texture_blocks(p_rnd, p_config, l_level, l_tileset_no);
+		if (m_render_toggles[c::TOGGLE_ITEM_IDX])
+			generate_texture_items(p_rnd, p_config, l_level, l_tileset_no);
+		if (m_render_toggles[c::TOGGLE_META_IDX]) {
+			generate_texture_door_and_key(p_rnd, p_config, l_level, l_tileset_no);
 		}
 	}
+	// regular rom draw order: blocks, door, key, mirrors, items, meta tiles
+	else {
+		generate_texture_blocks(p_rnd, p_config, l_level, l_tileset_no);
+		if (m_render_toggles[c::TOGGLE_META_IDX]) {
+			generate_texture_door_and_key(p_rnd, p_config, l_level, l_tileset_no);
+			generate_texture_mirrors(p_rnd, p_config, l_level, l_tileset_no);
+		}
+		if (m_render_toggles[c::TOGGLE_ITEM_IDX])
+			generate_texture_items(p_rnd, p_config, l_level, l_tileset_no);
+	}
+
+	if (m_render_toggles[c::TOGGLE_META_IDX])
+		generate_texture_meta_tiles(p_rnd, p_config, l_level, l_tileset_no);
 
 	// draw enemies
 	if (m_render_toggles[c::TOGGLE_ENEMY_IDX]) {
@@ -503,6 +473,59 @@ void skc::SKC_Main_window::generate_texture_blocks(SDL_Renderer* p_rnd, const SK
 			if (l_tile_no != 0)
 				draw_tile(p_rnd, m_gfx.get_meta_tile(l_tile_no, p_tileset_no), i, j);
 		}
+}
+
+void skc::SKC_Main_window::generate_texture_door_and_key(SDL_Renderer* p_rnd, const SKC_Config& p_config,
+	const skc::Level& p_level, std::size_t p_tileset_no) {
+
+	// draw door
+	auto l_door_pos = p_level.get_door_pos();
+	if (l_door_pos.second >= 0)
+		draw_tile(p_rnd, m_gfx.get_meta_tile(m_current_level == 49 ? c::MD_BYTE_NO_SOLOMONS_KEY : c::MD_BYTE_NO_DOOR, p_tileset_no),
+			l_door_pos.first, l_door_pos.second);
+
+	// draw key
+	if (!p_level.is_key_removed()) {
+		auto l_key_pos = m_levels.at(m_current_level).get_key_pos();
+
+		draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_KEY, p_tileset_no),
+			l_key_pos.first, l_key_pos.second, p_level.is_key_hidden());
+		if (p_level.is_key_in_block()) {
+			draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
+				p_tileset_no), l_key_pos.first, l_key_pos.second, true);
+		}
+	}
+}
+
+void skc::SKC_Main_window::generate_texture_meta_tiles(SDL_Renderer* p_rnd, const SKC_Config& p_config,
+	const skc::Level& p_level, std::size_t p_tileset_no) {
+
+	// draw meta-items
+	auto iter = m_meta_tiles.find(m_current_level);
+	if (iter != end(m_meta_tiles))
+		for (const auto& l_mtile : iter->second) {
+			std::size_t l_index{ l_mtile.first };
+			auto l_pos{ l_mtile.second };
+			draw_tile(p_rnd, m_gfx.get_absolute_tile(p_config.get_meta_tile_tile_no(l_index), p_tileset_no),
+				l_pos.first, l_pos.second, p_config.get_meta_tile_transparent(l_index));
+		}
+
+}
+
+void skc::SKC_Main_window::generate_texture_items(SDL_Renderer* p_rnd, const SKC_Config& p_config,
+	const skc::Level& p_level, std::size_t p_tileset_no) {
+	// draw items
+	const auto& l_items = p_level.get_items();
+	for (const auto& item : l_items) {
+		byte l_no = item.get_item_no();
+		auto l_pos = item.get_position();
+		draw_tile(p_rnd, m_gfx.get_item_tile(item.get_item_no(), p_tileset_no),
+			l_pos.first, l_pos.second,
+			skc::Level::is_item_hidden(item.get_element_no()));
+		if (skc::Level::is_item_in_block(item.get_element_no()))
+			draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
+				p_tileset_no), l_pos.first, l_pos.second, true);
+	}
 }
 
 int skc::SKC_Main_window::get_tile_w(int p_screen_h) const {
