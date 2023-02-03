@@ -616,6 +616,12 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes_rom03(SKC_Config& p
 		l_output.at(p_config.get_offset_enemy_table_lo() + i) = l_ram_address.second;
 	}
 
+	// apply signature
+	std::string l_signature{ c::EDITOR_SIGNATURE };
+	if (l_item_data.size() + l_signature.size() <= p_config.get_length_item_data()) {
+		l_item_data.insert(end(l_item_data), begin(l_signature), end(l_signature));
+	}
+
 	// patch item data
 	for (std::size_t i{ 0 }; i < l_item_data.size(); ++i)
 		l_output.at(p_config.get_offset_item_data() + i) = l_item_data[i];
