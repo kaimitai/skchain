@@ -10,24 +10,7 @@ skc::Level skc::m66::parse_level(const std::vector<byte>& p_rom_data,
 	std::size_t p_level_no) {
 	skc::Level result;
 
-	// parse the map (blocks and items)
 	std::size_t l_offset{ c::OFFSET_M66_LVL_DATA + 256 * p_level_no };
-
-	for (std::size_t j{ 0 }; j < c::LEVEL_H; ++j)
-		for (std::size_t i{ 0 }; i < c::LEVEL_W; ++i) {
-			byte l_value{ p_rom_data.at(l_offset + j * c::LEVEL_W + i) };
-			std::pair<int, int> l_pos{ std::make_pair(static_cast<int>(i), static_cast<int>(j)) };
-
-			if (l_value == 0xf8)
-				result.set_block(skc::Wall::White, l_pos);
-			else if (l_value == 0x90)
-				result.set_block(skc::Wall::Brown, l_pos);
-			else if (l_value != 0x10)
-				result.add_item(l_value, l_pos);
-		}
-
-	// parse enemy data
-	result.load_enemy_data(p_rom_data, l_offset + c::OFFSET_M66_LOCAL_ENEMY_DATA);
 
 	// parse metadata
 	result.set_key_status_and_time_dr(p_rom_data.at(l_offset + c::OFFSET_M66_KEY_STATUS));
@@ -43,6 +26,25 @@ skc::Level skc::m66::parse_level(const std::vector<byte>& p_rom_data,
 	if (l_item_delimiter >= c::ITEM_CONSTELLATION_MIN)
 		result.set_constellation(l_item_delimiter,
 			skc::Level::get_position_from_byte(p_rom_data.at(l_offset + c::OFFSET_M66_CONSTELLATION_POS)));
+
+	// parse the map (blocks and items)
+	for (std::size_t j{ 0 }; j < c::LEVEL_H; ++j)
+		for (std::size_t i{ 0 }; i < c::LEVEL_W; ++i) {
+			byte l_value{ p_rom_data.at(l_offset + j * c::LEVEL_W + i) };
+			std::pair<int, int> l_pos{ std::make_pair(static_cast<int>(i), static_cast<int>(j)) };
+			bool l_is_mirror_pos{ l_pos == result.get_spawn_position(0)
+				 || l_pos == result.get_spawn_position(1) };
+
+			if (l_value == 0xf8)
+				result.set_block(skc::Wall::White, l_pos);
+			else if (l_value == 0x90)
+				result.set_block(skc::Wall::Brown, l_pos);
+			else if (l_value != 0x10 || l_is_mirror_pos)
+				result.add_item(l_value, l_pos);
+		}
+
+	// parse enemy data
+	result.load_enemy_data(p_rom_data, l_offset + c::OFFSET_M66_LOCAL_ENEMY_DATA);
 
 	// cleanup any demon mirrors which we do not need to see in the editor
 	// these are demon mirror items on top of a visible demon mirror metadata location
@@ -284,6 +286,24 @@ std::vector<std::vector<bool>> skc::m66::expand_drop_schedules(
 	}
 
 	return result;
+}
+
+// when changing mapper and expanding the rom, the blocks will take precedence over demon mirrors
+// it is not like this in a vanilla ROM, so remove blocks behind demon mirrors, if any
+void skc::m66::remove_blocks_behind_demon_mirrors(std::vector<skc::Level>& p_levels) {
+	for (std::size_t l_lvl_no{ 0 }; l_lvl_no < p_levels.size(); ++l_lvl_no) {
+		auto& l_level{ p_levels[l_lvl_no] };
+
+		for (std::size_t i{ 0 }; i < 2; ++i) {
+			auto l_pos{ l_level.get_spawn_position(i) };
+			if (skc::Level::is_position_visible(l_pos)) {
+				auto l_wtp{ l_level.get_wall_type(l_pos.first, l_pos.second) };
+				if (l_wtp != skc::Wall::None)
+					l_level.set_block(skc::Wall::None, l_pos);
+			}
+		}
+
+	}
 }
 
 bool skc::m66::is_rom_expanded(std::size_t p_mirror_schedule_count) {

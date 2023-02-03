@@ -74,6 +74,8 @@ namespace skc {
 		constexpr char REGION_EU[]{ "EU" };
 		constexpr char REGION_JP[]{ "JP" };
 		constexpr char REGION_US[]{ "US" };
+		// virtual region US66 - indicating expanded US ROM
+		constexpr char REGION_US66[]{ "US66" };
 	}
 }
 

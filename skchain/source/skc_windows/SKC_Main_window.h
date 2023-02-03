@@ -96,6 +96,7 @@ namespace skc {
 		void set_metadata_tile_position(byte p_board_index_no, const position& p_pos, const SKC_Config& p_config);
 		void toggle_render_all(void);
 		bool is_rom_expanded(void) const;
+		void expand_rom_data(SKC_Config& p_config);
 
 		// file
 		std::vector<byte> generate_patch_bytes(SKC_Config& p_config) const;

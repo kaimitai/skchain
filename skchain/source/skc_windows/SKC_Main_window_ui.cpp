@@ -150,21 +150,10 @@ void skc::SKC_Main_window::draw_ui_main_window(SKC_Config& p_config, const klib:
 		save_nes_file(p_config, p_input.is_shift_pressed());
 
 	if (p_config.get_region_code() == c::REGION_US &&
-		!m66::is_rom_expanded(m_drop_enemies.size())) {
+		!is_rom_expanded()) {
 		ImGui::SameLine();
-		if (imgui::button("Expand ROM", 1, "Change ROM mapper. Holdt Ctrl to use") && l_ctrl) {
-			m_drop_enemies = m66::expand_enemy_sets(m_drop_enemies, m_levels);
-			m_drop_schedules = m66::expand_drop_schedules(m_drop_schedules, m_levels);
-
-			for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
-				m_levels[i].set_spawn_enemies(0, static_cast<byte>(2 * i));
-				m_levels[i].set_spawn_enemies(1, static_cast<byte>(2 * i + 1));
-				m_levels[i].set_spawn_schedule(0, static_cast<byte>(2 * i));
-				m_levels[i].set_spawn_schedule(1, static_cast<byte>(2 * i + 1));
-			}
-
-			p_config.add_message("Expanded ROM size and gave Demon Mirrors separate data", c::MSG_CODE_SUCCESS);
-		}
+		if (imgui::button("Expand ROM", 1, "Change ROM mapper. Holdt Ctrl to use") && l_ctrl)
+			expand_rom_data(p_config);
 	}
 
 	if (imgui::button("Load xml", c::COLOR_STYLE_NORMAL, "Hold ctrl to use this button")

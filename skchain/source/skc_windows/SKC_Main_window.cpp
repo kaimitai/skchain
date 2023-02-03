@@ -858,3 +858,20 @@ bool skc::SKC_Main_window::is_rom_expanded(void) const {
 void skc::SKC_Main_window::set_application_icon(SDL_Window* p_window) const {
 	m_gfx.set_application_icon(p_window);
 }
+
+// procedure that will change the current level data into an expanded version of the same data
+void skc::SKC_Main_window::expand_rom_data(SKC_Config& p_config) {
+	m_drop_enemies = m66::expand_enemy_sets(m_drop_enemies, m_levels);
+	m_drop_schedules = m66::expand_drop_schedules(m_drop_schedules, m_levels);
+
+	for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
+		m_levels[i].set_spawn_enemies(0, static_cast<byte>(2 * i));
+		m_levels[i].set_spawn_enemies(1, static_cast<byte>(2 * i + 1));
+		m_levels[i].set_spawn_schedule(0, static_cast<byte>(2 * i));
+		m_levels[i].set_spawn_schedule(1, static_cast<byte>(2 * i + 1));
+	}
+
+	m66::remove_blocks_behind_demon_mirrors(m_levels);
+
+	p_config.add_message("Expanded ROM size and gave Demon Mirrors separate data", c::MSG_CODE_SUCCESS);
+}
