@@ -119,10 +119,10 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config)
 				begin(lr_rom_data) + p_config.get_offset_item_data(i + 1));
 		klib::file::write_bytes_to_file(l_item_bytes, "items-" + klib::util::stringnum(i + 1, 2) + ".dat");
 	}
-
+	*/
 	//auto l_outp = m66::cleanup_skedit_rom(klib::file::read_file_as_bytes("noname.nes"));
 	//klib::file::write_bytes_to_file(l_outp, "noname-cleaned.nes");
-
+	/*
 	for (std::size_t i{ 0 }; i < lr_rom_data.size() - 245; ++i) {
 		if (lr_rom_data[i] == 0x20 && lr_rom_data[i + 245] == 0x9e) {
 			throw std::runtime_error("Found");
@@ -376,71 +376,30 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 			l_pos.first, l_pos.second);
 	}
 
-	// draw background
-	for (int j{ 0 }; j < c::LEVEL_H; ++j)
-		for (int i{ 0 }; i < c::LEVEL_W; ++i) {
-			byte l_tile_no{ 0 };
-			auto l_ttype = l_level.get_wall_type(i, j);
-			if (l_ttype == skc::Wall::Brown)
-				l_tile_no = c::MD_BYTE_NO_BLOCK_BROWN;
-			else if (l_ttype == skc::Wall::White || l_ttype == skc::Wall::Brown_white)
-				l_tile_no = c::MD_BYTE_NO_BLOCK_WHITE;
-
-			if (l_tile_no != 0)
-				draw_tile(p_rnd, m_gfx.get_meta_tile(l_tile_no, l_tileset_no), i, j);
-		}
-
-	if (m_render_toggles[c::TOGGLE_META_IDX]) {
-		// draw mirrors
-		auto l_m1_pos{ l_level.get_spawn_position(0) };
-		auto l_m2_pos{ l_level.get_spawn_position(1) };
-		draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN01, l_tileset_no), l_m1_pos.first, l_m1_pos.second);
-		draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN02, l_tileset_no), l_m2_pos.first, l_m2_pos.second);
-
-		// draw meta-items
-		auto iter = m_meta_tiles.find(m_current_level);
-		if (iter != end(m_meta_tiles))
-			for (const auto& l_mtile : iter->second) {
-				std::size_t l_index{ l_mtile.first };
-				auto l_pos{ l_mtile.second };
-				draw_tile(p_rnd, m_gfx.get_absolute_tile(p_config.get_meta_tile_tile_no(l_index), l_tileset_no),
-					l_pos.first, l_pos.second, p_config.get_meta_tile_transparent(l_index));
-			}
-
-		// draw door
-		auto l_door_pos = l_level.get_door_pos();
-		if (l_door_pos.second >= 0)
-			draw_tile(p_rnd, m_gfx.get_meta_tile(m_current_level == 49 ? c::MD_BYTE_NO_SOLOMONS_KEY : c::MD_BYTE_NO_DOOR, l_tileset_no),
-				l_door_pos.first, l_door_pos.second);
-
-		// draw key
-		if (!l_level.is_key_removed()) {
-			auto l_key_pos = m_levels.at(m_current_level).get_key_pos();
-
-			draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_KEY, l_tileset_no),
-				l_key_pos.first, l_key_pos.second, l_level.is_key_hidden());
-			if (l_level.is_key_in_block()) {
-				draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
-					l_tileset_no), l_key_pos.first, l_key_pos.second, true);
-			}
-		}
-
-	}
-
-	if (m_render_toggles[c::TOGGLE_ITEM_IDX]) {
-		// draw items
-		const auto& l_items = l_level.get_items();
-		for (const auto& item : l_items) {
-			byte l_no = item.get_item_no();
-			auto l_pos = item.get_position();
-			draw_tile(p_rnd, m_gfx.get_item_tile(item.get_item_no(), l_tileset_no),
-				l_pos.first, l_pos.second,
-				skc::Level::is_item_hidden(item.get_element_no()));
-			if (skc::Level::is_item_in_block(item.get_element_no()))
-				draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
-					l_tileset_no), l_pos.first, l_pos.second, true);
+	// expanded rom draw order: mirrors, blocks, items, door, key, meta tiles
+	if (is_rom_expanded()) {
+		if (m_render_toggles[c::TOGGLE_META_IDX])
+			generate_texture_mirrors(p_rnd, p_config, l_level, l_tileset_no);
+		generate_texture_blocks(p_rnd, p_config, l_level, l_tileset_no);
+		if (m_render_toggles[c::TOGGLE_ITEM_IDX])
+			generate_texture_items(p_rnd, p_config, l_level, l_tileset_no);
+		if (m_render_toggles[c::TOGGLE_META_IDX]) {
+			generate_texture_door_and_key(p_rnd, p_config, l_level, l_tileset_no);
 		}
 	}
+	// regular rom draw order: blocks, door, key, mirrors, items, meta tiles
+	else {
+		generate_texture_blocks(p_rnd, p_config, l_level, l_tileset_no);
+		if (m_render_toggles[c::TOGGLE_META_IDX]) {
+			generate_texture_door_and_key(p_rnd, p_config, l_level, l_tileset_no);
+			generate_texture_mirrors(p_rnd, p_config, l_level, l_tileset_no);
+		}
+		if (m_render_toggles[c::TOGGLE_ITEM_IDX])
+			generate_texture_items(p_rnd, p_config, l_level, l_tileset_no);
+	}
+
+	if (m_render_toggles[c::TOGGLE_META_IDX])
+		generate_texture_meta_tiles(p_rnd, p_config, l_level, l_tileset_no);
 
 	// draw enemies
 	if (m_render_toggles[c::TOGGLE_ENEMY_IDX]) {
@@ -490,6 +449,83 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 	}
 
 	SDL_SetRenderTarget(p_rnd, nullptr);
+}
+
+void skc::SKC_Main_window::generate_texture_mirrors(SDL_Renderer* p_rnd,
+	const SKC_Config& p_config, const skc::Level& p_level, std::size_t p_tileset_no) {
+	auto l_m1_pos{ p_level.get_spawn_position(0) };
+	auto l_m2_pos{ p_level.get_spawn_position(1) };
+	draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN01, p_tileset_no), l_m1_pos.first, l_m1_pos.second);
+	draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN02, p_tileset_no), l_m2_pos.first, l_m2_pos.second);
+}
+
+void skc::SKC_Main_window::generate_texture_blocks(SDL_Renderer* p_rnd, const SKC_Config& p_config,
+	const skc::Level& p_level, std::size_t p_tileset_no) {
+	for (int j{ 0 }; j < c::LEVEL_H; ++j)
+		for (int i{ 0 }; i < c::LEVEL_W; ++i) {
+			byte l_tile_no{ 0 };
+			auto l_ttype = p_level.get_wall_type(i, j);
+			if (l_ttype == skc::Wall::Brown)
+				l_tile_no = c::MD_BYTE_NO_BLOCK_BROWN;
+			else if (l_ttype == skc::Wall::White || l_ttype == skc::Wall::Brown_white)
+				l_tile_no = c::MD_BYTE_NO_BLOCK_WHITE;
+
+			if (l_tile_no != 0)
+				draw_tile(p_rnd, m_gfx.get_meta_tile(l_tile_no, p_tileset_no), i, j);
+		}
+}
+
+void skc::SKC_Main_window::generate_texture_door_and_key(SDL_Renderer* p_rnd, const SKC_Config& p_config,
+	const skc::Level& p_level, std::size_t p_tileset_no) {
+
+	// draw door
+	auto l_door_pos = p_level.get_door_pos();
+	if (l_door_pos.second >= 0)
+		draw_tile(p_rnd, m_gfx.get_meta_tile(m_current_level == 49 ? c::MD_BYTE_NO_SOLOMONS_KEY : c::MD_BYTE_NO_DOOR, p_tileset_no),
+			l_door_pos.first, l_door_pos.second);
+
+	// draw key
+	if (!p_level.is_key_removed()) {
+		auto l_key_pos = m_levels.at(m_current_level).get_key_pos();
+
+		draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_KEY, p_tileset_no),
+			l_key_pos.first, l_key_pos.second, p_level.is_key_hidden());
+		if (p_level.is_key_in_block()) {
+			draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
+				p_tileset_no), l_key_pos.first, l_key_pos.second, true);
+		}
+	}
+}
+
+void skc::SKC_Main_window::generate_texture_meta_tiles(SDL_Renderer* p_rnd, const SKC_Config& p_config,
+	const skc::Level& p_level, std::size_t p_tileset_no) {
+
+	// draw meta-items
+	auto iter = m_meta_tiles.find(m_current_level);
+	if (iter != end(m_meta_tiles))
+		for (const auto& l_mtile : iter->second) {
+			std::size_t l_index{ l_mtile.first };
+			auto l_pos{ l_mtile.second };
+			draw_tile(p_rnd, m_gfx.get_absolute_tile(p_config.get_meta_tile_tile_no(l_index), p_tileset_no),
+				l_pos.first, l_pos.second, p_config.get_meta_tile_transparent(l_index));
+		}
+
+}
+
+void skc::SKC_Main_window::generate_texture_items(SDL_Renderer* p_rnd, const SKC_Config& p_config,
+	const skc::Level& p_level, std::size_t p_tileset_no) {
+	// draw items
+	const auto& l_items = p_level.get_items();
+	for (const auto& item : l_items) {
+		byte l_no = item.get_item_no();
+		auto l_pos = item.get_position();
+		draw_tile(p_rnd, m_gfx.get_item_tile(item.get_item_no(), p_tileset_no),
+			l_pos.first, l_pos.second,
+			skc::Level::is_item_hidden(item.get_element_no()));
+		if (skc::Level::is_item_in_block(item.get_element_no()))
+			draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_BLOCK_BROWN,
+				p_tileset_no), l_pos.first, l_pos.second, true);
+	}
 }
 
 int skc::SKC_Main_window::get_tile_w(int p_screen_h) const {
@@ -580,6 +616,12 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes_rom03(SKC_Config& p
 		l_output.at(p_config.get_offset_enemy_table_lo() + i) = l_ram_address.second;
 	}
 
+	// apply signature
+	std::string l_signature{ c::EDITOR_SIGNATURE };
+	if (l_item_data.size() + l_signature.size() <= p_config.get_length_item_data()) {
+		l_item_data.insert(end(l_item_data), begin(l_signature), end(l_signature));
+	}
+
 	// patch item data
 	for (std::size_t i{ 0 }; i < l_item_data.size(); ++i)
 		l_output.at(p_config.get_offset_item_data() + i) = l_item_data[i];
@@ -665,6 +707,8 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes_rom66(SKC_Config& p
 				l_output.at(l_offset) = skc::Level::get_byte_from_position(l_md_tile.second);
 			}
 		}
+
+	l_output = skc::m66::cleanup_skedit_rom(l_output);
 
 	return l_output;
 }
@@ -836,6 +880,27 @@ void skc::SKC_Main_window::toggle_render_all(void) {
 		m_render_toggles[i] = l_new_value;
 }
 
+bool skc::SKC_Main_window::is_rom_expanded(void) const {
+	return m66::is_rom_expanded(m_drop_schedules.size());
+}
+
 void skc::SKC_Main_window::set_application_icon(SDL_Window* p_window) const {
 	m_gfx.set_application_icon(p_window);
+}
+
+// procedure that will change the current level data into an expanded version of the same data
+void skc::SKC_Main_window::expand_rom_data(SKC_Config& p_config) {
+	m_drop_enemies = m66::expand_enemy_sets(m_drop_enemies, m_levels);
+	m_drop_schedules = m66::expand_drop_schedules(m_drop_schedules, m_levels);
+
+	for (std::size_t i{ 0 }; i < m_levels.size(); ++i) {
+		m_levels[i].set_spawn_enemies(0, static_cast<byte>(2 * i));
+		m_levels[i].set_spawn_enemies(1, static_cast<byte>(2 * i + 1));
+		m_levels[i].set_spawn_schedule(0, static_cast<byte>(2 * i));
+		m_levels[i].set_spawn_schedule(1, static_cast<byte>(2 * i + 1));
+	}
+
+	m66::remove_blocks_behind_demon_mirrors(m_levels);
+
+	p_config.add_message("Expanded ROM size and gave Demon Mirrors separate data", c::MSG_CODE_SUCCESS);
 }

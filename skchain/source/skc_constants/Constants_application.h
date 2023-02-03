@@ -9,6 +9,7 @@ namespace skc {
 		constexpr char APP_VERSION[]{ "1.1-snapshot" };
 		constexpr char APP_TITLE[]{ "Solomon's Keychain v1.1-snapshot" };
 		constexpr int APP_W{ 1024 + 435 }, APP_H{ 768 };
+		constexpr char EDITOR_SIGNATURE[]{ "kaimitai@github " };
 
 		constexpr char FILENAME_CONFIG_XML[]{ "skc_config.xml" };
 		constexpr char FILENAME_ERROR_LOG[]{ "skc_errors.log" };
@@ -74,6 +75,8 @@ namespace skc {
 		constexpr char REGION_EU[]{ "EU" };
 		constexpr char REGION_JP[]{ "JP" };
 		constexpr char REGION_US[]{ "US" };
+		// virtual region US66 - indicating expanded US ROM
+		constexpr char REGION_US66[]{ "US66" };
 	}
 }
 

@@ -77,6 +77,7 @@ namespace skc {
 			const std::vector<std::vector<bool>>& p_drop_scheds,
 			const std::vector<skc::Level>& p_levels
 		);
+		void remove_blocks_behind_demon_mirrors(std::vector<skc::Level>& p_levels);
 		bool is_rom_expanded(std::size_t p_mirror_schedule_count);
 		std::vector<byte> cleanup_skedit_rom(const std::vector<byte>& p_rom66_data);
 

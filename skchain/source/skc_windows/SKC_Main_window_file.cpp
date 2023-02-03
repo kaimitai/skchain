@@ -1,5 +1,6 @@
 #include "SKC_Main_window.h"
 #include "./../skc_util/Xml_helper.h"
+#include "./../skc_util/Rom_expander.h"
 #include "./../common/klib/klib_file.h"
 #include "./../common/klib/klib_util.h"
 #include "./../common/klib/IPS_Patch.h"
@@ -73,6 +74,7 @@ void skc::SKC_Main_window::load_xml_files(SKC_Config& p_config) {
 							mkvt.second = kv.second;
 			}
 		}
+
 		p_config.add_message("Metadata xml file loaded", c::MSG_CODE_SUCCESS);
 	}
 	catch (const std::exception& ex) {
@@ -92,4 +94,7 @@ void skc::SKC_Main_window::load_xml_files(SKC_Config& p_config) {
 	}
 	p_config.add_message(std::to_string(l_import_count) + " level xml files loaded from " + p_config.get_xml_path(),
 		l_import_count == p_config.get_level_count() ? c::MSG_CODE_SUCCESS : c::MSG_CODE_WARNING);
+
+	if (p_config.get_region_code() == c::REGION_US66 && !is_rom_expanded())
+		expand_rom_data(p_config);
 }
