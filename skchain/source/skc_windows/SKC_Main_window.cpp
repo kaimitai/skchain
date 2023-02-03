@@ -119,10 +119,10 @@ skc::SKC_Main_window::SKC_Main_window(SDL_Renderer* p_rnd, SKC_Config& p_config)
 				begin(lr_rom_data) + p_config.get_offset_item_data(i + 1));
 		klib::file::write_bytes_to_file(l_item_bytes, "items-" + klib::util::stringnum(i + 1, 2) + ".dat");
 	}
-
+	*/
 	//auto l_outp = m66::cleanup_skedit_rom(klib::file::read_file_as_bytes("noname.nes"));
 	//klib::file::write_bytes_to_file(l_outp, "noname-cleaned.nes");
-
+	/*
 	for (std::size_t i{ 0 }; i < lr_rom_data.size() - 245; ++i) {
 		if (lr_rom_data[i] == 0x20 && lr_rom_data[i + 245] == 0x9e) {
 			throw std::runtime_error("Found");
@@ -360,6 +360,7 @@ void skc::SKC_Main_window::draw_tile(SDL_Renderer* p_rnd, SDL_Texture* p_texture
 void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Config& p_config) {
 	SDL_SetRenderTarget(p_rnd, m_texture);
 
+	bool l_expanded_rom{ is_rom_expanded() };
 	const auto& l_level{ get_level() };
 	std::size_t l_tileset_no{ p_config.get_level_tileset(m_current_level,
 		l_level.get_tileset_no()) };
@@ -376,26 +377,14 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 			l_pos.first, l_pos.second);
 	}
 
-	// draw background
-	for (int j{ 0 }; j < c::LEVEL_H; ++j)
-		for (int i{ 0 }; i < c::LEVEL_W; ++i) {
-			byte l_tile_no{ 0 };
-			auto l_ttype = l_level.get_wall_type(i, j);
-			if (l_ttype == skc::Wall::Brown)
-				l_tile_no = c::MD_BYTE_NO_BLOCK_BROWN;
-			else if (l_ttype == skc::Wall::White || l_ttype == skc::Wall::Brown_white)
-				l_tile_no = c::MD_BYTE_NO_BLOCK_WHITE;
-
-			if (l_tile_no != 0)
-				draw_tile(p_rnd, m_gfx.get_meta_tile(l_tile_no, l_tileset_no), i, j);
-		}
+	generate_texture_blocks(p_rnd, p_config, l_level, l_tileset_no);
 
 	if (m_render_toggles[c::TOGGLE_META_IDX]) {
 		// draw mirrors
-		auto l_m1_pos{ l_level.get_spawn_position(0) };
-		auto l_m2_pos{ l_level.get_spawn_position(1) };
-		draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN01, l_tileset_no), l_m1_pos.first, l_m1_pos.second);
-		draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN02, l_tileset_no), l_m2_pos.first, l_m2_pos.second);
+		generate_texture_mirrors(p_rnd, p_config, l_level, l_tileset_no);
+
+		if (l_expanded_rom)
+			generate_texture_blocks(p_rnd, p_config, l_level, l_tileset_no);
 
 		// draw meta-items
 		auto iter = m_meta_tiles.find(m_current_level);
@@ -490,6 +479,30 @@ void skc::SKC_Main_window::generate_texture(SDL_Renderer* p_rnd, const SKC_Confi
 	}
 
 	SDL_SetRenderTarget(p_rnd, nullptr);
+}
+
+void skc::SKC_Main_window::generate_texture_mirrors(SDL_Renderer* p_rnd,
+	const SKC_Config& p_config, const skc::Level& p_level, std::size_t p_tileset_no) {
+	auto l_m1_pos{ p_level.get_spawn_position(0) };
+	auto l_m2_pos{ p_level.get_spawn_position(1) };
+	draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN01, p_tileset_no), l_m1_pos.first, l_m1_pos.second);
+	draw_tile(p_rnd, m_gfx.get_meta_tile(c::MD_BYTE_NO_SPAWN02, p_tileset_no), l_m2_pos.first, l_m2_pos.second);
+}
+
+void skc::SKC_Main_window::generate_texture_blocks(SDL_Renderer* p_rnd, const SKC_Config& p_config,
+	const skc::Level& p_level, std::size_t p_tileset_no) {
+	for (int j{ 0 }; j < c::LEVEL_H; ++j)
+		for (int i{ 0 }; i < c::LEVEL_W; ++i) {
+			byte l_tile_no{ 0 };
+			auto l_ttype = p_level.get_wall_type(i, j);
+			if (l_ttype == skc::Wall::Brown)
+				l_tile_no = c::MD_BYTE_NO_BLOCK_BROWN;
+			else if (l_ttype == skc::Wall::White || l_ttype == skc::Wall::Brown_white)
+				l_tile_no = c::MD_BYTE_NO_BLOCK_WHITE;
+
+			if (l_tile_no != 0)
+				draw_tile(p_rnd, m_gfx.get_meta_tile(l_tile_no, p_tileset_no), i, j);
+		}
 }
 
 int skc::SKC_Main_window::get_tile_w(int p_screen_h) const {
@@ -666,6 +679,8 @@ std::vector<byte> skc::SKC_Main_window::generate_patch_bytes_rom66(SKC_Config& p
 			}
 		}
 
+	l_output = skc::m66::cleanup_skedit_rom(l_output);
+
 	return l_output;
 }
 
@@ -834,6 +849,10 @@ void skc::SKC_Main_window::toggle_render_all(void) {
 
 	for (std::size_t i{ c::TOGGLE_GRID_IDX + 1 }; i <= c::TOGGLE_ENEMY_IDX; ++i)
 		m_render_toggles[i] = l_new_value;
+}
+
+bool skc::SKC_Main_window::is_rom_expanded(void) const {
+	return m66::is_rom_expanded(m_drop_schedules.size());
 }
 
 void skc::SKC_Main_window::set_application_icon(SDL_Window* p_window) const {

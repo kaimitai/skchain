@@ -339,7 +339,8 @@ bool skc::m66::is_mirror_visible(const skc::Level& p_level, std::size_t p_mirror
 		for (const auto& l_item : p_level.get_items())
 			if (l_pos == l_item.get_position() && l_item.get_element_no() != c::ITEM_NO_DEMON_MIRROR)
 				return false;
-		return true;
+		bool l_res{ p_level.get_wall_type(l_pos.first, l_pos.second) == skc::Wall::None };
+		return l_res;
 	}
 	else
 		return false;

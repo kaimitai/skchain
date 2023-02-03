@@ -46,6 +46,10 @@ namespace skc {
 		int get_tile_w(int p_screen_h) const;
 		void draw_tile(SDL_Renderer* p_rnd, SDL_Texture* p_texture, int p_x, int p_y, bool p_transp = false) const;
 		void generate_texture(SDL_Renderer* p_rnd, const SKC_Config& p_config);
+		void generate_texture_mirrors(SDL_Renderer* p_rnd, const SKC_Config& p_config,
+			const skc::Level& p_level, std::size_t p_tileset_no);
+		void generate_texture_blocks(SDL_Renderer* p_rnd, const SKC_Config& p_config,
+			const skc::Level& p_level, std::size_t p_tileset_no);
 
 		// ui stuff
 		void draw_ui(SKC_Config& p_config, const klib::User_input& p_input);
@@ -91,6 +95,7 @@ namespace skc {
 		position get_metadata_tile_position(byte p_board_index_no) const;
 		void set_metadata_tile_position(byte p_board_index_no, const position& p_pos, const SKC_Config& p_config);
 		void toggle_render_all(void);
+		bool is_rom_expanded(void) const;
 
 		// file
 		std::vector<byte> generate_patch_bytes(SKC_Config& p_config) const;
