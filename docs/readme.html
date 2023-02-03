@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Solomon's Keychain v1.1-snapshot - Documentation</title>
+    <title>Solomon's Keychain v1.1 - Documentation</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -60,7 +60,7 @@
 
                 <hr>
 
-                <header>Solomon's Keychain v1.1-snapshot - Documentation</header>
+                <header>Solomon's Keychain v1.1 - Documentation</header>
 
                 <p>Thank you for checking out <a href="https://github.com/kaimitai/skchain/">Solomon's Keychain</a>. With this tool you will be able to alter the level data and game metadata for Solomon's Key (NES). We support altering the US, EU and JP versions of the game. The application also supports expanding the ROM to vastly increase data size.</p>
 
@@ -79,6 +79,8 @@
                 <p>When starting the editor, the application will look for NES-files in the application directory, and load any if found.</p>
 
                 <p>The application can also be started from the command-line with path to a NES-file as parameter. This means you can drag and drop a ROM file on the application to immediately load the file, at least on Windows.</p>
+
+                <p>If a second command line parameter is given, it should be the region code for the rom; US, EU, JP or US66. The latter is a virtual region code signifying the ROM has been expanded, and no longer constitutes a vanilla hack.</p>
 
                 <p>When the editor starts successfully, it will tell you which NES-ROM file is loaded, which region the ROM belongs to, and which directory it uses as the working directory.</p>
 
@@ -176,8 +178,14 @@
                     <li><b>Tileset</b> slider: Will set the level's tileset, out of 3 possible tilesets.</li>
                     <li><b>Time Decrease Rate</b> slider: Increase to make the level's time decrease faster in the game</li>
                     <li><b>Demonhead/Saramandor Lifetime</b> slider: Determines how long the spawned enemies will live before despawning. The higher the number, the longer they live</li>
-                    <li><b>Remove constellation</b> button: Removes constellation from the level, if it has one</li>
                 </ul>
+
+                <ul>
+                    <li><b>Clear Level Data</b> button: Removes all elements from the level, and turns it into a "blank canvas"</li>
+                    <li><b>Remove constellation</b> button: Removes constellation from the level, if it has one</li>
+                    <li>Checkboxes Grid, Meta, Items and Enemies: Toggles rendering of a given layer</li>
+                </ul>
+
                 <hr>
 
                 <p>The Selected Element-window will allow altering all properties of the selected element. This window will look different depending on which type of element is selected.</p>
@@ -292,6 +300,17 @@
             <hr>
 
             <section class="main-section" id="changelog">
+
+                <header>2023-02-04: v1.1</header>
+                <ul>
+                    <li>The rendering order of layers and elements depend on whether the ROM has been expanded or not. The editor should now correctly reflect the actual output in either case</li>
+                    <li>Foreground rendering can be toggled on/off per layer (metadata, items and enemies)</li>
+                    <li>Associate all items and enemies (including glitchy elements) with graphics and descriptions</li>
+                    <li> Support for clearing all level data for a given level, to quickly provide a "blank canvas" for editing</li>
+                    <li>The Demon Mirror Enemy Set editor interfaces will use the tileset of the currently loaded level when presenting the enemy graphics</li>
+                    <li>Support for giving ROM region code as a command-line parameter, to override the automatic region deduction</li>
+                    <li>Added a new section in the readme; technical documentation of the data layout of expanded ROMs</li>
+                </ul>
 
                 <header>2023-01-27: v1.0</header>
                 <ul>

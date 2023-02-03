@@ -6,8 +6,8 @@
 namespace skc {
 	namespace c {
 
-		constexpr char APP_VERSION[]{ "1.1-snapshot" };
-		constexpr char APP_TITLE[]{ "Solomon's Keychain v1.1-snapshot" };
+		constexpr char APP_VERSION[]{ "1.1" };
+		constexpr char APP_TITLE[]{ "Solomon's Keychain v1.1" };
 		constexpr int APP_W{ 1024 + 435 }, APP_H{ 768 };
 		constexpr char EDITOR_SIGNATURE[]{ "kaimitai@github " };
 

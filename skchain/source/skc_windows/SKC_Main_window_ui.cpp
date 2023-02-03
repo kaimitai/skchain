@@ -107,6 +107,7 @@ void skc::SKC_Main_window::draw_ui_level_board(SKC_Config& p_config, const klib:
 
 	if (imgui::button("Clear Level Data", 2, "Clears the level. Hold Ctrl to use.") && l_ctrl) {
 		get_level() = skc::Level();
+		get_level().set_right_wall();
 		reset_selections(m_current_level);
 	}
 

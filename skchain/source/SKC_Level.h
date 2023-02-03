@@ -142,6 +142,8 @@ namespace skc {
 
 		bool is_door_removed(void) const;
 		void set_door_removed(void);
+
+		void set_right_wall(void);
 	};
 
 }

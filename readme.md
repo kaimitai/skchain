@@ -29,6 +29,15 @@ The [ROM map document](./docs/solomon's_key_rom_map.md) contains all information
 
 ### Version History
 
+2023-02-04: v1.1
+* The rendering order of layers and elements depend on whether the ROM has been expanded or not. The editor should now correctly reflect the actual output in either case
+* Foreground rendering can be toggled on/off per layer (metadata, items and enemies)
+* Associate all items and enemies (including glitchy elements) with graphics and descriptions
+* Support for clearing all level data for a given level, to quickly provide a "blank canvas" for editing
+* The Demon Mirror Enemy Set editor interfaces will use the tileset of the currently loaded level when presenting the enemy graphics
+* Support for giving ROM region code as a command-line parameter, to override the automatic region deduction
+* Added a new section in the readme; technical documentation of the data layout of expanded ROMs
+
 2023-01-27: v1.0
 * Added support for ROM expansion, to exceed the original size limits! (adds compatibility with <a href="https://www.romhacking.net/utilities/906/">skedit</a>)
 * Added support for editing demon mirror drop rate schedules and enemy sets directly from the Selected Demon Mirror-window
@@ -42,16 +51,3 @@ The [ROM map document](./docs/solomon's_key_rom_map.md) contains all information
 
 2023-01-22: v0.1
 * Initial release, v0.1
-
-<hr>
-
-### Upcoming Changes in v1.1
-
-* The rendering order of layers and elements depend on whether the ROM has been expanded or not. The editor should now correctly reflect the actual output in either case
-* Support for clearing all level data for a given level, to quickly provide a "blank canvas" for editing
-* Support for giving ROM region code as a command-line parameter, to override the automatic region deduction
-* The Demon Mirror Enemy Set editor interfaces will use the tileset of the currently loaded level when presenting the enemy graphics
-* Foreground rendering can be toggled on/off per layer (metadata, items and enemies)
-* Associate all items and enemies (including glitchy elements) with graphics and descriptions
-* Added a new section in the readme; technical documentation of the data layout of expanded ROMs
-

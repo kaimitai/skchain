@@ -499,6 +499,11 @@ void skc::Level::set_door_removed(void) {
 	m_fixed_door_pos = std::make_pair(-1, 0);
 }
 
+void skc::Level::set_right_wall(void) {
+	for (int j{ 0 }; j < c::LEVEL_H; ++j)
+		set_block(skc::Wall::White, std::make_pair(c::LEVEL_W - 1, j));
+}
+
 int skc::Level::get_item_count(void) const {
 	return static_cast<int>(m_items.size());
 }
