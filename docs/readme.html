@@ -149,6 +149,15 @@
                     The level window is where level editing takes place. You can click any element on the board (apart from blocks and constellation graphics), move it around and change its properties. You can also insert new elements from the element picker.
                 </p>
 
+                <p>The order of precedence for the different layers and elements depend on whether the ROM has been expanded or not, but the editor will adapt to the actual case. Rendering order, from first drawn to last, is as follows:</p>
+
+                <ul>
+                    <li>Vanilla ROM: blocks, door, key, mirrors, items, meta tiles</li>
+                    <li>Expanded ROM: mirrors, blocks, items, door, key, meta tiles</li>
+                </ul>
+
+                <p>Editor Controls:</p>
+
                 <ul>
                     <li><b>Right Click</b>: Will insert the selected element picker element at the location, unless one exists there already. If you want to place more than one enemy at the same location - make one in a free location and move it.</li>
                     <li><b>Left Click</b>: Select item on the gameboard. Will change element mode to the type of the selected element. (if you are in items editing mode and click on a metadata item, the editing mode will change to metadata) The selected element will be outlined by a pulsating yellow square</li>
@@ -352,7 +361,11 @@
 
                 <p>When loading a base US-version of the ROM, the editor gives you the option of expanding the ROM. When the ROM is expanded, the data section sizes are greatly increased. Each Demon Mirror gets its own drop schedule and enemy set (with up to 7 enemies in each), the levels can have arbitrarily many items, and each level can have up to 15 enemies.</p>
 
-                <p>When converting a base ROM to an expanded ROM, a patch is applied. This patch changes the mapper from number 3 to 66, and alters some gamecode to read data from other locations. There are some fundamental differences in the way the data is stored in an original ROM versus an expanded ROM. An overview of the expanded ROM data layout follows.</p>
+                <p>When converting a base ROM to an expanded ROM, a patch is applied. This patch changes the mapper from number 3 to 66, and alters some gamecode to read data from other locations. There are some fundamental differences in the way the data is stored in an original ROM versus an expanded ROM.</p>
+
+                <p>In an expanded ROM, the level data is stored as a grid of items - and the in-game rendering order of layers and elements is different.</p>
+
+                <p>An overview of the expanded ROM data layout follows.</p>
 
                 <p>The level data starts at offset 0xc010, and comes in 53 contiguous blocks of 256 bytes - one block per level. The following table describes the layout of such a block:</p>
 
